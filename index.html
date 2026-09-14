@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도플라링고 - 도황의 영어공부법</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fdf0f5; 
+            font-family: 'Jua', sans-serif;
+        }
+
+        /* 스마트폰 화면 비율 스타일 */
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 25px 20px;
+            border-radius: 35px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            border: 4px solid #fbcfe8;
+            width: 380px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        /* 공통 버튼 스타일 */
+        .btn {
+            background-color: #ec4899; 
+            color: white;
+            border: none;
+            padding: 14px 0;
+            width: 80%;
+            font-size: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #be185d;
+            transition: all 0.1s;
+            font-family: 'Jua', sans-serif;
+            margin-top: 15px;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #be185d;
+        }
+
+        /* 타이틀 화면 상단 PNG 이미지 스타일 (크기 확대) */
+        .title-image {
+            max-width: 230px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        /* 로고 글자 핑크빛 적용 */
+        .logo { 
+            font-size: 52px; 
+            color: #ec4899; 
+            margin-bottom: 5px; 
+            text-shadow: 3px 3px 0px #be185d; 
+        }
+        .subtitle { 
+            font-size: 20px; 
+            color: #374151; 
+            margin-bottom: 25px; 
+            font-weight: bold;
+        }
+
+        /* 퀴즈 화면 전용 */
+        .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
+        .question-text { font-size: 18px; color: #374151; margin-bottom: 25px; line-height: 1.5; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
+        
+        .options { display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 0 10px; box-sizing: border-box; }
+        .option-btn {
+            background-color: white;
+            color: #374151;
+            border: 2px solid #fbcfe8;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+            font-family: 'Jua', sans-serif;
+        }
+        .option-btn:hover { background-color: #fdf2f8; border-color: #f472b6; }
+        .option-btn:active { background-color: #fbcfe8; }
+
+        /* 결과 화면 전용 (이미지 크기 대폭 확대) */
+        .result-image {
+            max-width: 240px;
+            max-height: 220px;
+            width: auto;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: none;
+            object-fit: contain;
+        }
+        .result-text { font-size: 26px; margin-bottom: 8px; }
+        
+        /* 해설 박스 스타일 */
+        .explanation {
+            font-size: 15px;
+            color: #4b5563;
+            background-color: #fdf2f8;
+            border: 1.5px dashed #f472b6;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            width: 85%;
+            text-align: left;
+            line-height: 1.4;
+            white-space: pre-line;
+            display: none;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- 배경음악 오디오 태그 -->
+    <audio id="bgm" src="bgm.mp3" loop></audio>
+
+    <!-- 1. 타이틀 화면 -->
+    <div id="title-screen" class="container">
+        <img src="title.png" alt="타이틀 이미지" class="title-image">
+        <div class="logo">도플라링고</div>
+        <div class="subtitle">도황의 영어공부법</div>
+        <button class="btn" onclick="startGame()">시작하기</button>
+    </div>
+
+    <!-- 2. 퀴즈 화면 -->
+    <div id="quiz-screen" class="container hidden">
+        <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
+        <div id="q-text" class="question-text"></div>
+        <div id="q-options" class="options"></div>
+    </div>
+
+    <!-- 3. 결과 화면 -->
+    <div id="result-screen" class="container hidden">
+        <img id="result-img" class="result-image" src="" alt="결과 이미지">
+        <div id="result-msg" class="result-text"></div>
+        <div id="result-exp" class="explanation"></div>
+        <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                number: 1,
+                title: "1번 문제 (틀리면 죽자)",
+                text: "To attract young consumers, promoting new products online is more <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> than advertising on television.",
+                options: [
+                    { label: "(A) effects", val: "A" },
+                    { label: "(B) effectively", val: "B" },
+                    { label: "(C) effecting", val: "C" },
+                    { label: "(D) effective", val: "D" }
+                ],
+                correct: "D",
+                explanation: "💡 해설\nmore 이니까 뒤에 형용사"
+            },
+            {
+                number: 2,
+                title: "2번 문제 (틀리면 죽자)",
+                text: "Twins Excursions emplys licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
+                options: [
+                    { label: "(A) conduct", val: "A" },
+                    { label: "(B) receive", val: "B" },
+                    { label: "(C) inspect", val: "C" },
+                    { label: "(D) distribute", val: "D" }
+                ],
+                correct: "A",
+                explanation: "💡 해설\nconduct = 안내하다, 수행하다\ninspect = 검사하다\ndistribute = 분배하다"
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let isCorrectAnswer = false;
+
+        function startGame() {
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.2; // 음량을 더 줄여서 20%로 설정
+            bgm.play().catch(error => {
+                console.log("음악 재생 실패:", error);
+            });
+
+            currentQuizIndex = 0;
+            document.getElementById('title-screen').classList.add('hidden');
+            loadQuestion(currentQuizIndex);
+        }
+
+        function loadQuestion(index) {
+            const q = questions[index];
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-text').innerHTML = q.text;
+
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = ''; 
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.label;
+                btn.onclick = () => checkAnswer(opt.val);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+        }
+
+        function checkAnswer(selectedOption) {
+            const q = questions[currentQuizIndex];
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const resultImg = document.getElementById('result-img');
+            const resultMsg = document.getElementById('result-msg');
+            const resultExp = document.getElementById('result-exp');
+            const actionBtn = document.getElementById('action-btn');
+            
+            resultImg.style.display = 'block';
+
+            if (selectedOption === q.correct) {
+                isCorrectAnswer = true;
+                resultImg.src = "correct.gif"; 
+                resultMsg.style.color = "#ec4899";
+                resultMsg.innerText = "도~황!";
+                
+                resultExp.innerText = q.explanation;
+                resultExp.style.display = 'block';
+                
+                if (currentQuizIndex + 1 < questions.length) {
+                    actionBtn.innerText = "다음";
+                } else {
+                    actionBtn.innerText = "완료 (처음으로)";
+                }
+            } else {
+                isCorrectAnswer = false;
+                resultImg.src = "wrong.png"; 
+                resultMsg.style.color = "#ef4444";
+                resultMsg.innerText = "죽어";
+                
+                resultExp.style.display = 'none';
+                actionBtn.innerText = "다시";
+            }
+        }
+
+        function handleNextAction() {
+            if (isCorrectAnswer) {
+                currentQuizIndex++;
+                if (currentQuizIndex < questions.length) {
+                    loadQuestion(currentQuizIndex);
+                } else {
+                    location.reload();
+                }
+            } else {
+                loadQuestion(currentQuizIndex);
+            }
+        }
+    </script>
+</body>
+</html>
