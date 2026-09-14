@@ -124,6 +124,21 @@
         .page-arrow:active { transform: translateY(3px); box-shadow: 0 0 0 #be185d; }
         .page-indicator { font-size: 16px; color: #4b5563; }
 
+        /* 문제풀이 규칙 화면 전용 스타일 */
+        .rule-title { font-size: 26px; color: #ec4899; margin-bottom: 20px; font-weight: bold; }
+        .rule-box {
+            background-color: #fdf2f8;
+            border: 2px dashed #f472b6;
+            border-radius: 20px;
+            padding: 20px;
+            width: 85%;
+            text-align: left;
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
         /* 퀴즈 화면 전용 */
         .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
         .question-text { font-size: 18px; color: #374151; margin-bottom: 25px; line-height: 1.5; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
@@ -201,14 +216,25 @@
         <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="location.reload()">처음으로</button>
     </div>
 
-    <!-- 3. 퀴즈 화면 -->
+    <!-- 3. 문제풀이 규칙 화면 -->
+    <div id="rule-screen" class="container hidden">
+        <div class="rule-title">&lt;문제풀이규칙&gt;</div>
+        <div class="rule-box">
+            1. 보기 먼저 확인<br><br>
+            2. 명사 동사 나누기<br><br>
+            3. 모르면 울지 말고 근거 있게 찍기
+        </div>
+        <button class="btn" onclick="startQuiz()">문제풀기</button>
+    </div>
+
+    <!-- 4. 퀴즈 화면 -->
     <div id="quiz-screen" class="container hidden">
         <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
         <div id="q-text" class="question-text"></div>
         <div id="q-options" class="options"></div>
     </div>
 
-    <!-- 4. 결과 화면 -->
+    <!-- 5. 결과 화면 -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지">
         <div id="result-msg" class="result-text"></div>
@@ -275,7 +301,7 @@
                 btn.innerText = `DAY ${i}`;
                 
                 if (i === 1) {
-                    btn.onclick = () => startQuiz(1);
+                    btn.onclick = () => showRuleScreen();
                 } else {
                     btn.onclick = () => alert(`DAY ${i}는 아직 준비 중이다! 훗훗훗...`);
                 }
@@ -292,9 +318,14 @@
             renderDayButtons();
         }
 
-        function startQuiz(dayNum) {
-            currentQuizIndex = 0;
+        function showRuleScreen() {
             document.getElementById('day-screen').classList.add('hidden');
+            document.getElementById('rule-screen').classList.remove('hidden');
+        }
+
+        function startQuiz() {
+            currentQuizIndex = 0;
+            document.getElementById('rule-screen').classList.add('hidden');
             loadQuestion(currentQuizIndex);
         }
 
