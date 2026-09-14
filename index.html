@@ -56,7 +56,7 @@
             box-shadow: 0 0 0 #be185d;
         }
 
-        /* 타이틀 화면 상단 PNG 이미지 스타일 (크기 확대) */
+        /* 타이틀 화면 상단 PNG 이미지 스타일 */
         .title-image {
             max-width: 230px;
             width: 100%;
@@ -78,6 +78,52 @@
             font-weight: bold;
         }
 
+        /* DAY 선택 화면 스타일 */
+        .day-title { font-size: 24px; color: #ec4899; margin-bottom: 15px; font-weight: bold; }
+        .day-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .day-btn {
+            background-color: #fdf2f8;
+            color: #374151;
+            border: 2px solid #fbcfe8;
+            padding: 12px 0;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+            transition: 0.2s;
+        }
+        .day-btn:hover { background-color: #fce7f3; border-color: #ec4899; }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .page-arrow {
+            background-color: #f472b6;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+            box-shadow: 0 3px 0 #be185d;
+        }
+        .page-arrow:active { transform: translateY(3px); box-shadow: 0 0 0 #be185d; }
+        .page-indicator { font-size: 16px; color: #4b5563; }
+
         /* 퀴즈 화면 전용 */
         .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
         .question-text { font-size: 18px; color: #374151; margin-bottom: 25px; line-height: 1.5; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
@@ -98,7 +144,7 @@
         .option-btn:hover { background-color: #fdf2f8; border-color: #f472b6; }
         .option-btn:active { background-color: #fbcfe8; }
 
-        /* 결과 화면 전용 (이미지 크기 대폭 확대) */
+        /* 결과 화면 전용 */
         .result-image {
             max-width: 240px;
             max-height: 220px;
@@ -140,17 +186,29 @@
         <img src="title.png" alt="타이틀 이미지" class="title-image">
         <div class="logo">도플라링고</div>
         <div class="subtitle">도황의 영어공부법</div>
-        <button class="btn" onclick="startGame()">시작하기</button>
+        <button class="btn" onclick="goToDaySelect()">시작하기</button>
     </div>
 
-    <!-- 2. 퀴즈 화면 -->
+    <!-- 2. DAY 선택 화면 (1~30) -->
+    <div id="day-screen" class="container hidden">
+        <div class="day-title">학습할 DAY를 선택하라</div>
+        <div id="day-grid" class="day-grid"></div>
+        <div class="pagination-container">
+            <button class="page-arrow" onclick="changePage(-1)">◀</button>
+            <span id="page-indicator" class="page-indicator">1 / 3 페이지</span>
+            <button class="page-arrow" onclick="changePage(1)">▶</button>
+        </div>
+        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="location.reload()">처음으로</button>
+    </div>
+
+    <!-- 3. 퀴즈 화면 -->
     <div id="quiz-screen" class="container hidden">
         <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
         <div id="q-text" class="question-text"></div>
         <div id="q-options" class="options"></div>
     </div>
 
-    <!-- 3. 결과 화면 -->
+    <!-- 4. 결과 화면 -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지">
         <div id="result-msg" class="result-text"></div>
@@ -162,7 +220,7 @@
         const questions = [
             {
                 number: 1,
-                title: "1번 문제 (틀리면 죽자)",
+                title: "DAY 1 - 1번 문제",
                 text: "To attract young consumers, promoting new products online is more <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> than advertising on television.",
                 options: [
                     { label: "(A) effects", val: "A" },
@@ -175,8 +233,8 @@
             },
             {
                 number: 2,
-                title: "2번 문제 (틀리면 죽자)",
-                text: "Twins Excursions emplys licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
+                title: "DAY 1 - 2번 문제",
+                text: "Twins Excursions employs licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
                 options: [
                     { label: "(A) conduct", val: "A" },
                     { label: "(B) receive", val: "B" },
@@ -190,16 +248,55 @@
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
+        let currentDayPage = 0; // 0: DAY 1~10, 1: DAY 11~20, 2: DAY 21~30
 
-        function startGame() {
+        function goToDaySelect() {
             const bgm = document.getElementById('bgm');
-            bgm.volume = 0.2; // 음량을 더 줄여서 20%로 설정
+            bgm.volume = 0.2; 
             bgm.play().catch(error => {
                 console.log("음악 재생 실패:", error);
             });
 
-            currentQuizIndex = 0;
             document.getElementById('title-screen').classList.add('hidden');
+            renderDayButtons();
+            document.getElementById('day-screen').classList.remove('hidden');
+        }
+
+        function renderDayButtons() {
+            const grid = document.getElementById('day-grid');
+            grid.innerHTML = '';
+            
+            const startDay = currentDayPage * 10 + 1;
+            const endDay = startDay + 9;
+
+            for (let i = startDay; i <= endDay; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'day-btn';
+                btn.innerText = `DAY ${i}`;
+                
+                // 현재는 DAY 1만 퀴즈 연결, 나머지는 준비중 메시지
+                if (i === 1) {
+                    btn.onclick = () => startQuiz(1);
+                } else {
+                    btn.onclick = () => alert(`DAY ${i}는 아직 준비 중이다! 훗훗훗...`);
+                }
+                grid.appendChild(btn);
+            }
+
+            document.getElementById('page-indicator.innerText = `${currentDayPage + 1} / 3 페이지`;
+            document.getElementById('page-indicator').innerText = `${currentDayPage + 1} / 3 페이지`;
+        }
+
+        function changePage(direction) {
+            currentDayPage += direction;
+            if (currentDayPage < 0) currentDayPage = 2; // 순환
+            if (currentDayPage > 2) currentDayPage = 0;
+            renderDayButtons();
+        }
+
+        function startQuiz(dayNum) {
+            currentQuizIndex = 0;
+            document.getElementById('day-screen').classList.add('hidden');
             loadQuestion(currentQuizIndex);
         }
 
@@ -247,7 +344,7 @@
                 if (currentQuizIndex + 1 < questions.length) {
                     actionBtn.innerText = "다음";
                 } else {
-                    actionBtn.innerText = "완료 (처음으로)";
+                    actionBtn.innerText = "DAY 선택으로";
                 }
             } else {
                 isCorrectAnswer = false;
@@ -266,7 +363,10 @@
                 if (currentQuizIndex < questions.length) {
                     loadQuestion(currentQuizIndex);
                 } else {
-                    location.reload();
+                    // 모든 문제 완료 시 DAY 선택 화면으로 복귀
+                    document.getElementById('result-screen').classList.add('hidden');
+                    renderDayButtons();
+                    document.getElementById('day-screen').classList.remove('hidden');
                 }
             } else {
                 loadQuestion(currentQuizIndex);
