@@ -234,7 +234,7 @@
             {
                 number: 2,
                 title: "DAY 1 - 2번 문제",
-                text: "Twins Excursions employs licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
+                text: "Twins Excursions emplys licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
                 options: [
                     { label: "(A) conduct", val: "A" },
                     { label: "(B) receive", val: "B" },
@@ -274,7 +274,6 @@
                 btn.className = 'day-btn';
                 btn.innerText = `DAY ${i}`;
                 
-                // 현재는 DAY 1만 퀴즈 연결, 나머지는 준비중 메시지
                 if (i === 1) {
                     btn.onclick = () => startQuiz(1);
                 } else {
@@ -283,13 +282,12 @@
                 grid.appendChild(btn);
             }
 
-            document.getElementById('page-indicator.innerText = `${currentDayPage + 1} / 3 페이지`;
             document.getElementById('page-indicator').innerText = `${currentDayPage + 1} / 3 페이지`;
         }
 
         function changePage(direction) {
             currentDayPage += direction;
-            if (currentDayPage < 0) currentDayPage = 2; // 순환
+            if (currentDayPage < 0) currentDayPage = 2; 
             if (currentDayPage > 2) currentDayPage = 0;
             renderDayButtons();
         }
@@ -363,7 +361,6 @@
                 if (currentQuizIndex < questions.length) {
                     loadQuestion(currentQuizIndex);
                 } else {
-                    // 모든 문제 완료 시 DAY 선택 화면으로 복귀
                     document.getElementById('result-screen').classList.add('hidden');
                     renderDayButtons();
                     document.getElementById('day-screen').classList.remove('hidden');
