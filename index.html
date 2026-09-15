@@ -62,23 +62,50 @@
             box-shadow: 0 0 0 #be185d;
         }
 
-        /* 타이틀 화면 상단 PNG 이미지 스타일 */
+        /* 인트로 화면 전용 스타일 (슬라이드 페이드 인 애니메이션) */
+        .intro-container {
+            background-color: #ec4899; /* 인트로 배경은 강렬한 핑크빛 */
+            color: white;
+        }
+        .intro-text {
+            font-size: 50px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0px #be185d;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideFadeIn 1s ease forwards;
+        }
+
+        @keyframes slideFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 타이틀 화면 상단 PNG 이미지 스타일 (크기 대폭 확대) */
         .title-image {
-            max-width: 230px;
+            max-width: 300px;
             width: 100%;
             height: auto;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            border-radius: 20px;
         }
 
         /* 로고 글자 핑크빛 적용 */
         .logo { 
-            font-size: 52px; 
+            font-size: 44px; 
             color: #ec4899; 
             margin-bottom: 5px; 
             text-shadow: 3px 3px 0px #be185d; 
         }
         .subtitle { 
-            font-size: 20px; 
+            font-size: 18px; 
             color: #374151; 
             margin-bottom: 25px; 
             font-weight: bold;
@@ -160,11 +187,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            perspective: 1000px; /* 3D 입체감 설정 */
+            perspective: 1000px;
             transition: transform 0.4s ease, opacity 0.4s ease;
         }
         
-        /* 뒤집히는 순간의 회전 효과 클래스 */
         .quiz-content-wrapper.flip-anim {
             transform: rotateY(90deg) scale(0.9);
             opacity: 0;
@@ -262,8 +288,16 @@
 </head>
 <body>
 
+    <!-- 오디오 객체 설정 (start.mp3 재생용) -->
+    <audio id="start-audio" src="start.mp3" preload="auto"></audio>
+
+    <!-- 0. 인트로 화면 (Doflalingo 슬라이드 페이드 인) -->
+    <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
+        <div class="intro-text">Doflalingo</div>
+    </div>
+
     <!-- 1. 타이틀 화면 -->
-    <div id="title-screen" class="container">
+    <div id="title-screen" class="container hidden">
         <img src="title.png" alt="타이틀 이미지" class="title-image">
         <div class="logo">도플라링고</div>
         <div class="subtitle">도황의 영어공부법</div>
@@ -417,6 +451,34 @@
         let currentDayPage = 0;
         let currentReviewIndex = 0;
         let isShowingMeaning = false;
+        let introTimer = null;
+        let hasIntroPassed = false;
+
+        // 페이지 로드 시 인트로 재생 및 2초 후 자동 전환 설정
+        window.onload = function() {
+            const audio = document.getElementById('start-audio');
+            audio.play().catch(error => {
+                // 브라우저 정책상 자동 재생이 차단될 경우를 대비한 예외 처리
+                console.log("Audio autoplay restricted:", error);
+            });
+
+            introTimer = setTimeout(() => {
+                transitionToIntoTitle();
+            }, 2000); // 2초 후 타이틀로 전환
+        };
+
+        function skipIntro() {
+            if (hasIntroPassed) return;
+            hasIntroPassed = true;
+            clearTimeout(introTimer);
+            transitionToIntoTitle();
+        }
+
+        function transitionToIntoTitle() {
+            hasIntroPassed = true;
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('title-screen').classList.remove('hidden');
+        }
 
         function goToDaySelect() {
             document.getElementById('title-screen').classList.add('hidden');
@@ -465,11 +527,9 @@
             loadQuestion(currentQuizIndex);
         }
 
-        // 🎴 카드 덱 뒤집기(Flip) 애니메이션을 적용한 문제 로드 함수
         function loadQuestion(index) {
             const quizWrapper = document.getElementById('quiz-wrapper');
             
-            // 기존 화면이 있다면 뒤집히는 효과(Flip) 적용 후 내용 교체
             quizWrapper.classList.add('flip-anim');
 
             setTimeout(() => {
@@ -491,9 +551,8 @@
                 document.getElementById('quiz-screen').classList.remove('hidden');
                 document.getElementById('result-screen').classList.add('hidden');
 
-                // 뒤집혀서 들어오는 효과 완료
                 quizWrapper.classList.remove('flip-anim');
-            }, 200); // 0.2초 동안 회전 후 새 문제로 샥 바뀌도록 세팅
+            }, 200);
         }
 
         function checkAnswer(selectedOption) {
@@ -530,6 +589,11 @@
                 
                 resultExp.style.display = 'none';
                 actionBtn.innerText = "다시";
+
+                // 📳 오답 선택 시 스마트폰 진동 발생 (지원하는 모바일 기기에서 작동)
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]); // 징-징 두 번 짧고 강하게 울림
+                }
             }
         }
 
