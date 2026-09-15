@@ -154,7 +154,21 @@
             margin-bottom: 15px;
         }
 
-        /* 퀴즈 화면 전용 */
+        /* 퀴즈 화면 전용 및 Fade In 애니메이션 적용 */
+        .quiz-content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .quiz-content-wrapper.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
         .question-text { font-size: 17px; color: #374151; margin-bottom: 20px; line-height: 1.4; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
         
@@ -209,12 +223,11 @@
             overflow-y: auto;
         }
 
-        /* 카드 슬라이드 효과 스타일 */
+        /* 단어 복습 화면: 부드러운 페이드 & 스케일 애니메이션 효과 */
         .flashcard-scene {
             width: 85%;
             height: 180px;
             margin-bottom: 15px;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -231,15 +244,14 @@
             align-items: center;
             box-sizing: border-box;
             padding: 20px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.25s ease, transform 0.25s ease;
         }
-        .slide-out-left {
-            transform: translateX(-100px);
+        /* 단어 전환 시 톡 하고 부드럽게 나타나는 효과 */
+        .flashcard.fade-anim {
             opacity: 0;
-        }
-        .slide-in-right {
-            transform: translateX(100px);
-            opacity: 0;
+            transform: scale(0.92);
         }
 
         .card-label { font-size: 14px; color: #ec4899; margin-bottom: 5px; font-weight: bold; }
@@ -283,9 +295,11 @@
 
     <!-- 4. 퀴즈 화면 -->
     <div id="quiz-screen" class="container hidden">
-        <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
-        <div id="q-text" class="question-text"></div>
-        <div id="q-options" class="options"></div>
+        <div id="quiz-wrapper" class="quiz-content-wrapper">
+            <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
+            <div id="q-text" class="question-text"></div>
+            <div id="q-options" class="options"></div>
+        </div>
     </div>
 
     <!-- 5. 결과 화면 -->
@@ -296,7 +310,7 @@
         <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 (카드 슬라이드 효과) -->
+    <!-- 6. 단어 복습 화면 (부드러운 페이드 효과) -->
     <div id="review-screen" class="container hidden">
         <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
         <div class="flashcard-scene">
@@ -453,6 +467,11 @@
 
         function loadQuestion(index) {
             const q = questions[index];
+            const quizWrapper = document.getElementById('quiz-wrapper');
+            
+            // 기존 페이드인 제거 후 내용 세팅 및 페이드인 재적용
+            quizWrapper.classList.remove('fade-in');
+
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-text').innerHTML = q.text;
 
@@ -469,6 +488,11 @@
 
             document.getElementById('quiz-screen').classList.remove('hidden');
             document.getElementById('result-screen').classList.add('hidden');
+
+            // 살짝 지연 후 Fade In 효과 발동
+            setTimeout(() => {
+                quizWrapper.classList.add('fade-in');
+            }, 50);
         }
 
         function checkAnswer(selectedOption) {
@@ -537,14 +561,10 @@
             const reviewBtn = document.getElementById('review-btn');
 
             if (!isInitial) {
-                cardEl.classList.add('slide-out-left');
+                cardEl.classList.add('fade-anim');
                 setTimeout(() => {
                     setCardTextData(card, cardLabel, cardText, reviewBtn);
-                    cardEl.classList.remove('slide-out-left');
-                    cardEl.classList.add('slide-in-right');
-                    setTimeout(() => {
-                        cardEl.classList.remove('slide-in-right');
-                    }, 50);
+                    cardEl.classList.remove('fade-anim');
                 }, 200);
             } else {
                 setCardTextData(card, cardLabel, cardText, reviewBtn);
