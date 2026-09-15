@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도플라링고 - 도황의 영어공부법</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN 추가 -->
+    <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -209,45 +209,41 @@
             overflow-y: auto;
         }
 
-        /* 3D 플립 카드 스타일 */
+        /* 카드 슬라이드 효과 스타일 */
         .flashcard-scene {
             width: 85%;
             height: 180px;
-            perspective: 1000px;
             margin-bottom: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .flashcard {
             width: 100%;
             height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s ease;
-        }
-        .flashcard.is-flipped {
-            transform: rotateY(180deg);
-        }
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
             background-color: #fdf2f8;
             border: 2px dashed #f472b6;
             border-radius: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
             padding: 20px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
-        .card-back {
-            transform: rotateY(180deg);
-            background-color: #fff1f2;
-            border-color: #fda4af;
+        .slide-out-left {
+            transform: translateX(-100px);
+            opacity: 0;
         }
-        .card-word { font-size: 28px; color: #374151; font-weight: bold; }
-        .card-meaning { font-size: 26px; color: #ec4899; font-weight: bold; }
+        .slide-in-right {
+            transform: translateX(100px);
+            opacity: 0;
+        }
+
+        .card-label { font-size: 14px; color: #ec4899; margin-bottom: 5px; font-weight: bold; }
+        .card-content { font-size: 28px; color: #374151; font-weight: bold; }
 
         .hidden { display: none !important; }
     </style>
@@ -300,27 +296,23 @@
         <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 (3D 플립 카드) -->
+    <!-- 6. 단어 복습 화면 (카드 슬라이드 효과) -->
     <div id="review-screen" class="container hidden">
         <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
         <div class="flashcard-scene">
             <div id="flashcard" class="flashcard">
-                <div class="card-face">
-                    <div id="card-word" class="card-word"></div>
-                </div>
-                <div class="card-face card-back">
-                    <div id="card-meaning" class="card-meaning"></div>
-                </div>
+                <div id="card-label" class="card-label">단어</div>
+                <div id="card-text" class="card-content"></div>
             </div>
         </div>
         <button id="review-btn" class="btn" onclick="handleReviewAction()">정답 확인</button>
     </div>
 
-    <!-- 7. 최종 완료 화면 (학습 완료 버튼 누를 때 등장) -->
+    <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="complete.gif" alt="완료 이미지" class="result-image" style="display: block; max-width: 240px; margin-bottom: 15px;">
-        <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 마스터 완료!</div>
-        <div class="subtitle" style="font-size: 16px; margin-bottom: 20px;">도황의 완벽한 승리다! 훗훗훗...</div>
+        <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;">
+        <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px;">DAY 1 마스터 완료!</div>
+        <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="returnToDaySelect()">DAY 선택으로</button>
     </div>
 
@@ -410,7 +402,7 @@
         let isCorrectAnswer = false;
         let currentDayPage = 0; // 0: DAY 1~10, 1: DAY 11~20, 2: DAY 21~30
         let currentReviewIndex = 0;
-        let isCardFlipped = false;
+        let isShowingMeaning = false;
 
         function goToDaySelect() {
             document.getElementById('title-screen').classList.add('hidden');
@@ -532,56 +524,72 @@
 
         function startReview() {
             currentReviewIndex = 0;
-            isCardFlipped = false;
-            loadFlashcard(currentReviewIndex);
+            isShowingMeaning = false;
+            updateFlashcardContent(false);
             document.getElementById('review-screen').classList.remove('hidden');
         }
 
-        function loadFlashcard(index) {
-            isCardFlipped = false;
-            const card = flashcards[index];
-            
+        function updateFlashcardContent(isInitial) {
+            const card = flashcards[currentReviewIndex];
             const cardEl = document.getElementById('flashcard');
-            cardEl.classList.remove('is-flipped');
-
-            document.getElementById('card-word').innerText = card.word;
-            document.getElementById('card-meaning').innerText = card.meaning;
-
-            document.getElementById('review-btn').innerText = "정답 확인";
-        }
-
-        function handleReviewAction() {
-            const cardEl = document.getElementById('flashcard');
+            const cardLabel = document.getElementById('card-label');
+            const cardText = document.getElementById('card-text');
             const reviewBtn = document.getElementById('review-btn');
 
-            if (!isCardFlipped) {
-                cardEl.classList.add('is-flipped');
-                isCardFlipped = true;
+            if (!isInitial) {
+                cardEl.classList.add('slide-out-left');
+                setTimeout(() => {
+                    setCardTextData(card, cardLabel, cardText, reviewBtn);
+                    cardEl.classList.remove('slide-out-left');
+                    cardEl.classList.add('slide-in-right');
+                    setTimeout(() => {
+                        cardEl.classList.remove('slide-in-right');
+                    }, 50);
+                }, 200);
+            } else {
+                setCardTextData(card, cardLabel, cardText, reviewBtn);
+            }
+        }
 
+        function setCardTextData(card, cardLabel, cardText, reviewBtn) {
+            if (!isShowingMeaning) {
+                cardLabel.innerText = "단어";
+                cardText.innerText = card.word;
+                cardText.style.color = "#374151";
+                reviewBtn.innerText = "정답 확인";
+            } else {
+                cardLabel.innerText = "뜻";
+                cardText.innerText = card.meaning;
+                cardText.style.color = "#ec4899";
+                
                 if (currentReviewIndex === flashcards.length - 1) {
                     reviewBtn.innerText = "학습 완료";
                 } else {
                     reviewBtn.innerText = "다음 단어";
                 }
+            }
+        }
+
+        function handleReviewAction() {
+            if (!isShowingMeaning) {
+                isShowingMeaning = true;
+                updateFlashcardContent(false);
             } else {
                 currentReviewIndex++;
                 if (currentReviewIndex < flashcards.length) {
-                    loadFlashcard(currentReviewIndex);
+                    isShowingMeaning = false;
+                    updateFlashcardContent(false);
                 } else {
-                    // 단어 복습 마지막 단계에서 '학습 완료' 버튼을 누른 경우 실행
                     triggerCompletionEffects();
                 }
             }
         }
 
-        // 학습 완료 시 진동, 축하 파티클, complete 화면 호출 함수
         function triggerCompletionEffects() {
-            // 1. 모바일 진동 효과 (지원하는 기기에서 300밀리초 동안 부르르 떨림)
             if (navigator.vibrate) {
                 navigator.vibrate(300);
             }
 
-            // 2. 형긋한 핑크빛 축하 파티클 (Confetti 폭죽 효과)
             confetti({
                 particleCount: 120,
                 spread: 70,
@@ -589,7 +597,6 @@
                 colors: ['#ec4899', '#f472b6', '#fbcfe8', '#ffe4e6']
             });
 
-            // 3. 기존 복습 화면을 숨기고 complete 화면 노출
             document.getElementById('review-screen').classList.add('hidden');
             document.getElementById('complete-screen').classList.remove('hidden');
         }
