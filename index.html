@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>도플라링고 - 도황의 영어공부법</title>
+    
+    <!-- ✨ 주소창을 없애고 전체 화면 앱처럼 실행하기 위한 설정 추가 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="도플라링고">
+    
+    <!-- 스마트폰 홈 화면 아이콘 설정 -->
+    <link rel="apple-touch-icon" href="title.png">
+    <link rel="icon" type="image/png" href="title.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -39,7 +50,7 @@
             overflow: hidden; 
         }
 
-        /* ✨ 오답 시 화면 흔들림(Shake) 애니메이션 */
+        /* 오답 시 화면 흔들림(Shake) 애니메이션 */
         @keyframes screenShake {
             0% { transform: translate(0, 0); }
             20% { transform: translate(-8px, 0); }
@@ -78,7 +89,7 @@
 
         /* 인트로 화면 전용 스타일 (슬라이드 페이드 인 애니메이션) */
         .intro-container {
-            background-color: #ec4899; /* 인트로 배경은 강렬한 핑크빛 */
+            background-color: #ec4899; 
             color: white;
         }
         .intro-text {
@@ -136,7 +147,6 @@
             animation: bubbleBounce 2s infinite ease-in-out;
             z-index: 10;
         }
-        /* 말풍선 꼬리 */
         .speech-bubble::after {
             content: '';
             position: absolute;
@@ -168,7 +178,6 @@
             50% { transform: translateY(-4px); }
         }
 
-        /* 타이틀 이미지 테두리/그림자 제거 */
         .title-image {
             max-width: 190px;
             width: 100%;
@@ -195,23 +204,26 @@
         }
 
         /* DAY 선택 화면 스타일 */
-        .day-title { font-size: 24px; color: #ec4899; margin-bottom: 8px; font-weight: bold; }
-        
-        /* ✨ 연속 출석 스트릭 배지 스타일 */
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
         .streak-badge {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             background-color: #fff1f2;
-            border: 1.5px solid #fda4af;
+            border: 2px solid #fda4af;
             color: #e11d48;
-            font-size: 14px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 12px;
+            font-size: 17px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            margin-bottom: 18px;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(225, 29, 72, 0.1);
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.15);
+            animation: gentleBounce 2s infinite ease-in-out;
         }
 
         .day-grid {
@@ -240,7 +252,6 @@
             transform: translateY(-2px) scale(1.03);
         }
 
-        /* DAY 완료 시 어두운 핑크/버건디 색상 및 완료 스타일 */
         .day-btn.completed {
             background-color: #9d174d;
             color: #ffffff;
@@ -279,7 +290,6 @@
         .page-arrow:active { transform: translateY(3px); box-shadow: 0 0 0 #be185d; }
         .page-indicator { font-size: 16px; color: #4b5563; }
 
-        /* 문제풀이 규칙 화면 전용 스타일 */
         .rule-title { font-size: 26px; color: #ec4899; margin-bottom: 20px; font-weight: bold; }
         .rule-box {
             background-color: #fdf2f8;
@@ -294,7 +304,6 @@
             margin-bottom: 15px;
         }
 
-        /* 퀴즈 화면 전용 및 부드러운 Fade In 애니메이션 적용 */
         .quiz-content-wrapper {
             width: 100%;
             display: flex;
@@ -312,7 +321,6 @@
             transform: scale(0.96);
         }
 
-        /* 왼쪽 상단 메인으로 돌아가기 버튼 스타일 */
         .quiz-home-btn {
             position: absolute;
             top: -15px;
@@ -333,7 +341,6 @@
             transform: scale(1.05);
         }
 
-        /* 오른쪽 상단 타이머 스타일 */
         .timer-badge {
             position: absolute;
             top: -15px;
@@ -378,7 +385,6 @@
         }
         .option-btn:active { background-color: #fbcfe8; }
 
-        /* 결과 화면 전용 */
         .result-image {
             max-width: 220px;
             max-height: 200px;
@@ -391,7 +397,6 @@
         }
         .result-text { font-size: 24px; margin-bottom: 6px; }
         
-        /* 해설 박스 스타일 */
         .explanation {
             font-size: 14px;
             color: #4b5563;
@@ -409,7 +414,6 @@
             overflow-y: auto;
         }
 
-        /* 단어 복습 화면 컨테이너 */
         .review-container {
             width: 100%;
             display: flex;
@@ -477,7 +481,6 @@
 
     <!-- 2. DAY 선택 화면 (1~30) -->
     <div id="day-screen" class="container hidden">
-        <div class="day-title">학습할 DAY를 선택하라</div>
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
         <div id="day-grid" class="day-grid"></div>
         <div class="pagination-container">
@@ -658,14 +661,12 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // ✨ 연속 출석(스트릭) 체크 및 관리 함수
         function checkStreakSystem() {
             const todayStr = new Date().toISOString().slice(0, 10);
             let lastVisitDate = localStorage.getItem('dofla_last_visit');
             let currentStreak = parseInt(localStorage.getItem('dofla_streak') || '1', 10);
 
             if (!lastVisitDate) {
-                // 최초 방문
                 localStorage.setItem('dofla_last_visit', todayStr);
                 localStorage.setItem('dofla_streak', '1');
                 return 1;
@@ -677,17 +678,14 @@
             const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
             if (diffDays === 1) {
-                // 하루 연속 방문 성공!
                 currentStreak += 1;
                 localStorage.setItem('dofla_streak', currentStreak.toString());
                 localStorage.setItem('dofla_last_visit', todayStr);
             } else if (diffDays > 1) {
-                // 하루 이상 건너뛴 경우 초기화
                 currentStreak = 1;
                 localStorage.setItem('dofla_streak', '1');
                 localStorage.setItem('dofla_last_visit', todayStr);
             }
-            // diffDays === 0 인 경우(당일 재방문)는 기존 스트릭 유지
 
             return currentStreak;
         }
@@ -785,7 +783,6 @@
             const startDay = currentDayPage * 10 + 1;
             const endDay = startDay + 9;
 
-            // 로컬 스토리지에서 DAY 1 완료 여부 및 연속 출석일 가져오기
             const isDay1Completed = localStorage.getItem('dofla_day1_completed') === 'true';
             const currentStreak = localStorage.getItem('dofla_streak') || '1';
             
@@ -879,7 +876,6 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
-            // ✨ 화면 흔들림 효과 트리거
             const resultScreenContainer = document.getElementById('result-screen');
             resultScreenContainer.classList.add('shake-anim');
             setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
@@ -935,7 +931,6 @@
             } else {
                 isCorrectAnswer = false;
                 
-                // ✨ 화면 흔들림 효과 트리거
                 const resultScreenContainer = document.getElementById('result-screen');
                 resultScreenContainer.classList.add('shake-anim');
                 setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
