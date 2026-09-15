@@ -74,7 +74,7 @@
             text-shadow: 4px 4px 0px #be185d;
             opacity: 0;
             transform: translateY(30px);
-            animation: slideFadeIn 1s ease forwards;
+            animation: slideFadeIn 1.2s ease forwards;
         }
 
         @keyframes slideFadeIn {
@@ -88,7 +88,7 @@
             }
         }
 
-        /* 타이틀 화면 상단 PNG 이미지 스타일 (크기 대폭 확대) */
+        /* 타이틀 화면 상단 PNG 이미지 스타일 */
         .title-image {
             max-width: 300px;
             width: 100%;
@@ -181,22 +181,46 @@
             margin-bottom: 15px;
         }
 
-        /* 퀴즈 화면 전용 및 카드 덱 뒤집기(Flip) 애니메이션 적용 */
+        /* 퀴즈 화면 전용 및 부드러운 Fade In 애니메이션 적용 */
         .quiz-content-wrapper {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            perspective: 1000px;
-            transition: transform 0.4s ease, opacity 0.4s ease;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: relative;
         }
         
-        .quiz-content-wrapper.flip-anim {
-            transform: rotateY(90deg) scale(0.9);
+        .quiz-content-wrapper.fade-in-anim {
             opacity: 0;
+            transform: scale(0.96);
         }
 
-        .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
+        /* 오른쪽 상단 타이머 스타일 (시계 아이콘 포함) */
+        .timer-badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #fdf2f8;
+            border: 2px solid #f472b6;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 15px;
+            color: #db2777;
+            font-weight: bold;
+        }
+        .timer-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: #db2777;
+        }
+
+        .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; width: 100%; text-align: left; padding-left: 10px; box-sizing: border-box;}
         .question-text { font-size: 17px; color: #374151; margin-bottom: 20px; line-height: 1.4; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
         
         .options { display: flex; flex-direction: column; gap: 10px; width: 100%; padding: 0 10px; box-sizing: border-box; }
@@ -250,6 +274,15 @@
             overflow-y: auto;
         }
 
+        /* 단어 복습 화면 컨테이너 */
+        .review-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
         /* 단어 복습 화면: 부드러운 페이드 & 스케일 애니메이션 효과 */
         .flashcard-scene {
             width: 85%;
@@ -287,13 +320,6 @@
     </style>
 </head>
 <body>
-
-    <!-- 오디오 엘리먼트들 설정 -->
-    <audio id="start-audio" src="start.mp3" preload="auto"></audio>
-    <audio id="btn-audio" src="1.mp3" preload="auto"></audio>
-    <audio id="correct-audio" src="correct.mp3" preload="auto"></audio>
-    <audio id="wrong-audio" src="wrong.mp3" preload="auto"></audio>
-    <audio id="end-audio" src="end.mp3" preload="auto"></audio>
 
     <!-- 0. 인트로 화면 (Doflalingo 슬라이드 페이드 인) -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
@@ -334,6 +360,10 @@
     <!-- 4. 퀴즈 화면 -->
     <div id="quiz-screen" class="container hidden">
         <div id="quiz-wrapper" class="quiz-content-wrapper">
+            <div class="timer-badge">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                <span id="quiz-timer">30</span>초
+            </div>
             <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
             <div id="q-text" class="question-text"></div>
             <div id="q-options" class="options"></div>
@@ -350,20 +380,26 @@
 
     <!-- 6. 단어 복습 화면 -->
     <div id="review-screen" class="container hidden">
-        <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
-        <div class="flashcard-scene">
-            <div id="flashcard" class="flashcard">
-                <div id="card-label" class="card-label">단어</div>
-                <div id="card-text" class="card-content"></div>
+        <div class="review-container">
+            <div class="timer-badge">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                <span id="review-timer">5</span>초
             </div>
+            <div class="question-title" style="color: #ec4899; margin-bottom: 10px; text-align: center; padding-left: 0;">DAY 1 단어 복습</div>
+            <div class="flashcard-scene">
+                <div id="flashcard" class="flashcard">
+                    <div id="card-label" class="card-label">단어</div>
+                    <div id="card-text" class="card-content"></div>
+                </div>
+            </div>
+            <button id="review-btn" class="btn" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
         </div>
-        <button id="review-btn" class="btn" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
     </div>
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
         <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;">
-        <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px;">DAY 1 마스터 완료!</div>
+        <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px; text-align: center; padding-left: 0;">DAY 1 마스터 완료!</div>
         <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="playButtonSound(); returnToDaySelect()">DAY 선택으로</button>
     </div>
@@ -457,27 +493,32 @@
         let isShowingMeaning = false;
         let introTimer = null;
         let hasIntroPassed = false;
+        
+        let quizTimerInterval = null;
+        let quizTimeLeft = 30;
 
-        // 효과음 재생 헬퍼 함수
-        function playSound(audioId) {
-            const audio = document.getElementById(audioId);
-            if (audio) {
-                audio.currentTime = 0; // 연속 재생을 위해 재생 위치 초기화
-                audio.play().catch(e => console.log("Audio play error:", e));
-            }
+        let reviewTimerInterval = null;
+        let reviewTimeLeft = 5;
+
+        // 범용 사운드 재생 함수 (파일명 입력받아 즉시 새 Audio 객체로 재생 - 브라우저 차단 우회)
+        function playSoundFile(filename) {
+            const audio = new Audio(filename);
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log(filename + " play error:", e));
         }
 
+        // 버튼 클릭 소리 (1.mp3)
         function playButtonSound() {
-            playSound('btn-audio');
+            playSoundFile('1.mp3');
         }
 
-        // 페이지 로드 시 인트로 재생 및 2초 후 자동 전환 설정
+        // 페이지 로드 시 인트로 사운드(start.mp3) 재생 및 3초 후 자동 전환 설정
         window.onload = function() {
-            playSound('start-audio');
+            playSoundFile('start.mp3');
 
             introTimer = setTimeout(() => {
                 transitionToIntoTitle();
-            }, 2000); // 2초 후 타이틀로 전환
+            }, 3000); 
         };
 
         function skipIntro() {
@@ -541,31 +582,72 @@
         }
 
         function loadQuestion(index) {
+            clearInterval(quizTimerInterval); // 이전 타이머 중지
+            quizTimeLeft = 30;
+            document.getElementById('quiz-timer').innerText = quizTimeLeft;
+
             const quizWrapper = document.getElementById('quiz-wrapper');
+            quizWrapper.classList.add('fade-in-anim');
+
+            const q = questions[index];
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-text').innerHTML = q.text;
+
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = ''; 
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.label;
+                btn.onclick = () => { 
+                    clearInterval(quizTimerInterval); // 정답 선택 시 타이머 정지
+                    playButtonSound(); 
+                    checkAnswer(opt.val); 
+                };
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+
+            requestAnimationFrame(() => {
+                quizWrapper.classList.remove('fade-in-anim');
+            });
+
+            // 30초 퀴즈 타이머 시작
+            quizTimerInterval = setInterval(() => {
+                quizTimeLeft--;
+                document.getElementById('quiz-timer').innerText = quizTimeLeft;
+                if (quizTimeLeft <= 0) {
+                    clearInterval(quizTimerInterval);
+                    handleQuizTimeout(); // 시간 초과 시 오답 처리
+                }
+            }, 1000);
+        }
+
+        function handleQuizTimeout() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const resultImg = document.getElementById('result-img');
+            const resultMsg = document.getElementById('result-msg');
+            const resultExp = document.getElementById('result-exp');
+            const actionBtn = document.getElementById('action-btn');
             
-            quizWrapper.classList.add('flip-anim');
+            resultImg.style.display = 'block';
+            isCorrectAnswer = false;
+            resultImg.src = "wrong.png"; 
+            resultMsg.style.color = "#ef4444";
+            resultMsg.innerText = "시간 초과! 죽어";
+            
+            resultExp.style.display = 'none';
+            actionBtn.innerText = "다시";
 
-            setTimeout(() => {
-                const q = questions[index];
-                document.getElementById('q-title').innerText = q.title;
-                document.getElementById('q-text').innerHTML = q.text;
-
-                const optionsContainer = document.getElementById('q-options');
-                optionsContainer.innerHTML = ''; 
-
-                q.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerText = opt.label;
-                    btn.onclick = () => { playButtonSound(); checkAnswer(opt.val); };
-                    optionsContainer.appendChild(btn);
-                });
-
-                document.getElementById('quiz-screen').classList.remove('hidden');
-                document.getElementById('result-screen').classList.add('hidden');
-
-                quizWrapper.classList.remove('flip-anim');
-            }, 200);
+            playSoundFile('wrong.mp3');
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]); 
+            }
         }
 
         function checkAnswer(selectedOption) {
@@ -595,8 +677,7 @@
                     actionBtn.innerText = "복습하기";
                 }
 
-                // ✨ 정답 맞췄을 때 correct.mp3 재생
-                playSound('correct-audio');
+                playSoundFile('correct.mp3');
             } else {
                 isCorrectAnswer = false;
                 resultImg.src = "wrong.png"; 
@@ -606,8 +687,7 @@
                 resultExp.style.display = 'none';
                 actionBtn.innerText = "다시";
 
-                // ❌ 틀렸을 때 wrong.mp3 재생 및 스마트폰 진동 발생
-                playSound('wrong-audio');
+                playSoundFile('wrong.mp3');
                 if (navigator.vibrate) {
                     navigator.vibrate([100, 50, 100]); 
                 }
@@ -636,6 +716,10 @@
         }
 
         function updateFlashcardContent(isInitial) {
+            clearInterval(reviewTimerInterval); // 이전 단어 타이머 중지
+            reviewTimeLeft = 5;
+            document.getElementById('review-timer').innerText = reviewTimeLeft;
+
             const card = flashcards[currentReviewIndex];
             const cardEl = document.getElementById('flashcard');
             const cardLabel = document.getElementById('card-label');
@@ -651,6 +735,16 @@
             } else {
                 setCardTextData(card, cardLabel, cardText, reviewBtn);
             }
+
+            // 5초 단어 복습 타이머 시작
+            reviewTimerInterval = setInterval(() => {
+                reviewTimeLeft--;
+                document.getElementById('review-timer').innerText = reviewTimeLeft;
+                if (reviewTimeLeft <= 0) {
+                    clearInterval(reviewTimerInterval);
+                    handleReviewAction(); // 5초 지나면 자동으로 다음 단계 진행
+                }
+            }, 1000);
         }
 
         function setCardTextData(card, cardLabel, cardText, reviewBtn) {
@@ -673,6 +767,7 @@
         }
 
         function handleReviewAction() {
+            clearInterval(reviewTimerInterval); // 버튼 수동 클릭 시에도 타이머 리셋
             if (!isShowingMeaning) {
                 isShowingMeaning = true;
                 updateFlashcardContent(false);
@@ -688,8 +783,8 @@
         }
 
         function triggerCompletionEffects() {
-            // 🎉 최종 완료 시 end.mp3 재생 및 진동/컨페티 효과
-            playSound('end-audio');
+            clearInterval(reviewTimerInterval);
+            playSoundFile('end.mp3');
 
             if (navigator.vibrate) {
                 navigator.vibrate(300);
