@@ -88,7 +88,7 @@
             }
         }
 
-        /* ✨ 세련되게 개편된 타이틀 화면 스타일 */
+        /* ✨ 세련된 타이틀 화면 스타일 (말풍선 추가) */
         .title-wrapper {
             display: flex;
             flex-direction: column;
@@ -97,25 +97,81 @@
             padding: 10px;
             box-sizing: border-box;
         }
+
+        /* 캐릭터 & 말풍선 컨테이너 */
+        .character-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* 말풍선 스타일 */
+        .speech-bubble {
+            position: absolute;
+            top: -52px;
+            background-color: #ffffff;
+            border: 2.5px solid #ec4899;
+            border-radius: 15px;
+            padding: 8px 14px;
+            font-size: 15px;
+            color: #374151;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(236,72,153,0.15);
+            animation: bubbleBounce 2s infinite ease-in-out;
+            z-index: 10;
+        }
+        /* 말풍선 꼬리 */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 7px 0 7px;
+            border-style: solid;
+            border-color: #ec4899 transparent;
+            display: block;
+            width: 0;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px 5px 0 5px;
+            border-style: solid;
+            border-color: #ffffff transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        @keyframes bubbleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
         .title-image {
-            max-width: 220px;
+            max-width: 190px;
             width: 100%;
             height: auto;
-            margin-bottom: 15px;
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(236,72,153,0.25);
             border: 3px solid #fbcfe8;
         }
         .logo { 
-            font-size: 38px; 
+            font-size: 34px; 
             color: #ec4899; 
             margin-bottom: 2px; 
             text-shadow: 3px 3px 0px #fbcfe8; 
         }
         .subtitle { 
-            font-size: 16px; 
+            font-size: 15px; 
             color: #4b5563; 
-            margin-bottom: 20px; 
+            margin-bottom: 15px; 
             font-weight: bold;
             background-color: #fdf2f8;
             padding: 4px 14px;
@@ -338,10 +394,13 @@
         <div class="intro-text">Doflalingo</div>
     </div>
 
-    <!-- 1. 세련되게 개편된 타이틀 화면 -->
+    <!-- 1. 타이틀 화면 (캐릭터 위 말풍선 추가) -->
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
-            <img src="title.png" alt="타이틀 이미지" class="title-image">
+            <div class="character-area">
+                <div id="speech-bubble" class="speech-bubble">공부 안 하고 뭐 하냐? 훗훗훗!</div>
+                <img src="title.png" alt="타이틀 이미지" class="title-image">
+            </div>
             <div class="logo">도플라링고</div>
             <div class="subtitle">도황의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
@@ -488,7 +547,6 @@
             }
         ];
 
-        // ✨ 앞으로 DAY 2, 3 등이 추가될 때 여기에 단어들을 계속 누적해서 등록하면 자동으로 단어장에 반영됨!
         const allDayFlashcards = {
             day1: [
                 { word: "Formerly", meaning: "이전에" },
@@ -502,38 +560,45 @@
                 { word: "now that", meaning: "~이므로" },
                 { word: "recession", meaning: "불경기" }
             ],
-            // day2: [ ... ],
-            // day3: [ ... ]
         };
+
+        // ✨ 도황의 랜덤 대사 목록 (비꼬기 + 격려)
+        const randomTaunts = [
+            "공부 안 하고 뭐 하냐? 훗훗훗!",
+            "설마 아직도 영어 단어를 몰라서 헤매는 건 아니겠지?",
+            "세상은 실력자만이 살아남는 법이지. 단어부터 외워라!",
+            "오늘도 놀기만 할 건가? 토익이 너를 기다린다!",
+            "내 밑으로 집합! 영어 공부는 제대로 하고 있겠지?",
+            "흐름을 읽어라! 영어도 전략이다.",
+            "실망시키지 마라, 훗훗훗... 얼른 과제를 시작해!",
+            "늦었다고 생각할 때가 진짜 늦은 거다. 당장 풀어라!"
+        ];
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
         let currentDayPage = 0;
-        let activeFlashcards = []; // 현재 단어장에서 랜덤 정렬되어 사용할 단어 배열
+        let activeFlashcards = []; 
         let currentReviewIndex = 0;
         let isShowingMeaning = false;
         let introTimer = null;
         let hasIntroPassed = false;
         
         let quizTimerInterval = null;
-        let quizTimeLeft = 20; // 20초로 단축
+        let quizTimeLeft = 20;
 
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // 범용 사운드 재생 함수 (파일명 입력받아 즉시 새 Audio 객체로 재생 - 브라우저 차단 우회)
         function playSoundFile(filename) {
             const audio = new Audio(filename);
             audio.currentTime = 0;
             audio.play().catch(e => console.log(filename + " play error:", e));
         }
 
-        // 버튼 클릭 소리 (1.mp3)
         function playButtonSound() {
             playSoundFile('1.mp3');
         }
 
-        // 페이지 로드 시 인트로 사운드(start.mp3) 재생 및 3초 후 자동 전환 설정
         window.onload = function() {
             playSoundFile('start.mp3');
 
@@ -549,14 +614,25 @@
             transitionToIntoTitle();
         }
 
+        // ✨ 타이틀 화면으로 진입할 때마다 말풍선 대사 랜덤 교체
         function transitionToIntoTitle() {
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
+            
+            // 랜덤 대사 설정
+            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
+            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
         function goToTitle() {
             document.getElementById('day-screen').classList.add('hidden');
+            
+            // 메인으로 돌아올 때도 대사 랜덤 교체
+            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
+            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
@@ -566,13 +642,11 @@
             document.getElementById('day-screen').classList.remove('hidden');
         }
 
-        // ✨ 단어장 메뉴 클릭 시 모든 DAY 단어를 모아서 랜덤(Shuffle) 배치 후 복습 화면으로 진입
         function startVocabularyDeck() {
             let combined = [];
             for (let dayKey in allDayFlashcards) {
                 combined = combined.concat(allDayFlashcards[dayKey]);
             }
-            // Fisher-Yates 알고리즘을 통한 완전한 무작위(랜덤) 섞기
             for (let i = combined.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [combined[i], combined[j]] = [combined[j], combined[i]];
@@ -625,8 +699,8 @@
         }
 
         function loadQuestion(index) {
-            clearInterval(quizTimerInterval); // 이전 타이머 중지
-            quizTimeLeft = 20; // 20초 설정
+            clearInterval(quizTimerInterval);
+            quizTimeLeft = 20;
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
             const quizWrapper = document.getElementById('quiz-wrapper');
@@ -644,7 +718,7 @@
                 btn.className = 'option-btn';
                 btn.innerText = opt.label;
                 btn.onclick = () => { 
-                    clearInterval(quizTimerInterval); // 정답 선택 시 타이머 정지
+                    clearInterval(quizTimerInterval);
                     playButtonSound(); 
                     checkAnswer(opt.val); 
                 };
@@ -658,13 +732,12 @@
                 quizWrapper.classList.remove('fade-in-anim');
             });
 
-            // 20초 퀴즈 타이머 시작
             quizTimerInterval = setInterval(() => {
                 quizTimeLeft--;
                 document.getElementById('quiz-timer').innerText = quizTimeLeft;
                 if (quizTimeLeft <= 0) {
                     clearInterval(quizTimerInterval);
-                    handleQuizTimeout(); // 시간 초과 시 오답 처리
+                    handleQuizTimeout();
                 }
             }, 1000);
         }
@@ -744,7 +817,6 @@
                     loadQuestion(currentQuizIndex);
                 } else {
                     document.getElementById('result-screen').classList.add('hidden');
-                    // 일일 과제 완료 시 전체 단어장을 랜덤으로 구성하여 복습 시작
                     let combined = [];
                     for (let dayKey in allDayFlashcards) {
                         combined = combined.concat(allDayFlashcards[dayKey]);
@@ -769,7 +841,7 @@
         }
 
         function updateFlashcardContent(isInitial) {
-            clearInterval(reviewTimerInterval); // 이전 단어 타이머 중지
+            clearInterval(reviewTimerInterval);
             reviewTimeLeft = 5;
             document.getElementById('review-timer').innerText = reviewTimeLeft;
 
@@ -789,13 +861,12 @@
                 setCardTextData(card, cardLabel, cardText, reviewBtn);
             }
 
-            // 5초 단어 복습 타이머 시작
             reviewTimerInterval = setInterval(() => {
                 reviewTimeLeft--;
                 document.getElementById('review-timer').innerText = reviewTimeLeft;
                 if (reviewTimeLeft <= 0) {
                     clearInterval(reviewTimerInterval);
-                    handleReviewAction(); // 5초 지나면 자동으로 다음 단계 진행
+                    handleReviewAction();
                 }
             }, 1000);
         }
@@ -820,7 +891,7 @@
         }
 
         function handleReviewAction() {
-            clearInterval(reviewTimerInterval); // 버튼 수동 클릭 시에도 타이머 리셋
+            clearInterval(reviewTimerInterval);
             if (!isShowingMeaning) {
                 isShowingMeaning = true;
                 updateFlashcardContent(false);
@@ -856,6 +927,11 @@
 
         function returnToMainFromComplete() {
             document.getElementById('complete-screen').classList.add('hidden');
+            
+            // 완료 후 메인으로 돌아올 때도 대사 랜덤 교체
+            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
+            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+
             document.getElementById('title-screen').classList.remove('hidden');
         }
     </script>
