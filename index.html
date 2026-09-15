@@ -113,7 +113,7 @@
             animation: screenShake 0.4s ease;
         }
 
-        /* 3D 입체 버튼 */
+        /* 3D 입체 버튼 (cubic-bezier 적용) */
         .btn {
             background: linear-gradient(145deg, #ff53b0 0%, #ec4899 50%, #db2777 100%);
             color: white;
@@ -126,7 +126,7 @@
             box-shadow: 
                 0 5px 0 #be185d, 
                 0 8px 15px rgba(236, 72, 153, 0.3);
-            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: 'Jua', sans-serif;
             margin-top: 12px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -298,7 +298,7 @@
             cursor: pointer;
             font-family: 'Jua', sans-serif;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .day-btn:hover { 
             background: #fdf2f8;
@@ -333,7 +333,10 @@
             cursor: pointer;
             font-family: 'Jua', sans-serif;
             box-shadow: 0 3px 0 #be185d, 0 4px 10px rgba(236, 72, 153, 0.2);
-            transition: transform 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .page-arrow:hover {
+            transform: scale(1.1);
         }
         .page-indicator { font-size: 16px; color: #db2777; font-weight: bold; }
 
@@ -380,6 +383,11 @@
             cursor: pointer;
             font-family: 'Jua', sans-serif;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .quiz-home-btn:hover {
+            transform: scale(1.05);
+            background: #fdf2f8;
         }
 
         .timer-badge {
@@ -430,7 +438,7 @@
             border-radius: 16px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: 'Jua', sans-serif;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
         }
@@ -438,6 +446,7 @@
             background: #fdf2f8;
             border-color: #ec4899; 
             color: #db2777;
+            transform: translateY(-2px);
         }
 
         .result-image {
@@ -451,24 +460,6 @@
             object-fit: contain;
         }
         .result-text { font-size: 26px; margin-bottom: 8px; font-weight: bold; }
-        
-        .explanation {
-            font-size: 15px;
-            color: #334155;
-            background: #f8fafc;
-            border: 1.5px dashed #f472b6;
-            padding: 10px 14px;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            width: 88%;
-            text-align: left;
-            line-height: 1.4;
-            white-space: pre-line;
-            display: none;
-            max-height: 150px;
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
 
         .review-container {
             width: 100%;
@@ -519,7 +510,7 @@
             -webkit-backdrop-filter: blur(4px);
             z-index: 100;
             opacity: 0;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
         }
         .sheet-backdrop.active {
@@ -568,7 +559,7 @@
             background: #cbd5e1;
             border-radius: 10px;
             margin-bottom: 12px;
-            transition: background 0.2s ease;
+            transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .sheet-header:active .sheet-handle {
             background: #ec4899;
@@ -586,6 +577,18 @@
             padding-right: 2px;
         }
         
+        .explanation-text {
+            font-size: 17px;
+            color: #1e293b;
+            line-height: 1.6;
+            background: #fdf2f8;
+            border: 1.5px dashed #f472b6;
+            padding: 16px;
+            border-radius: 16px;
+            white-space: pre-line;
+            margin-top: 10px;
+        }
+
         .quick-word-list {
             display: flex;
             flex-direction: column;
@@ -626,7 +629,7 @@
             <div class="subtitle">도황의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장 전체</button>
-            <button class="btn" style="background: linear-gradient(145deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87, 0 8px 15px rgba(168, 85, 247, 0.25); font-size: 17px; padding: 11px 0;" onclick="playButtonSound(); openBottomSheet()">⚡ 단어 벼락치기 (바텀시트)</button>
+            <button class="btn" style="background: linear-gradient(145deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87, 0 8px 15px rgba(168, 85, 247, 0.25); font-size: 17px; padding: 11px 0;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 단어 벼락치기 (바텀시트)</button>
         </div>
     </div>
 
@@ -671,7 +674,6 @@
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
-        <div id="result-exp" class="explanation"></div>
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
     </div>
 
@@ -710,21 +712,10 @@
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="sheet-header" id="sheet-header">
             <div class="sheet-handle"></div>
-            <div class="sheet-title">도황의 벼락치기 단어 ⚡</div>
+            <div class="sheet-title" id="sheet-title">도황의 벼락치기 단어 ⚡</div>
         </div>
-        <div class="sheet-content">
-            <p style="margin: 0 0 10px 0; color: #64748b; font-size: 14px; text-align: center;">아래로 당기거나 배경을 누르면 닫힙니다.</p>
-            <div class="quick-word-list">
-                <div class="quick-word-item"><span class="word">Formerly</span><span class="meaning">이전에</span></div>
-                <div class="quick-word-item"><span class="word">withdraw</span><span class="meaning">철회하다</span></div>
-                <div class="quick-word-item"><span class="word">aside</span><span class="meaning">따로</span></div>
-                <div class="quick-word-item"><span class="word">representation</span><span class="meaning">대표단</span></div>
-                <div class="quick-word-item"><span class="word">along with</span><span class="meaning">~와 함께</span></div>
-                <div class="quick-word-item"><span class="word">owing to</span><span class="meaning">~때문에</span></div>
-                <div class="quick-word-item"><span class="word">despite</span><span class="meaning">~에도 불구하고</span></div>
-                <div class="quick-word-item"><span class="word">recession</span><span class="meaning">불경기</span></div>
-            </div>
-            <button class="btn" style="margin-top: 15px; width: 100%; font-size: 17px; padding: 12px 0;" onclick="closeBottomSheet()">닫기</button>
+        <div class="sheet-content" id="sheet-content">
+            <!-- 자바스크립트로 유동적 동적 삽입 -->
         </div>
     </div>
 
@@ -940,6 +931,7 @@
 
         function goToTitleFromQuiz() {
             clearInterval(quizTimerInterval);
+            closeBottomSheet();
             document.getElementById('quiz-screen').classList.add('hidden');
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
@@ -1029,6 +1021,7 @@
 
         function loadQuestion(index) {
             clearInterval(quizTimerInterval);
+            closeBottomSheet();
             quizTimeLeft = 20;
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
@@ -1076,7 +1069,6 @@
 
             const resultImg = document.getElementById('result-img');
             const resultMsg = document.getElementById('result-msg');
-            const resultExp = document.getElementById('result-exp');
             const actionBtn = document.getElementById('action-btn');
             
             resultImg.style.display = 'block';
@@ -1084,8 +1076,6 @@
             resultImg.src = "wrong.png"; 
             resultMsg.style.color = "#dc2626";
             resultMsg.innerText = "시간 초과! 죽어";
-            
-            resultExp.style.display = 'none';
             actionBtn.innerText = "다시";
 
             playSoundFile('wrong.mp3');
@@ -1101,7 +1091,6 @@
 
             const resultImg = document.getElementById('result-img');
             const resultMsg = document.getElementById('result-msg');
-            const resultExp = document.getElementById('result-exp');
             const actionBtn = document.getElementById('action-btn');
             
             resultImg.style.display = 'block';
@@ -1112,16 +1101,12 @@
                 resultMsg.style.color = "#db2777";
                 resultMsg.innerText = "도~황!";
                 
-                resultExp.innerText = q.explanation;
-                resultExp.style.display = 'block';
-                
-                if (currentQuizIndex + 1 < questions.length) {
-                    actionBtn.innerText = "다음";
-                } else {
-                    actionBtn.innerText = "복습하기";
-                }
+                let nextText = (currentQuizIndex + 1 < questions.length) ? "다음" : "복습하기";
+                actionBtn.innerText = nextText;
 
                 playSoundFile('correct.mp3');
+                // 정답 해설 바텀 시트 노출
+                openExplanationSheet(q.explanation, nextText);
             } else {
                 isCorrectAnswer = false;
                 
@@ -1132,8 +1117,6 @@
                 resultImg.src = "wrong.png"; 
                 resultMsg.style.color = "#dc2626";
                 resultMsg.innerText = "죽어";
-                
-                resultExp.style.display = 'none';
                 actionBtn.innerText = "다시";
 
                 playSoundFile('wrong.mp3');
@@ -1144,6 +1127,7 @@
         }
 
         function handleNextAction() {
+            closeBottomSheet();
             if (isCorrectAnswer) {
                 currentQuizIndex++;
                 if (currentQuizIndex < questions.length) {
@@ -1267,6 +1251,8 @@
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetBackdrop = document.getElementById('sheet-backdrop');
         const sheetHeader = document.getElementById('sheet-header');
+        const sheetTitle = document.getElementById('sheet-title');
+        const sheetContent = document.getElementById('sheet-content');
 
         let startY = 0;
         let currentY = 0;
@@ -1282,6 +1268,36 @@
             bottomSheet.style.transform = '';
             bottomSheet.classList.remove('active');
             sheetBackdrop.classList.remove('active');
+        }
+
+        // 1. 단어 벼락치기 모드 바텀시트
+        function openQuickWordSheet() {
+            sheetTitle.innerText = "도황의 벼락치기 단어 ⚡";
+            sheetContent.innerHTML = `
+                <p style="margin: 0 0 10px 0; color: #64748b; font-size: 14px; text-align: center;">아래로 당기거나 배경을 누르면 닫힙니다.</p>
+                <div class="quick-word-list">
+                    <div class="quick-word-item"><span class="word">Formerly</span><span class="meaning">이전에</span></div>
+                    <div class="quick-word-item"><span class="word">withdraw</span><span class="meaning">철회하다</span></div>
+                    <div class="quick-word-item"><span class="word">aside</span><span class="meaning">따로</span></div>
+                    <div class="quick-word-item"><span class="word">representation</span><span class="meaning">대표단</span></div>
+                    <div class="quick-word-item"><span class="word">along with</span><span class="meaning">~와 함께</span></div>
+                    <div class="quick-word-item"><span class="word">owing to</span><span class="meaning">~때문에</span></div>
+                    <div class="quick-word-item"><span class="word">despite</span><span class="meaning">~에도 불구하고</span></div>
+                    <div class="quick-word-item"><span class="word">recession</span><span class="meaning">불경기</span></div>
+                </div>
+                <button class="btn" style="margin-top: 15px; width: 100%; font-size: 17px; padding: 12px 0;" onclick="closeBottomSheet()">닫기</button>
+            `;
+            openBottomSheet();
+        }
+
+        // 2. 정답 맞췄을 때 문제 해설 바텀시트
+        function openExplanationSheet(expText, btnLabel) {
+            sheetTitle.innerText = "정답입니다! 🎯";
+            sheetContent.innerHTML = `
+                <div class="explanation-text">${expText}</div>
+                <button class="btn" style="margin-top: 15px; width: 100%; font-size: 18px; padding: 14px 0;" onclick="playButtonSound(); handleNextAction()">${btnLabel}</button>
+            `;
+            openBottomSheet();
         }
 
         function initBottomSheetEvents() {
