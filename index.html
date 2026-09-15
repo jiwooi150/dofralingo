@@ -88,27 +88,39 @@
             }
         }
 
-        /* 타이틀 화면 상단 PNG 이미지 스타일 */
+        /* ✨ 세련되게 개편된 타이틀 화면 스타일 */
+        .title-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
         .title-image {
-            max-width: 300px;
+            max-width: 220px;
             width: 100%;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(236,72,153,0.25);
+            border: 3px solid #fbcfe8;
         }
-
-        /* 로고 글자 핑크빛 적용 */
         .logo { 
-            font-size: 44px; 
+            font-size: 38px; 
             color: #ec4899; 
-            margin-bottom: 5px; 
-            text-shadow: 3px 3px 0px #be185d; 
+            margin-bottom: 2px; 
+            text-shadow: 3px 3px 0px #fbcfe8; 
         }
         .subtitle { 
-            font-size: 18px; 
-            color: #374151; 
-            margin-bottom: 25px; 
+            font-size: 16px; 
+            color: #4b5563; 
+            margin-bottom: 20px; 
             font-weight: bold;
+            background-color: #fdf2f8;
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1.5px dashed #f472b6;
         }
 
         /* DAY 선택 화면 스타일 */
@@ -326,12 +338,15 @@
         <div class="intro-text">Doflalingo</div>
     </div>
 
-    <!-- 1. 타이틀 화면 -->
+    <!-- 1. 세련되게 개편된 타이틀 화면 -->
     <div id="title-screen" class="container hidden">
-        <img src="title.png" alt="타이틀 이미지" class="title-image">
-        <div class="logo">도플라링고</div>
-        <div class="subtitle">도황의 영어공부법</div>
-        <button class="btn" onclick="playButtonSound(); goToDaySelect()">시작하기</button>
+        <div class="title-wrapper">
+            <img src="title.png" alt="타이틀 이미지" class="title-image">
+            <div class="logo">도플라링고</div>
+            <div class="subtitle">도황의 영어공부법</div>
+            <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
+            <button class="btn" style="background-color: #f472b6; box-shadow: 0 4px 0 #db2777;" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
+        </div>
     </div>
 
     <!-- 2. DAY 선택 화면 (1~30) -->
@@ -343,7 +358,7 @@
             <span id="page-indicator" class="page-indicator">1 / 3 페이지</span>
             <button class="page-arrow" onclick="playButtonSound(); changePage(1)">▶</button>
         </div>
-        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); location.reload()">처음으로</button>
+        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
     <!-- 3. 문제풀이 규칙 화면 -->
@@ -362,7 +377,7 @@
         <div id="quiz-wrapper" class="quiz-content-wrapper">
             <div class="timer-badge">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
-                <span id="quiz-timer">30</span>초
+                <span id="quiz-timer">20</span>초
             </div>
             <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
             <div id="q-text" class="question-text"></div>
@@ -385,7 +400,7 @@
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                 <span id="review-timer">5</span>초
             </div>
-            <div class="question-title" style="color: #ec4899; margin-bottom: 10px; text-align: center; padding-left: 0;">DAY 1 단어 복습</div>
+            <div class="question-title" style="color: #ec4899; margin-bottom: 10px; text-align: center; padding-left: 0;">단어장 학습</div>
             <div class="flashcard-scene">
                 <div id="flashcard" class="flashcard">
                     <div id="card-label" class="card-label">단어</div>
@@ -399,9 +414,9 @@
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
         <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;">
-        <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px; text-align: center; padding-left: 0;">DAY 1 마스터 완료!</div>
+        <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px; text-align: center; padding-left: 0;">학습 마스터 완료!</div>
         <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
-        <button class="btn" onclick="playButtonSound(); returnToDaySelect()">DAY 선택으로</button>
+        <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
     </div>
 
     <script>
@@ -473,29 +488,35 @@
             }
         ];
 
-        const flashcards = [
-            { word: "Formerly", meaning: "이전에" },
-            { word: "withdraw", meaning: "철회하다" },
-            { word: "aside", meaning: "따로" },
-            { word: "representation", meaning: "대표단" },
-            { word: "along with", meaning: "함께" },
-            { word: "owing to", meaning: "~때문에" },
-            { word: "despite", meaning: "~불구하고" },
-            { word: "in order that", meaning: "~할 수 있도록" },
-            { word: "now that", meaning: "~이므로" },
-            { word: "recession", meaning: "불경기" }
-        ];
+        // ✨ 앞으로 DAY 2, 3 등이 추가될 때 여기에 단어들을 계속 누적해서 등록하면 자동으로 단어장에 반영됨!
+        const allDayFlashcards = {
+            day1: [
+                { word: "Formerly", meaning: "이전에" },
+                { word: "withdraw", meaning: "철회하다" },
+                { word: "aside", meaning: "따로" },
+                { word: "representation", meaning: "대표단" },
+                { word: "along with", meaning: "함께" },
+                { word: "owing to", meaning: "~때문에" },
+                { word: "despite", meaning: "~불구하고" },
+                { word: "in order that", meaning: "~할 수 있도록" },
+                { word: "now that", meaning: "~이므로" },
+                { word: "recession", meaning: "불경기" }
+            ],
+            // day2: [ ... ],
+            // day3: [ ... ]
+        };
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
         let currentDayPage = 0;
+        let activeFlashcards = []; // 현재 단어장에서 랜덤 정렬되어 사용할 단어 배열
         let currentReviewIndex = 0;
         let isShowingMeaning = false;
         let introTimer = null;
         let hasIntroPassed = false;
         
         let quizTimerInterval = null;
-        let quizTimeLeft = 30;
+        let quizTimeLeft = 20; // 20초로 단축
 
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
@@ -534,10 +555,32 @@
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
+        function goToTitle() {
+            document.getElementById('day-screen').classList.add('hidden');
+            document.getElementById('title-screen').classList.remove('hidden');
+        }
+
         function goToDaySelect() {
             document.getElementById('title-screen').classList.add('hidden');
             renderDayButtons();
             document.getElementById('day-screen').classList.remove('hidden');
+        }
+
+        // ✨ 단어장 메뉴 클릭 시 모든 DAY 단어를 모아서 랜덤(Shuffle) 배치 후 복습 화면으로 진입
+        function startVocabularyDeck() {
+            let combined = [];
+            for (let dayKey in allDayFlashcards) {
+                combined = combined.concat(allDayFlashcards[dayKey]);
+            }
+            // Fisher-Yates 알고리즘을 통한 완전한 무작위(랜덤) 섞기
+            for (let i = combined.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [combined[i], combined[j]] = [combined[j], combined[i]];
+            }
+            activeFlashcards = combined;
+
+            document.getElementById('title-screen').classList.add('hidden');
+            startReview();
         }
 
         function renderDayButtons() {
@@ -583,7 +626,7 @@
 
         function loadQuestion(index) {
             clearInterval(quizTimerInterval); // 이전 타이머 중지
-            quizTimeLeft = 30;
+            quizTimeLeft = 20; // 20초 설정
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
             const quizWrapper = document.getElementById('quiz-wrapper');
@@ -615,7 +658,7 @@
                 quizWrapper.classList.remove('fade-in-anim');
             });
 
-            // 30초 퀴즈 타이머 시작
+            // 20초 퀴즈 타이머 시작
             quizTimerInterval = setInterval(() => {
                 quizTimeLeft--;
                 document.getElementById('quiz-timer').innerText = quizTimeLeft;
@@ -701,6 +744,16 @@
                     loadQuestion(currentQuizIndex);
                 } else {
                     document.getElementById('result-screen').classList.add('hidden');
+                    // 일일 과제 완료 시 전체 단어장을 랜덤으로 구성하여 복습 시작
+                    let combined = [];
+                    for (let dayKey in allDayFlashcards) {
+                        combined = combined.concat(allDayFlashcards[dayKey]);
+                    }
+                    for (let i = combined.length - 1; i > 0; i--) {
+                        let j = Math.floor(Math.random() * (i + 1));
+                        [combined[i], combined[j]] = [combined[j], combined[i]];
+                    }
+                    activeFlashcards = combined;
                     startReview();
                 }
             } else {
@@ -720,7 +773,7 @@
             reviewTimeLeft = 5;
             document.getElementById('review-timer').innerText = reviewTimeLeft;
 
-            const card = flashcards[currentReviewIndex];
+            const card = activeFlashcards[currentReviewIndex];
             const cardEl = document.getElementById('flashcard');
             const cardLabel = document.getElementById('card-label');
             const cardText = document.getElementById('card-text');
@@ -758,7 +811,7 @@
                 cardText.innerText = card.meaning;
                 cardText.style.color = "#ec4899";
                 
-                if (currentReviewIndex === flashcards.length - 1) {
+                if (currentReviewIndex === activeFlashcards.length - 1) {
                     reviewBtn.innerText = "학습 완료";
                 } else {
                     reviewBtn.innerText = "다음 단어";
@@ -773,7 +826,7 @@
                 updateFlashcardContent(false);
             } else {
                 currentReviewIndex++;
-                if (currentReviewIndex < flashcards.length) {
+                if (currentReviewIndex < activeFlashcards.length) {
                     isShowingMeaning = false;
                     updateFlashcardContent(false);
                 } else {
@@ -801,10 +854,9 @@
             document.getElementById('complete-screen').classList.remove('hidden');
         }
 
-        function returnToDaySelect() {
+        function returnToMainFromComplete() {
             document.getElementById('complete-screen').classList.add('hidden');
-            renderDayButtons();
-            document.getElementById('day-screen').classList.remove('hidden');
+            document.getElementById('title-screen').classList.remove('hidden');
         }
     </script>
 </body>
