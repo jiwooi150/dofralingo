@@ -288,8 +288,12 @@
 </head>
 <body>
 
-    <!-- 오디오 객체 설정 (start.mp3 재생용) -->
+    <!-- 오디오 엘리먼트들 설정 -->
     <audio id="start-audio" src="start.mp3" preload="auto"></audio>
+    <audio id="btn-audio" src="1.mp3" preload="auto"></audio>
+    <audio id="correct-audio" src="correct.mp3" preload="auto"></audio>
+    <audio id="wrong-audio" src="wrong.mp3" preload="auto"></audio>
+    <audio id="end-audio" src="end.mp3" preload="auto"></audio>
 
     <!-- 0. 인트로 화면 (Doflalingo 슬라이드 페이드 인) -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
@@ -301,7 +305,7 @@
         <img src="title.png" alt="타이틀 이미지" class="title-image">
         <div class="logo">도플라링고</div>
         <div class="subtitle">도황의 영어공부법</div>
-        <button class="btn" onclick="goToDaySelect()">시작하기</button>
+        <button class="btn" onclick="playButtonSound(); goToDaySelect()">시작하기</button>
     </div>
 
     <!-- 2. DAY 선택 화면 (1~30) -->
@@ -309,11 +313,11 @@
         <div class="day-title">학습할 DAY를 선택하라</div>
         <div id="day-grid" class="day-grid"></div>
         <div class="pagination-container">
-            <button class="page-arrow" onclick="changePage(-1)">◀</button>
+            <button class="page-arrow" onclick="playButtonSound(); changePage(-1)">◀</button>
             <span id="page-indicator" class="page-indicator">1 / 3 페이지</span>
-            <button class="page-arrow" onclick="changePage(1)">▶</button>
+            <button class="page-arrow" onclick="playButtonSound(); changePage(1)">▶</button>
         </div>
-        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="location.reload()">처음으로</button>
+        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); location.reload()">처음으로</button>
     </div>
 
     <!-- 3. 문제풀이 규칙 화면 -->
@@ -324,7 +328,7 @@
             2. 명사 동사 나누기<br><br>
             3. 모르면 울지 말고 근거 있게 찍기
         </div>
-        <button class="btn" onclick="startQuiz()">문제풀기</button>
+        <button class="btn" onclick="playButtonSound(); startQuiz()">문제풀기</button>
     </div>
 
     <!-- 4. 퀴즈 화면 -->
@@ -341,7 +345,7 @@
         <img id="result-img" class="result-image" src="" alt="결과 이미지">
         <div id="result-msg" class="result-text"></div>
         <div id="result-exp" class="explanation"></div>
-        <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
+        <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
     </div>
 
     <!-- 6. 단어 복습 화면 -->
@@ -353,7 +357,7 @@
                 <div id="card-text" class="card-content"></div>
             </div>
         </div>
-        <button id="review-btn" class="btn" onclick="handleReviewAction()">정답 확인</button>
+        <button id="review-btn" class="btn" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
     </div>
 
     <!-- 7. 최종 완료 화면 -->
@@ -361,7 +365,7 @@
         <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;">
         <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px;">DAY 1 마스터 완료!</div>
         <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
-        <button class="btn" onclick="returnToDaySelect()">DAY 선택으로</button>
+        <button class="btn" onclick="playButtonSound(); returnToDaySelect()">DAY 선택으로</button>
     </div>
 
     <script>
@@ -454,13 +458,22 @@
         let introTimer = null;
         let hasIntroPassed = false;
 
+        // 효과음 재생 헬퍼 함수
+        function playSound(audioId) {
+            const audio = document.getElementById(audioId);
+            if (audio) {
+                audio.currentTime = 0; // 연속 재생을 위해 재생 위치 초기화
+                audio.play().catch(e => console.log("Audio play error:", e));
+            }
+        }
+
+        function playButtonSound() {
+            playSound('btn-audio');
+        }
+
         // 페이지 로드 시 인트로 재생 및 2초 후 자동 전환 설정
         window.onload = function() {
-            const audio = document.getElementById('start-audio');
-            audio.play().catch(error => {
-                // 브라우저 정책상 자동 재생이 차단될 경우를 대비한 예외 처리
-                console.log("Audio autoplay restricted:", error);
-            });
+            playSound('start-audio');
 
             introTimer = setTimeout(() => {
                 transitionToIntoTitle();
@@ -499,9 +512,9 @@
                 btn.innerText = `DAY ${i}`;
                 
                 if (i === 1) {
-                    btn.onclick = () => showRuleScreen();
+                    btn.onclick = () => { playButtonSound(); showRuleScreen(); };
                 } else {
-                    btn.onclick = () => alert(`DAY ${i}는 아직 준비 중이다! 훗훗훗...`);
+                    btn.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 준비 중이다! 훗훗훗...`); };
                 }
                 grid.appendChild(btn);
             }
@@ -544,7 +557,7 @@
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.innerText = opt.label;
-                    btn.onclick = () => checkAnswer(opt.val);
+                    btn.onclick = () => { playButtonSound(); checkAnswer(opt.val); };
                     optionsContainer.appendChild(btn);
                 });
 
@@ -581,6 +594,9 @@
                 } else {
                     actionBtn.innerText = "복습하기";
                 }
+
+                // ✨ 정답 맞췄을 때 correct.mp3 재생
+                playSound('correct-audio');
             } else {
                 isCorrectAnswer = false;
                 resultImg.src = "wrong.png"; 
@@ -590,9 +606,10 @@
                 resultExp.style.display = 'none';
                 actionBtn.innerText = "다시";
 
-                // 📳 오답 선택 시 스마트폰 진동 발생 (지원하는 모바일 기기에서 작동)
+                // ❌ 틀렸을 때 wrong.mp3 재생 및 스마트폰 진동 발생
+                playSound('wrong-audio');
                 if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]); // 징-징 두 번 짧고 강하게 울림
+                    navigator.vibrate([100, 50, 100]); 
                 }
             }
         }
@@ -671,6 +688,9 @@
         }
 
         function triggerCompletionEffects() {
+            // 🎉 최종 완료 시 end.mp3 재생 및 진동/컨페티 효과
+            playSound('end-audio');
+
             if (navigator.vibrate) {
                 navigator.vibrate(300);
             }
