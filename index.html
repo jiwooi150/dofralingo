@@ -628,8 +628,8 @@
             <div class="logo">도플라링고</div>
             <div class="subtitle">도황의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
-            <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장 전체</button>
-            <button class="btn" style="background: linear-gradient(145deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87, 0 8px 15px rgba(168, 85, 247, 0.25); font-size: 17px; padding: 11px 0;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 단어 벼락치기 (바텀시트)</button>
+            <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
+            <button class="btn" style="background: linear-gradient(145deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87, 0 8px 15px rgba(168, 85, 247, 0.25); font-size: 17px; padding: 11px 0;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 오늘의 단어</button>
         </div>
     </div>
 
@@ -712,7 +712,7 @@
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="sheet-header" id="sheet-header">
             <div class="sheet-handle"></div>
-            <div class="sheet-title" id="sheet-title">도황의 벼락치기 단어 ⚡</div>
+            <div class="sheet-title" id="sheet-title">도황의 오늘의 단어 ⚡</div>
         </div>
         <div class="sheet-content" id="sheet-content">
             <!-- 자바스크립트로 유동적 동적 삽입 -->
@@ -829,6 +829,20 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
+        // GIF 및 이미지 파일 미리로드 (딜레이 방지 핵심 로직)
+        function preloadImages() {
+            const imagesToPreload = [
+                'title.png',
+                'correct.gif',
+                'wrong.png',
+                'complete.gif'
+            ];
+            imagesToPreload.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
         // 브라우저 주소창 숨기기
         function hideAddressBar() {
             setTimeout(() => {
@@ -890,6 +904,7 @@
         }
 
         window.onload = function() {
+            preloadImages(); // 앱 로딩 시 이미지 백그라운드 다운로드
             hideAddressBar();
             checkStreakSystem();
             playSoundFile('start.mp3');
@@ -1270,9 +1285,9 @@
             sheetBackdrop.classList.remove('active');
         }
 
-        // 1. 단어 벼락치기 모드 바텀시트
+        // 1. 오늘의 단어 모드 바텀시트
         function openQuickWordSheet() {
-            sheetTitle.innerText = "도황의 벼락치기 단어 ⚡";
+            sheetTitle.innerText = "도황의 오늘의 단어 ⚡";
             sheetContent.innerHTML = `
                 <p style="margin: 0 0 10px 0; color: #64748b; font-size: 14px; text-align: center;">아래로 당기거나 배경을 누르면 닫힙니다.</p>
                 <div class="quick-word-list">
