@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>도플라링고 - 도황의 영어공부법</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN -->
@@ -17,6 +17,7 @@
             align-items: center;
             background-color: #fdf0f5; 
             font-family: 'Jua', sans-serif;
+            touch-action: manipulation;
         }
 
         /* 스마트폰 화면 비율 스타일 */
@@ -36,6 +37,19 @@
             position: relative;
             box-sizing: border-box;
             overflow: hidden; 
+        }
+
+        /* ✨ 오답 시 화면 흔들림(Shake) 애니메이션 */
+        @keyframes screenShake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-8px, 0); }
+            40% { transform: translate(8px, 0); }
+            60% { transform: translate(-6px, 0); }
+            80% { transform: translate(6px, 0); }
+            100% { transform: translate(0, 0); }
+        }
+        .shake-anim {
+            animation: screenShake 0.4s ease;
         }
 
         /* 공통 버튼 스타일 (Hover 효과 추가) */
@@ -181,7 +195,25 @@
         }
 
         /* DAY 선택 화면 스타일 */
-        .day-title { font-size: 24px; color: #ec4899; margin-bottom: 15px; font-weight: bold; }
+        .day-title { font-size: 24px; color: #ec4899; margin-bottom: 8px; font-weight: bold; }
+        
+        /* ✨ 연속 출석 스트릭 배지 스타일 */
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: #fff1f2;
+            border: 1.5px solid #fda4af;
+            color: #e11d48;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(225, 29, 72, 0.1);
+        }
+
         .day-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -206,6 +238,18 @@
             background-color: #fce7f3; 
             border-color: #ec4899; 
             transform: translateY(-2px) scale(1.03);
+        }
+
+        /* DAY 완료 시 어두운 핑크/버건디 색상 및 완료 스타일 */
+        .day-btn.completed {
+            background-color: #9d174d;
+            color: #ffffff;
+            border: 2px solid #831843;
+            box-shadow: 0 3px 0 #500724;
+        }
+        .day-btn.completed:hover {
+            background-color: #831843;
+            border-color: #500724;
         }
         
         .pagination-container {
@@ -260,7 +304,7 @@
             transform: scale(1);
             transition: opacity 0.3s ease, transform 0.3s ease;
             position: relative;
-            padding-top: 15px; /* 상단 버튼들과 겹치지 않도록 여백 확보 */
+            padding-top: 15px; 
         }
         
         .quiz-content-wrapper.fade-in-anim {
@@ -375,7 +419,6 @@
             padding-top: 15px;
         }
 
-        /* 단어 복습 화면: 부드러운 페이드 & 스케일 애니메이션 효과 */
         .flashcard-scene {
             width: 85%;
             height: 180px;
@@ -413,7 +456,7 @@
 </head>
 <body>
 
-    <!-- 0. 인트로 화면 (Doflalingo 슬라이드 페이드 인) -->
+    <!-- 0. 인트로 화면 -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
         <div class="intro-text">Doflalingo</div>
     </div>
@@ -435,6 +478,7 @@
     <!-- 2. DAY 선택 화면 (1~30) -->
     <div id="day-screen" class="container hidden">
         <div class="day-title">학습할 DAY를 선택하라</div>
+        <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
         <div id="day-grid" class="day-grid"></div>
         <div class="pagination-container">
             <button class="page-arrow" onclick="playButtonSound(); changePage(-1)">◀</button>
@@ -455,7 +499,7 @@
         <button class="btn" onclick="playButtonSound(); startQuiz()">문제풀기</button>
     </div>
 
-    <!-- 4. 퀴즈 화면 (왼쪽 상단 메인으로 버튼 추가) -->
+    <!-- 4. 퀴즈 화면 -->
     <div id="quiz-screen" class="container hidden">
         <div id="quiz-wrapper" class="quiz-content-wrapper">
             <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
@@ -614,6 +658,40 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
+        // ✨ 연속 출석(스트릭) 체크 및 관리 함수
+        function checkStreakSystem() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            let lastVisitDate = localStorage.getItem('dofla_last_visit');
+            let currentStreak = parseInt(localStorage.getItem('dofla_streak') || '1', 10);
+
+            if (!lastVisitDate) {
+                // 최초 방문
+                localStorage.setItem('dofla_last_visit', todayStr);
+                localStorage.setItem('dofla_streak', '1');
+                return 1;
+            }
+
+            const lastDate = new Date(lastVisitDate);
+            const nowDate = new Date(todayStr);
+            const diffTime = nowDate - lastDate;
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                // 하루 연속 방문 성공!
+                currentStreak += 1;
+                localStorage.setItem('dofla_streak', currentStreak.toString());
+                localStorage.setItem('dofla_last_visit', todayStr);
+            } else if (diffDays > 1) {
+                // 하루 이상 건너뛴 경우 초기화
+                currentStreak = 1;
+                localStorage.setItem('dofla_streak', '1');
+                localStorage.setItem('dofla_last_visit', todayStr);
+            }
+            // diffDays === 0 인 경우(당일 재방문)는 기존 스트릭 유지
+
+            return currentStreak;
+        }
+
         function playSoundFile(filename) {
             const audio = new Audio(filename);
             audio.currentTime = 0;
@@ -625,6 +703,7 @@
         }
 
         window.onload = function() {
+            checkStreakSystem();
             playSoundFile('start.mp3');
 
             introTimer = setTimeout(() => {
@@ -658,7 +737,6 @@
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
-        // ✨ 퀴즈 풀이 중 메인으로 이동할 때 타이머 정지 및 화면 전환
         function goToTitleFromQuiz() {
             clearInterval(quizTimerInterval);
             document.getElementById('quiz-screen').classList.add('hidden');
@@ -707,10 +785,22 @@
             const startDay = currentDayPage * 10 + 1;
             const endDay = startDay + 9;
 
+            // 로컬 스토리지에서 DAY 1 완료 여부 및 연속 출석일 가져오기
+            const isDay1Completed = localStorage.getItem('dofla_day1_completed') === 'true';
+            const currentStreak = localStorage.getItem('dofla_streak') || '1';
+            
+            document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${currentStreak}일째 버티는 중`;
+
             for (let i = startDay; i <= endDay; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'day-btn';
-                btn.innerText = `DAY ${i}`;
+                
+                if (i === 1 && isDay1Completed) {
+                    btn.classList.add('completed');
+                    btn.innerText = `DAY ${i} ✓`;
+                } else {
+                    btn.innerText = `DAY ${i}`;
+                }
                 
                 if (i === 1) {
                     btn.onclick = () => { playButtonSound(); showRuleScreen(); };
@@ -789,6 +879,11 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
+            // ✨ 화면 흔들림 효과 트리거
+            const resultScreenContainer = document.getElementById('result-screen');
+            resultScreenContainer.classList.add('shake-anim');
+            setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
+
             const resultImg = document.getElementById('result-img');
             const resultMsg = document.getElementById('result-msg');
             const resultExp = document.getElementById('result-exp');
@@ -839,6 +934,12 @@
                 playSoundFile('correct.mp3');
             } else {
                 isCorrectAnswer = false;
+                
+                // ✨ 화면 흔들림 효과 트리거
+                const resultScreenContainer = document.getElementById('result-screen');
+                resultScreenContainer.classList.add('shake-anim');
+                setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
+
                 resultImg.src = "wrong.png"; 
                 resultMsg.style.color = "#ef4444";
                 resultMsg.innerText = "죽어";
@@ -944,6 +1045,7 @@
                     isShowingMeaning = false;
                     updateFlashcardContent(false);
                 } else {
+                    localStorage.setItem('dofla_day1_completed', 'true');
                     triggerCompletionEffects();
                 }
             }
