@@ -36,7 +36,7 @@
             overflow: hidden; 
         }
 
-        /* 공통 버튼 스타일 */
+        /* 공통 버튼 스타일 (Hover 효과 추가) */
         .btn {
             background-color: #ec4899; 
             color: white;
@@ -47,12 +47,16 @@
             border-radius: 15px;
             cursor: pointer;
             box-shadow: 0 4px 0 #be185d;
-            transition: all 0.1s;
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
             font-family: 'Jua', sans-serif;
             margin-top: 15px;
         }
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            background-color: #db2777;
+        }
         .btn:active {
-            transform: translateY(4px);
+            transform: translateY(4px) scale(1);
             box-shadow: 0 0 0 #be185d;
         }
 
@@ -98,9 +102,13 @@
             border-radius: 12px;
             cursor: pointer;
             font-family: 'Jua', sans-serif;
-            transition: 0.2s;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
         }
-        .day-btn:hover { background-color: #fce7f3; border-color: #ec4899; }
+        .day-btn:hover { 
+            background-color: #fce7f3; 
+            border-color: #ec4899; 
+            transform: translateY(-2px) scale(1.03);
+        }
         
         .pagination-container {
             display: flex;
@@ -120,6 +128,11 @@
             cursor: pointer;
             font-family: 'Jua', sans-serif;
             box-shadow: 0 3px 0 #be185d;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .page-arrow:hover {
+            transform: scale(1.1);
+            background-color: #ec4899;
         }
         .page-arrow:active { transform: translateY(3px); box-shadow: 0 0 0 #be185d; }
         .page-indicator { font-size: 16px; color: #4b5563; }
@@ -153,10 +166,14 @@
             border-radius: 15px;
             cursor: pointer;
             text-align: left;
-            transition: 0.2s;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
             font-family: 'Jua', sans-serif;
         }
-        .option-btn:hover { background-color: #fdf2f8; border-color: #f472b6; }
+        .option-btn:hover { 
+            background-color: #fdf2f8; 
+            border-color: #f472b6; 
+            transform: scale(1.02);
+        }
         .option-btn:active { background-color: #fbcfe8; }
 
         /* 결과 화면 전용 */
@@ -190,23 +207,44 @@
             overflow-y: auto;
         }
 
-        /* 단어 복습 카드 스타일 */
-        .flashcard-box {
+        /* 3D 플립 카드 스타일 */
+        .flashcard-scene {
+            width: 85%;
+            height: 180px;
+            perspective: 1000px;
+            margin-bottom: 15px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
             background-color: #fdf2f8;
             border: 2px dashed #f472b6;
             border-radius: 20px;
-            padding: 30px 20px;
-            width: 85%;
-            height: 180px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
             box-sizing: border-box;
+            padding: 20px;
         }
-        .card-word { font-size: 28px; color: #374151; font-weight: bold; margin-bottom: 12px; }
-        .card-meaning { font-size: 24px; color: #ec4899; font-weight: bold; display: none; }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #fff1f2;
+            border-color: #fda4af;
+        }
+        .card-word { font-size: 28px; color: #374151; font-weight: bold; }
+        .card-meaning { font-size: 26px; color: #ec4899; font-weight: bold; }
 
         .hidden { display: none !important; }
     </style>
@@ -259,12 +297,18 @@
         <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 -->
+    <!-- 6. 단어 복습 화면 (3D 플립 카드) -->
     <div id="review-screen" class="container hidden">
         <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
-        <div class="flashcard-box">
-            <div id="card-word" class="card-word"></div>
-            <div id="card-meaning" class="card-meaning"></div>
+        <div class="flashcard-scene">
+            <div id="flashcard" class="flashcard">
+                <div class="card-face">
+                    <div id="card-word" class="card-word"></div>
+                </div>
+                <div class="card-face card-back">
+                    <div id="card-meaning" class="card-meaning"></div>
+                </div>
+            </div>
         </div>
         <button id="review-btn" class="btn" onclick="handleReviewAction()">정답 확인</button>
     </div>
@@ -485,20 +529,22 @@
         function loadFlashcard(index) {
             isCardFlipped = false;
             const card = flashcards[index];
+            
+            const cardEl = document.getElementById('flashcard');
+            cardEl.classList.remove('is-flipped');
+
             document.getElementById('card-word').innerText = card.word;
-            const meaningEl = document.getElementById('card-meaning');
-            meaningEl.innerText = card.meaning;
-            meaningEl.style.display = 'none';
+            document.getElementById('card-meaning').innerText = card.meaning;
 
             document.getElementById('review-btn').innerText = "정답 확인";
         }
 
         function handleReviewAction() {
-            const meaningEl = document.getElementById('card-meaning');
+            const cardEl = document.getElementById('flashcard');
             const reviewBtn = document.getElementById('review-btn');
 
             if (!isCardFlipped) {
-                meaningEl.style.display = 'block';
+                cardEl.classList.add('is-flipped');
                 isCardFlipped = true;
 
                 if (currentReviewIndex === flashcards.length - 1) {
