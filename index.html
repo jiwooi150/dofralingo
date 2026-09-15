@@ -141,15 +141,15 @@
 
         /* 퀴즈 화면 전용 */
         .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
-        .question-text { font-size: 18px; color: #374151; margin-bottom: 25px; line-height: 1.5; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
+        .question-text { font-size: 17px; color: #374151; margin-bottom: 20px; line-height: 1.4; text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; }
         
-        .options { display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 0 10px; box-sizing: border-box; }
+        .options { display: flex; flex-direction: column; gap: 10px; width: 100%; padding: 0 10px; box-sizing: border-box; }
         .option-btn {
             background-color: white;
             color: #374151;
             border: 2px solid #fbcfe8;
-            padding: 12px;
-            font-size: 18px;
+            padding: 10px 12px;
+            font-size: 17px;
             border-radius: 15px;
             cursor: pointer;
             text-align: left;
@@ -161,40 +161,57 @@
 
         /* 결과 화면 전용 */
         .result-image {
-            max-width: 240px;
-            max-height: 220px;
+            max-width: 220px;
+            max-height: 200px;
             width: auto;
             height: auto;
             border-radius: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: none;
             object-fit: contain;
         }
-        .result-text { font-size: 26px; margin-bottom: 8px; }
+        .result-text { font-size: 24px; margin-bottom: 6px; }
         
         /* 해설 박스 스타일 */
         .explanation {
-            font-size: 15px;
+            font-size: 14px;
             color: #4b5563;
             background-color: #fdf2f8;
             border: 1.5px dashed #f472b6;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             width: 85%;
             text-align: left;
-            line-height: 1.4;
+            line-height: 1.3;
             white-space: pre-line;
             display: none;
+            max-height: 150px;
+            overflow-y: auto;
         }
+
+        /* 단어 복습 카드 스타일 */
+        .flashcard-box {
+            background-color: #fdf2f8;
+            border: 2px dashed #f472b6;
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 85%;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .card-word { font-size: 28px; color: #374151; font-weight: bold; margin-bottom: 12px; }
+        .card-meaning { font-size: 24px; color: #ec4899; font-weight: bold; display: none; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
-    <!-- 배경음악 오디오 태그 -->
-    <audio id="bgm" src="bgm.mp3" loop></audio>
 
     <!-- 1. 타이틀 화면 -->
     <div id="title-screen" class="container">
@@ -242,6 +259,16 @@
         <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
     </div>
 
+    <!-- 6. 단어 복습 화면 -->
+    <div id="review-screen" class="container hidden">
+        <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
+        <div class="flashcard-box">
+            <div id="card-word" class="card-word"></div>
+            <div id="card-meaning" class="card-meaning"></div>
+        </div>
+        <button id="review-btn" class="btn" onclick="handleReviewAction()">정답 확인</button>
+    </div>
+
     <script>
         const questions = [
             {
@@ -269,20 +296,68 @@
                 ],
                 correct: "A",
                 explanation: "💡 해설\nconduct = 안내하다, 수행하다\ninspect = 검사하다\ndistribute = 분배하다"
+            },
+            {
+                number: 3,
+                title: "DAY 1 - 3번 문제",
+                text: "Director Philip Anderson's movie Silent Moon received a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> for the Best Film Award this year.",
+                options: [
+                    { label: "(A) nomination", val: "A" },
+                    { label: "(B) subscription", val: "B" },
+                    { label: "(C) destination", val: "C" },
+                    { label: "(D) creation", val: "D" }
+                ],
+                correct: "A",
+                explanation: "💡 해설\nnomination = 수상 후보, 지명\nsubscription = 신청, 구독"
+            },
+            {
+                number: 4,
+                title: "DAY 1 - 4번 문제",
+                text: "During peak shopping seasons, Johnson's Sportswear provides additional staff training to ensure an <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> workforce.",
+                options: [
+                    { label: "(A) experienced", val: "A" },
+                    { label: "(B) experiencing", val: "B" },
+                    { label: "(C) experiences", val: "C" },
+                    { label: "(D) experience", val: "D" }
+                ],
+                correct: "A",
+                explanation: "💡 해설\nworkforce(직원)를 꾸며주는 말이 나와야 함\nexperiencing workforce = 경험하는 직원 (어색)\nexperienced workforce = 숙련된 직원 (정답)"
+            },
+            {
+                number: 5,
+                title: "DAY 1 - 5번 문제",
+                text: "Only staff employed for more than 15 years are <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> to receive an Excellent Worker Award.",
+                options: [
+                    { label: "(A) accountable", val: "A" },
+                    { label: "(B) modified", val: "B" },
+                    { label: "(C) entitled", val: "C" },
+                    { label: "(D) important", val: "D" }
+                ],
+                correct: "C",
+                explanation: "💡 해설\naccountable = 책임이 있는 (be accountable for)\nmodified = 수정된\nentitled = ~을 받을 자격이 있다 (be entitled to) (정답)"
             }
+        ];
+
+        const flashcards = [
+            { word: "Formerly", meaning: "이전에" },
+            { word: "withdraw", meaning: "철회하다" },
+            { word: "aside", meaning: "따로" },
+            { word: "representation", meaning: "대표단" },
+            { word: "along with", meaning: "함께" },
+            { word: "owing to", meaning: "~때문에" },
+            { word: "despite", meaning: "~불구하고" },
+            { word: "in order that", meaning: "~할 수 있도록" },
+            { word: "now that", meaning: "~이므로" },
+            { word: "recession", meaning: "불경기" }
         ];
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
         let currentDayPage = 0; // 0: DAY 1~10, 1: DAY 11~20, 2: DAY 21~30
+        let currentReviewIndex = 0;
+        let isCardFlipped = false;
 
         function goToDaySelect() {
-            const bgm = document.getElementById('bgm');
-            bgm.volume = 0.2; 
-            bgm.play().catch(error => {
-                console.log("음악 재생 실패:", error);
-            });
-
             document.getElementById('title-screen').classList.add('hidden');
             renderDayButtons();
             document.getElementById('day-screen').classList.remove('hidden');
@@ -373,7 +448,7 @@
                 if (currentQuizIndex + 1 < questions.length) {
                     actionBtn.innerText = "다음";
                 } else {
-                    actionBtn.innerText = "DAY 선택으로";
+                    actionBtn.innerText = "복습하기";
                 }
             } else {
                 isCorrectAnswer = false;
@@ -393,11 +468,53 @@
                     loadQuestion(currentQuizIndex);
                 } else {
                     document.getElementById('result-screen').classList.add('hidden');
-                    renderDayButtons();
-                    document.getElementById('day-screen').classList.remove('hidden');
+                    startReview();
                 }
             } else {
                 loadQuestion(currentQuizIndex);
+            }
+        }
+
+        function startReview() {
+            currentReviewIndex = 0;
+            isCardFlipped = false;
+            loadFlashcard(currentReviewIndex);
+            document.getElementById('review-screen').classList.remove('hidden');
+        }
+
+        function loadFlashcard(index) {
+            isCardFlipped = false;
+            const card = flashcards[index];
+            document.getElementById('card-word').innerText = card.word;
+            const meaningEl = document.getElementById('card-meaning');
+            meaningEl.innerText = card.meaning;
+            meaningEl.style.display = 'none';
+
+            document.getElementById('review-btn').innerText = "정답 확인";
+        }
+
+        function handleReviewAction() {
+            const meaningEl = document.getElementById('card-meaning');
+            const reviewBtn = document.getElementById('review-btn');
+
+            if (!isCardFlipped) {
+                meaningEl.style.display = 'block';
+                isCardFlipped = true;
+
+                if (currentReviewIndex === flashcards.length - 1) {
+                    reviewBtn.innerText = "DAY 선택으로";
+                } else {
+                    reviewBtn.innerText = "다음 단어";
+                }
+            } else {
+                currentReviewIndex++;
+                if (currentReviewIndex < flashcards.length) {
+                    loadFlashcard(currentReviewIndex);
+                } else {
+                    document.getElementById('review-screen').classList.add('hidden');
+                    renderDayButtons();
+                    document.getElementById('day-screen').classList.remove('hidden');
+                }
             }
         }
     </script>
