@@ -505,9 +505,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.35); /* 블러 제거 후 깔끔한 반투명 색상 적용 */
             z-index: 100;
             opacity: 0;
             transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -526,8 +524,6 @@
             width: 100%;
             max-width: 420px;
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
             box-shadow: 
@@ -535,7 +531,7 @@
                 0 0 0 1.5px rgba(244, 114, 182, 0.3);
             z-index: 101;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 12px 20px 30px 20px;
+            padding: 12px 20px 20px 20px; /* 여백 축소로 해설 상향 배치 */
             box-sizing: border-box;
             will-change: transform;
         }
@@ -549,7 +545,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 12px;
+            padding-bottom: 6px;
             cursor: grab;
             touch-action: none;
         }
@@ -558,7 +554,7 @@
             height: 5px;
             background: #cbd5e1;
             border-radius: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .sheet-header:active .sheet-handle {
@@ -586,14 +582,15 @@
             padding: 16px;
             border-radius: 16px;
             white-space: pre-line;
-            margin-top: 10px;
+            margin-top: 6px;
+            margin-bottom: 6px;
         }
 
         .quick-word-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .quick-word-item {
             display: flex;
@@ -829,7 +826,7 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // GIF 및 이미지 파일 미리로드 (딜레이 방지 핵심 로직)
+        // GIF 및 이미지 파일 미리로드
         function preloadImages() {
             const imagesToPreload = [
                 'title.png',
@@ -904,7 +901,7 @@
         }
 
         window.onload = function() {
-            preloadImages(); // 앱 로딩 시 이미지 백그라운드 다운로드
+            preloadImages();
             hideAddressBar();
             checkStreakSystem();
             playSoundFile('start.mp3');
@@ -1040,8 +1037,6 @@
             quizTimeLeft = 20;
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
-            const quizWrapper = document.getElementById('quiz-wrapper');
-
             const q = questions[index];
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-text').innerHTML = q.text;
@@ -1121,7 +1116,7 @@
 
                 playSoundFile('correct.mp3');
                 // 정답 해설 바텀 시트 노출
-                openExplanationSheet(q.explanation, nextText);
+                openExplanationSheet(q.explanation);
             } else {
                 isCorrectAnswer = false;
                 
@@ -1300,17 +1295,15 @@
                     <div class="quick-word-item"><span class="word">despite</span><span class="meaning">~에도 불구하고</span></div>
                     <div class="quick-word-item"><span class="word">recession</span><span class="meaning">불경기</span></div>
                 </div>
-                <button class="btn" style="margin-top: 15px; width: 100%; font-size: 17px; padding: 12px 0;" onclick="closeBottomSheet()">닫기</button>
             `;
             openBottomSheet();
         }
 
-        // 2. 정답 맞췄을 때 문제 해설 바텀시트
-        function openExplanationSheet(expText, btnLabel) {
+        // 2. 정답 맞췄을 때 문제 해설 바텀시트 (버튼 제거 버전)
+        function openExplanationSheet(expText) {
             sheetTitle.innerText = "정답입니다! 🎯";
             sheetContent.innerHTML = `
                 <div class="explanation-text">${expText}</div>
-                <button class="btn" style="margin-top: 15px; width: 100%; font-size: 18px; padding: 14px 0;" onclick="playButtonSound(); handleNextAction()">${btnLabel}</button>
             `;
             openBottomSheet();
         }
@@ -1320,7 +1313,7 @@
             sheetHeader.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
                 isDragging = true;
-                bottomSheet.style.transition = 'none'; // 드래그 중에는 애니메이션 끄기
+                bottomSheet.style.transition = 'none';
             }, { passive: true });
 
             window.addEventListener('touchmove', (e) => {
@@ -1328,7 +1321,6 @@
                 currentY = e.touches[0].clientY;
                 const deltaY = currentY - startY;
 
-                // 아래로 당길 때만 끌려내려감
                 if (deltaY > 0) {
                     bottomSheet.style.transform = `translate(-50%, ${deltaY}px)`;
                 }
@@ -1340,7 +1332,6 @@
                 bottomSheet.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
 
                 const deltaY = currentY - startY;
-                // 100px 이상 내려 끌었으면 스무스하게 닫기
                 if (deltaY > 100) {
                     closeBottomSheet();
                 } else {
