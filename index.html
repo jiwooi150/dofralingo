@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도플라링고 - 도황의 영어공부법</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -228,6 +230,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             background-color: #fdf2f8;
             border: 2px dashed #f472b6;
@@ -311,6 +314,14 @@
             </div>
         </div>
         <button id="review-btn" class="btn" onclick="handleReviewAction()">정답 확인</button>
+    </div>
+
+    <!-- 7. 최종 완료 화면 (학습 완료 버튼 누를 때 등장) -->
+    <div id="complete-screen" class="container hidden">
+        <img src="complete.gif" alt="완료 이미지" class="result-image" style="display: block; max-width: 240px; margin-bottom: 15px;">
+        <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 마스터 완료!</div>
+        <div class="subtitle" style="font-size: 16px; margin-bottom: 20px;">도황의 완벽한 승리다! 훗훗훗...</div>
+        <button class="btn" onclick="returnToDaySelect()">DAY 선택으로</button>
     </div>
 
     <script>
@@ -548,7 +559,7 @@
                 isCardFlipped = true;
 
                 if (currentReviewIndex === flashcards.length - 1) {
-                    reviewBtn.innerText = "DAY 선택으로";
+                    reviewBtn.innerText = "학습 완료";
                 } else {
                     reviewBtn.innerText = "다음 단어";
                 }
@@ -557,11 +568,36 @@
                 if (currentReviewIndex < flashcards.length) {
                     loadFlashcard(currentReviewIndex);
                 } else {
-                    document.getElementById('review-screen').classList.add('hidden');
-                    renderDayButtons();
-                    document.getElementById('day-screen').classList.remove('hidden');
+                    // 단어 복습 마지막 단계에서 '학습 완료' 버튼을 누른 경우 실행
+                    triggerCompletionEffects();
                 }
             }
+        }
+
+        // 학습 완료 시 진동, 축하 파티클, complete 화면 호출 함수
+        function triggerCompletionEffects() {
+            // 1. 모바일 진동 효과 (지원하는 기기에서 300밀리초 동안 부르르 떨림)
+            if (navigator.vibrate) {
+                navigator.vibrate(300);
+            }
+
+            // 2. 형긋한 핑크빛 축하 파티클 (Confetti 폭죽 효과)
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ec4899', '#f472b6', '#fbcfe8', '#ffe4e6']
+            });
+
+            // 3. 기존 복습 화면을 숨기고 complete 화면 노출
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('complete-screen').classList.remove('hidden');
+        }
+
+        function returnToDaySelect() {
+            document.getElementById('complete-screen').classList.add('hidden');
+            renderDayButtons();
+            document.getElementById('day-screen').classList.remove('hidden');
         }
     </script>
 </body>
