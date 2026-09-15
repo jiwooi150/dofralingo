@@ -154,19 +154,20 @@
             margin-bottom: 15px;
         }
 
-        /* 퀴즈 화면 전용 및 Fade In 애니메이션 적용 */
+        /* 퀴즈 화면 전용 및 카드 덱 뒤집기(Flip) 애니메이션 적용 */
         .quiz-content-wrapper {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            perspective: 1000px; /* 3D 입체감 설정 */
+            transition: transform 0.4s ease, opacity 0.4s ease;
         }
-        .quiz-content-wrapper.fade-in {
-            opacity: 1;
-            transform: translateY(0);
+        
+        /* 뒤집히는 순간의 회전 효과 클래스 */
+        .quiz-content-wrapper.flip-anim {
+            transform: rotateY(90deg) scale(0.9);
+            opacity: 0;
         }
 
         .question-title { font-size: 24px; color: #ef4444; margin-bottom: 15px; }
@@ -248,7 +249,6 @@
             transform: scale(1);
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
-        /* 단어 전환 시 톡 하고 부드럽게 나타나는 효과 */
         .flashcard.fade-anim {
             opacity: 0;
             transform: scale(0.92);
@@ -310,7 +310,7 @@
         <button id="action-btn" class="btn" onclick="handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 (부드러운 페이드 효과) -->
+    <!-- 6. 단어 복습 화면 -->
     <div id="review-screen" class="container hidden">
         <div class="question-title" style="color: #ec4899; margin-bottom: 10px;">DAY 1 단어 복습</div>
         <div class="flashcard-scene">
@@ -414,7 +414,7 @@
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
-        let currentDayPage = 0; // 0: DAY 1~10, 1: DAY 11~20, 2: DAY 21~30
+        let currentDayPage = 0;
         let currentReviewIndex = 0;
         let isShowingMeaning = false;
 
@@ -465,34 +465,35 @@
             loadQuestion(currentQuizIndex);
         }
 
+        // 🎴 카드 덱 뒤집기(Flip) 애니메이션을 적용한 문제 로드 함수
         function loadQuestion(index) {
-            const q = questions[index];
             const quizWrapper = document.getElementById('quiz-wrapper');
             
-            // 기존 페이드인 제거 후 내용 세팅 및 페이드인 재적용
-            quizWrapper.classList.remove('fade-in');
+            // 기존 화면이 있다면 뒤집히는 효과(Flip) 적용 후 내용 교체
+            quizWrapper.classList.add('flip-anim');
 
-            document.getElementById('q-title').innerText = q.title;
-            document.getElementById('q-text').innerHTML = q.text;
-
-            const optionsContainer = document.getElementById('q-options');
-            optionsContainer.innerHTML = ''; 
-
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt.label;
-                btn.onclick = () => checkAnswer(opt.val);
-                optionsContainer.appendChild(btn);
-            });
-
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('result-screen').classList.add('hidden');
-
-            // 살짝 지연 후 Fade In 효과 발동
             setTimeout(() => {
-                quizWrapper.classList.add('fade-in');
-            }, 50);
+                const q = questions[index];
+                document.getElementById('q-title').innerText = q.title;
+                document.getElementById('q-text').innerHTML = q.text;
+
+                const optionsContainer = document.getElementById('q-options');
+                optionsContainer.innerHTML = ''; 
+
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt.label;
+                    btn.onclick = () => checkAnswer(opt.val);
+                    optionsContainer.appendChild(btn);
+                });
+
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                document.getElementById('result-screen').classList.add('hidden');
+
+                // 뒤집혀서 들어오는 효과 완료
+                quizWrapper.classList.remove('flip-anim');
+            }, 200); // 0.2초 동안 회전 후 새 문제로 샥 바뀌도록 세팅
         }
 
         function checkAnswer(selectedOption) {
