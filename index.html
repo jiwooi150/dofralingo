@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>도플라링고 - 도황의 영어공부법</title>
     
-    <!-- ✨ 주소창을 없애고 전체 화면 앱처럼 실행하기 위한 설정 추가 -->
+    <!-- 주소창 제거 및 PWA/전체 화면 설정 -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="title.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <!-- 컨페티(파티클) 효과를 위한 라이브러리 CDN -->
+    <!-- 컨페티(파티클) 효과 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -29,6 +29,8 @@
             background-color: #fdf0f5; 
             font-family: 'Jua', sans-serif;
             touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* 스마트폰 화면 비율 스타일 */
@@ -63,7 +65,7 @@
             animation: screenShake 0.4s ease;
         }
 
-        /* 공통 버튼 스타일 (Hover 효과 추가) */
+        /* 공통 버튼 스타일 */
         .btn {
             background-color: #ec4899; 
             color: white;
@@ -87,10 +89,11 @@
             box-shadow: 0 0 0 #be185d;
         }
 
-        /* 인트로 화면 전용 스타일 (슬라이드 페이드 인 애니메이션) */
+        /* 인트로 화면 스타일 */
         .intro-container {
             background-color: #ec4899; 
             color: white;
+            cursor: pointer;
         }
         .intro-text {
             font-size: 50px;
@@ -123,7 +126,6 @@
             box-sizing: border-box;
         }
 
-        /* 캐릭터 & 말풍선 컨테이너 */
         .character-area {
             position: relative;
             display: flex;
@@ -132,7 +134,6 @@
             margin-bottom: 10px;
         }
 
-        /* 말풍선 스타일 */
         .speech-bubble {
             position: absolute;
             top: -52px;
@@ -302,6 +303,7 @@
             color: #374151;
             line-height: 1.6;
             margin-bottom: 15px;
+            box-sizing: border-box;
         }
 
         .quiz-content-wrapper {
@@ -412,6 +414,7 @@
             display: none;
             max-height: 150px;
             overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .review-container {
@@ -453,7 +456,7 @@
         }
 
         .card-label { font-size: 14px; color: #ec4899; margin-bottom: 5px; font-weight: bold; }
-        .card-content { font-size: 28px; color: #374151; font-weight: bold; }
+        .card-content { font-size: 28px; color: #374151; font-weight: bold; word-break: break-all; }
 
         .hidden { display: none !important; }
     </style>
@@ -470,7 +473,7 @@
         <div class="title-wrapper">
             <div class="character-area">
                 <div id="speech-bubble" class="speech-bubble">공부 안 하고 뭐 하냐? 훗훗훗!</div>
-                <img src="title.png" alt="타이틀 이미지" class="title-image">
+                <img src="title.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
             </div>
             <div class="logo">도플라링고</div>
             <div class="subtitle">도황의 영어공부법</div>
@@ -507,7 +510,7 @@
         <div id="quiz-wrapper" class="quiz-content-wrapper">
             <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
             <div class="timer-badge">
-                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                 <span id="quiz-timer">20</span>초
             </div>
             <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
@@ -518,7 +521,7 @@
 
     <!-- 5. 결과 화면 -->
     <div id="result-screen" class="container hidden">
-        <img id="result-img" class="result-image" src="" alt="결과 이미지">
+        <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
         <div id="result-exp" class="explanation"></div>
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
@@ -529,7 +532,7 @@
         <div class="review-container">
             <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
             <div class="timer-badge">
-                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                 <span id="review-timer">5</span>초
             </div>
             <div class="question-title" style="color: #ec4899; margin-bottom: 10px; text-align: center; padding-left: 0;">단어장 학습</div>
@@ -545,7 +548,7 @@
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;">
+        <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;" onerror="this.style.display='none';">
         <div class="question-title" style="color: #ec4899; margin-bottom: 8px; font-size: 26px; text-align: center; padding-left: 0;">학습 마스터 완료!</div>
         <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
@@ -691,9 +694,16 @@
         }
 
         function playSoundFile(filename) {
-            const audio = new Audio(filename);
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log(filename + " play error:", e));
+            try {
+                const audio = new Audio(filename);
+                audio.currentTime = 0;
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log(filename + " play skip:", e));
+                }
+            } catch(e) {
+                console.log("Audio play error", e);
+            }
         }
 
         function playButtonSound() {
@@ -975,7 +985,7 @@
         function startReview() {
             currentReviewIndex = 0;
             isShowingMeaning = false;
-            updateFlashcardContent(false);
+            updateFlashcardContent(true);
             document.getElementById('review-screen').classList.remove('hidden');
         }
 
@@ -1054,12 +1064,16 @@
                 navigator.vibrate(300);
             }
 
-            confetti({
-                particleCount: 120,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#ec4899', '#f472b6', '#fbcfe8', '#ffe4e6']
-            });
+            try {
+                confetti({
+                    particleCount: 120,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ec4899', '#f472b6', '#fbcfe8', '#ffe4e6']
+                });
+            } catch(e) {
+                console.log("Confetti library load fail", e);
+            }
 
             document.getElementById('review-screen').classList.add('hidden');
             document.getElementById('complete-screen').classList.remove('hidden');
