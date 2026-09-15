@@ -154,7 +154,7 @@
             50% { transform: translateY(-4px); }
         }
 
-        /* ✨ 타이틀 이미지 테두리/그림자 제거 (순수 이미지 형태로 노출) */
+        /* 타이틀 이미지 테두리/그림자 제거 */
         .title-image {
             max-width: 190px;
             width: 100%;
@@ -260,6 +260,7 @@
             transform: scale(1);
             transition: opacity 0.3s ease, transform 0.3s ease;
             position: relative;
+            padding-top: 15px; /* 상단 버튼들과 겹치지 않도록 여백 확보 */
         }
         
         .quiz-content-wrapper.fade-in-anim {
@@ -267,10 +268,31 @@
             transform: scale(0.96);
         }
 
-        /* 오른쪽 상단 타이머 스타일 (시계 아이콘 포함) */
+        /* 왼쪽 상단 메인으로 돌아가기 버튼 스타일 */
+        .quiz-home-btn {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background-color: #fdf2f8;
+            border: 2px solid #f472b6;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #db2777;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .quiz-home-btn:hover {
+            background-color: #fce7f3;
+            transform: scale(1.05);
+        }
+
+        /* 오른쪽 상단 타이머 스타일 */
         .timer-badge {
             position: absolute;
-            top: -10px;
+            top: -15px;
             right: 10px;
             display: flex;
             align-items: center;
@@ -350,6 +372,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            padding-top: 15px;
         }
 
         /* 단어 복습 화면: 부드러운 페이드 & 스케일 애니메이션 효과 */
@@ -432,9 +455,10 @@
         <button class="btn" onclick="playButtonSound(); startQuiz()">문제풀기</button>
     </div>
 
-    <!-- 4. 퀴즈 화면 -->
+    <!-- 4. 퀴즈 화면 (왼쪽 상단 메인으로 버튼 추가) -->
     <div id="quiz-screen" class="container hidden">
         <div id="quiz-wrapper" class="quiz-content-wrapper">
+            <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
             <div class="timer-badge">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                 <span id="quiz-timer">20</span>초
@@ -453,9 +477,10 @@
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 (메인으로 버튼 추가) -->
+    <!-- 6. 단어 복습 화면 -->
     <div id="review-screen" class="container hidden">
         <div class="review-container">
+            <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
             <div class="timer-badge">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                 <span id="review-timer">5</span>초
@@ -468,7 +493,6 @@
                 </div>
             </div>
             <button id="review-btn" class="btn" style="margin-top: 5px;" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
-            <button class="btn" style="background-color: #f472b6; box-shadow: 0 4px 0 #db2777; margin-top: 10px;" onclick="playButtonSound(); goToTitleFromReview()">메인으로</button>
         </div>
     </div>
 
@@ -634,7 +658,17 @@
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
-        // ✨ 단어장 학습 중 메인으로 이동할 때 타이머 정지 및 화면 전환
+        // ✨ 퀴즈 풀이 중 메인으로 이동할 때 타이머 정지 및 화면 전환
+        function goToTitleFromQuiz() {
+            clearInterval(quizTimerInterval);
+            document.getElementById('quiz-screen').classList.add('hidden');
+            
+            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
+            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+
+            document.getElementById('title-screen').classList.remove('hidden');
+        }
+
         function goToTitleFromReview() {
             clearInterval(reviewTimerInterval);
             document.getElementById('review-screen').classList.add('hidden');
