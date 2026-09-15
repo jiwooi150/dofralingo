@@ -88,7 +88,7 @@
             }
         }
 
-        /* ✨ 세련된 타이틀 화면 스타일 (말풍선 추가) */
+        /* 타이틀 화면 스타일 */
         .title-wrapper {
             display: flex;
             flex-direction: column;
@@ -154,13 +154,14 @@
             50% { transform: translateY(-4px); }
         }
 
+        /* ✨ 타이틀 이미지 테두리/그림자 제거 (순수 이미지 형태로 노출) */
         .title-image {
             max-width: 190px;
             width: 100%;
             height: auto;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(236,72,153,0.25);
-            border: 3px solid #fbcfe8;
+            border: none;
+            box-shadow: none;
+            background: transparent;
         }
         .logo { 
             font-size: 34px; 
@@ -355,7 +356,7 @@
         .flashcard-scene {
             width: 85%;
             height: 180px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -394,7 +395,7 @@
         <div class="intro-text">Doflalingo</div>
     </div>
 
-    <!-- 1. 타이틀 화면 (캐릭터 위 말풍선 추가) -->
+    <!-- 1. 타이틀 화면 -->
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
@@ -452,7 +453,7 @@
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 -->
+    <!-- 6. 단어 복습 화면 (메인으로 버튼 추가) -->
     <div id="review-screen" class="container hidden">
         <div class="review-container">
             <div class="timer-badge">
@@ -466,7 +467,8 @@
                     <div id="card-text" class="card-content"></div>
                 </div>
             </div>
-            <button id="review-btn" class="btn" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
+            <button id="review-btn" class="btn" style="margin-top: 5px;" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
+            <button class="btn" style="background-color: #f472b6; box-shadow: 0 4px 0 #db2777; margin-top: 10px;" onclick="playButtonSound(); goToTitleFromReview()">메인으로</button>
         </div>
     </div>
 
@@ -562,7 +564,6 @@
             ],
         };
 
-        // ✨ 도황의 랜덤 대사 목록 (비꼬기 + 격려)
         const randomTaunts = [
             "공부 안 하고 뭐 하냐? 훗훗훗!",
             "설마 아직도 영어 단어를 몰라서 헤매는 건 아니겠지?",
@@ -614,12 +615,10 @@
             transitionToIntoTitle();
         }
 
-        // ✨ 타이틀 화면으로 진입할 때마다 말풍선 대사 랜덤 교체
         function transitionToIntoTitle() {
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
             
-            // 랜덤 대사 설정
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
 
@@ -629,7 +628,17 @@
         function goToTitle() {
             document.getElementById('day-screen').classList.add('hidden');
             
-            // 메인으로 돌아올 때도 대사 랜덤 교체
+            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
+            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+
+            document.getElementById('title-screen').classList.remove('hidden');
+        }
+
+        // ✨ 단어장 학습 중 메인으로 이동할 때 타이머 정지 및 화면 전환
+        function goToTitleFromReview() {
+            clearInterval(reviewTimerInterval);
+            document.getElementById('review-screen').classList.add('hidden');
+            
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
 
@@ -928,7 +937,6 @@
         function returnToMainFromComplete() {
             document.getElementById('complete-screen').classList.add('hidden');
             
-            // 완료 후 메인으로 돌아올 때도 대사 랜덤 교체
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
 
