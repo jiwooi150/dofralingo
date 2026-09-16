@@ -282,10 +282,11 @@
             font-weight: 600;
         }
 
+        /* DAY 선택 화면 개편 */
         #day-screen {
             padding: 20px 12px 16px 12px;
             justify-content: flex-start;
-            background: #fffdfa;
+            background: #ffffff;
         }
 
         .streak-badge {
@@ -302,121 +303,111 @@
             border-radius: 20px;
             margin-bottom: 12px;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.1);
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.08);
         }
 
-        /* 월드맵 스테이지 지도 컨셉 스타일 */
         .worldmap-scroll-container {
             width: 100%;
             flex: 1;
             overflow-y: auto;
-            padding: 20px 10px 40px 10px;
+            padding: 10px 0 30px 0;
             -webkit-overflow-scrolling: touch;
-            background: 
-                radial-gradient(#e2e8f0 1.5px, transparent 1.5px) 0 0 / 24px 24px,
-                linear-gradient(135deg, #fefce8 0%, #fff1f2 100%);
-            border-radius: 24px;
-            border: 2px dashed #f472b6;
+            background: #ffffff;
             position: relative;
+            scrollbar-width: none;
         }
+        .worldmap-scroll-container::-webkit-scrollbar { display: none; }
 
         .worldmap-path-wrapper {
             position: relative;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            min-height: 100%;
         }
 
-        .map-stage-row {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            position: relative;
-            margin-bottom: 32px;
-        }
-
-        .map-stage-row.pos-left { justify-content: flex-start; padding-left: 20px; }
-        .map-stage-row.pos-center { justify-content: center; }
-        .map-stage-row.pos-right { justify-content: flex-end; padding-right: 20px; }
-
-        .map-node {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 4px solid #cbd5e1;
-            box-shadow: 0 6px 0 #94a3b8, 0 8px 15px rgba(0,0,0,0.1);
+        /* 세련된 섬 스테이지 스타일 */
+        .island-node {
+            position: absolute;
+            width: 72px;
+            height: 72px;
+            border-radius: 26px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            position: relative;
             z-index: 2;
-            transition: transform 0.1s ease;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-left: -36px;
         }
 
-        .map-node:active, .map-node.touch-active {
-            transform: translateY(4px) scale(0.96) !important;
-            box-shadow: 0 2px 0 #94a3b8 !important;
+        .island-node:active, .island-node.touch-active {
+            transform: scale(0.92) !important;
         }
 
-        .map-node .stage-num {
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            font-weight: 800;
-            color: #64748b;
-        }
-        .map-node .stage-icon {
-            font-size: 18px;
-            margin-top: -2px;
-        }
-
-        .map-node.unlocked {
-            border-color: var(--primary-pink);
-            background: #ffffff;
-            box-shadow: 0 6px 0 var(--primary-pink-shadow), 0 0 15px rgba(236, 72, 153, 0.3);
-            animation: pulseNode 2s infinite ease-in-out;
-        }
-        .map-node.unlocked .stage-num {
-            color: var(--primary-pink-dark);
+        /* 진행 중 섬 (Pink Island) */
+        .island-node.unlocked {
+            background: linear-gradient(145deg, #f472b6 0%, #ec4899 100%);
+            box-shadow: 
+                0 8px 0 #be185d, 
+                0 12px 20px rgba(236, 72, 153, 0.35),
+                inset 0 2px 3px rgba(255,255,255,0.6);
+            border: 3px solid #ffffff;
+            animation: islandFloat 2.4s infinite ease-in-out;
         }
 
-        @keyframes pulseNode {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
+        /* 완료된 섬 (Gold/Emerald Island) */
+        .island-node.completed {
+            background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 
+                0 8px 0 #b45309, 
+                0 10px 18px rgba(245, 158, 11, 0.3),
+                inset 0 2px 3px rgba(255,255,255,0.7);
+            border: 3px solid #ffffff;
         }
 
-        .map-node.completed {
-            background: #fdf2f8;
-            border-color: #f472b6;
-            box-shadow: 0 6px 0 #be185d;
-            animation: none;
-        }
-        .map-node.completed .stage-num {
-            color: var(--primary-pink-dark);
-        }
-
-        .map-node.locked {
-            opacity: 0.75;
-            background: #f1f5f9;
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 0 #94a3b8;
+        /* 잠긴 섬 (Grey Cloud Island) */
+        .island-node.locked {
+            background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+            box-shadow: 
+                0 6px 0 #cbd5e1, 
+                0 6px 12px rgba(0,0,0,0.04);
+            border: 3px solid #ffffff;
+            opacity: 0.85;
             cursor: not-allowed;
         }
 
-        .map-path-line {
-            position: absolute;
-            z-index: 1;
-            pointer-events: none;
+        @keyframes islandFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
         }
 
-        .map-decor {
+        .island-node .stage-num {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            line-height: 1;
+        }
+        
+        .island-node.locked .stage-num {
+            color: #94a3b8;
+            text-shadow: none;
+        }
+
+        .island-node .stage-icon {
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .map-svg-layer {
             position: absolute;
-            font-size: 20px;
-            opacity: 0.35;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
 
         .rule-title { 
@@ -822,11 +813,13 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (월드맵 / 스테이지 지도 컨셉) -->
+    <!-- 2. DAY 선택 화면 (개편된 세련된 아일랜드 월드맵) -->
     <div id="day-screen" class="container hidden">
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
         <div id="island-container" class="worldmap-scroll-container">
-            <div id="worldmap-path" class="worldmap-path-wrapper"></div>
+            <div id="worldmap-path" class="worldmap-path-wrapper">
+                <svg id="map-svg-layer" class="map-svg-layer"></svg>
+            </div>
         </div>
         <button class="btn btn-secondary" style="margin-top: 12px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
@@ -880,7 +873,7 @@
                 <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
                 <div id="card-counter" class="card-counter-badge">1 / 10</div>
                 <div class="timer-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                     <span id="review-timer">5</span>초
                 </div>
             </div>
@@ -1241,7 +1234,7 @@
         }
 
         function setupTouchFeedback() {
-            const targets = '.btn, .map-node, .quiz-home-btn, .option-btn';
+            const targets = '.btn, .island-node, .quiz-home-btn, .option-btn';
             
             document.addEventListener('touchstart', (e) => {
                 requestFullScreen();
@@ -1472,23 +1465,64 @@
             startReview();
         }
 
-        /* 월드맵 스테이지 지도 레이아웃 렌더링 */
+        /* 3D 섬 컨셉 및 곡선 배치 적용된 깔끔한 월드맵 렌더링 */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
-            pathWrapper.innerHTML = '';
+            const svgLayer = document.getElementById('map-svg-layer');
+            
+            pathWrapper.querySelectorAll('.island-node').forEach(node => node.remove());
+            svgLayer.innerHTML = '';
+
             document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${localStorage.getItem('dofla_streak') || '1'}일째`;
 
-            // 스테이지 배치 패턴: 왼쪽 -> 중앙 -> 오른쪽 -> 중앙 반복
-            const positions = ['pos-center', 'pos-left', 'pos-center', 'pos-right'];
+            const totalStages = 30;
+            const containerWidth = 330; 
+            const startY = 50;
+            const rowGap = 85;
 
-            for (let i = 1; i <= 30; i++) {
-                const row = document.createElement('div');
-                const posClass = positions[(i - 1) % positions.length];
-                row.className = `map-stage-row ${posClass}`;
+            const nodesData = [];
 
+            for (let i = 1; i <= totalStages; i++) {
+                // 부드러운 곡선 및 불규칙성을 만드는 좌표 계산
+                const offsetX = Math.sin(i * 0.85) * 85 + Math.cos(i * 0.4) * 20; 
+                const posX = (containerWidth / 2) + offsetX;
+                const posY = startY + (i - 1) * rowGap;
+
+                nodesData.push({ id: i, x: posX, y: posY });
+            }
+
+            const totalHeight = startY + totalStages * rowGap + 40;
+            pathWrapper.style.height = `${totalHeight}px`;
+
+            // 스테이지 노드 간 세련된 연결선 생성
+            let pathD = "";
+            for (let i = 0; i < nodesData.length - 1; i++) {
+                const curr = nodesData[i];
+                const next = nodesData[i + 1];
+                const cpY1 = curr.y + rowGap * 0.5;
+                const cpY2 = next.y - rowGap * 0.5;
+
+                if (i === 0) {
+                    pathD += `M ${curr.x} ${curr.y} C ${curr.x} ${cpY1}, ${next.x} ${cpY2}, ${next.x} ${next.y}`;
+                } else {
+                    pathD += ` C ${curr.x} ${cpY1}, ${next.x} ${cpY2}, ${next.x} ${next.y}`;
+                }
+            }
+
+            const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pathElement.setAttribute("d", pathD);
+            pathElement.setAttribute("fill", "none");
+            pathElement.setAttribute("stroke", "#e2e8f0");
+            pathElement.setAttribute("stroke-width", "6");
+            pathElement.setAttribute("stroke-linecap", "round");
+            svgLayer.appendChild(pathElement);
+
+            // 섬 노드 엘리먼트 배치
+            nodesData.forEach(data => {
+                const i = data.id;
                 const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
                 const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
-                
+
                 const node = document.createElement('div');
                 let statusClass = 'locked';
                 let iconText = '🔒';
@@ -1499,11 +1533,14 @@
                         iconText = '⭐';
                     } else {
                         statusClass = 'unlocked';
-                        iconText = '☠️';
+                        iconText = '🏝️';
                     }
                 }
 
-                node.className = `map-node ${statusClass}`;
+                node.className = `island-node ${statusClass}`;
+                node.style.left = `${data.x}px`;
+                node.style.top = `${data.y - 36}px`;
+
                 node.innerHTML = `
                     <span class="stage-num">${i < 10 ? '0' + i : i}</span>
                     <span class="stage-icon">${iconText}</span>
@@ -1512,12 +1549,11 @@
                 if (hasQuestions) {
                     node.onclick = () => { playButtonSound(); selectDay(i); };
                 } else {
-                    node.onclick = () => { playButtonSound(); alert('아직 토벌할 수 없는 스테이지다!'); };
+                    node.onclick = () => { playButtonSound(); alert('아직 개척되지 않은 섬입니다!'); };
                 }
 
-                row.appendChild(node);
-                pathWrapper.appendChild(row);
-            }
+                pathWrapper.appendChild(node);
+            });
         }
 
         function selectDay(dayNum) {
