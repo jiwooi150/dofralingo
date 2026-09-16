@@ -282,7 +282,6 @@
             font-weight: 600;
         }
 
-        /* DAY 선택 화면 개편 - 배경 하얀색으로 변경 */
         #day-screen {
             padding: 20px 12px 16px 12px;
             justify-content: flex-start;
@@ -303,7 +302,6 @@
         }
         .worldmap-scroll-container::-webkit-scrollbar { display: none; }
 
-        /* 바다 파도 배경 제거를 위해 display: none 처리 */
         .wave-bg {
             display: none;
         }
@@ -314,7 +312,7 @@
             min-height: 100%;
         }
 
-        /* 동그라미 노드 스타일 */
+        /* Day 선택 버튼 스타일 수정 */
         .island-node {
             position: absolute;
             width: 108px;
@@ -334,71 +332,63 @@
             transform: scale(0.92) !important;
         }
 
-        /* 미완료(기본) 섬 버튼 - 연한 초록색 배경, 연한 갈색 그림자 */
+        /* 1. 열려있는 버튼 (연한 분홍색 / 진한 분홍색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.unlocked {
-            background: #bbf7d0; 
+            background: #fbcfe8; 
             box-shadow: 
-                0 10px 0 #d4a373, 
-                0 14px 22px rgba(212, 163, 115, 0.35),
+                0 10px 0 #db2777, 
+                0 14px 22px rgba(219, 39, 119, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.7);
-            border: 4px solid #ffffff;
-            animation: islandFloat 2.4s infinite ease-in-out;
+            border: none;
         }
 
-        /* 완료된 섬 버튼 - 노란색 배경, 연한 노란색 그림자 */
+        /* 2. 완료한 버튼 (연한 초록색 / 진한 초록색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.completed {
-            background: #fde047;
+            background: #bbf7d0;
             box-shadow: 
-                0 10px 0 #fef08a, 
-                0 12px 20px rgba(253, 224, 71, 0.3),
+                0 10px 0 #15803d, 
+                0 12px 20px rgba(21, 128, 61, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.8);
-            border: 4px solid #ffffff;
+            border: none;
         }
 
+        /* 3. 잠겨있는 버튼 (회색 / 진한 회색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.locked {
-            background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+            background: #cbd5e1;
             box-shadow: 
-                0 8px 0 #94a3b8, 
+                0 8px 0 #475569, 
                 0 6px 12px rgba(0,0,0,0.04);
-            border: 4px solid #ffffff;
+            border: none;
             opacity: 0.85;
             cursor: not-allowed;
         }
 
-        @keyframes islandFloat {
+        /* 4. 가장 최신 열린 버튼 위아래 흔들림 애니메이션 */
+        .island-node.latest-unlocked {
+            animation: latestFloat 1.5s infinite ease-in-out;
+        }
+
+        @keyframes latestFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-8px); }
         }
 
         .island-node .stage-num {
             font-family: 'Poppins', sans-serif;
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 800;
-            color: #334155;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
             line-height: 1;
         }
         
         .island-node.locked .stage-num {
-            color: #94a3b8;
+            color: #ffffff;
             text-shadow: none;
         }
 
-        /* 이모티콘 크기 3배 확대 (60px) */
-        .island-node .stage-icon {
-            font-size: 60px;
-            margin-top: 2px;
-            line-height: 1;
-        }
-
         .map-svg-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
+            display: none; /* 섬과 섬 사이 점선 모두 제거 */
         }
 
         .rule-card-wrapper {
@@ -859,7 +849,7 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (배경 하얀색) -->
+    <!-- 2. DAY 선택 화면 -->
     <div id="day-screen" class="container hidden">
         <div class="wave-bg"></div>
         <div id="island-container" class="worldmap-scroll-container">
@@ -930,7 +920,7 @@
                 <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
                 <div id="card-counter" class="card-counter-badge">1 / 10</div>
                 <div class="timer-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                     <span id="review-timer">5</span>초
                 </div>
             </div>
@@ -1354,7 +1344,6 @@
 
             try {
                 const audio = new Audio(filename);
-                // 2.mp3 파일일 경우 볼륨을 절반(0.5)으로 설정
                 if (filename === '2.mp3') {
                     audio.volume = 0.5;
                 }
@@ -1523,7 +1512,7 @@
             startReview();
         }
 
-        /* 맵 그리기 수정 완료 (미완료: 연초록/연갈색 그림자/섬 이모티콘, 완료: 노란색/연노란색 그림자/깃발 이모티콘, 문구: day1 형식) */
+        /* Day 선택 지도 렌더링 (점선 제거, 이모티콘 제거, 텍스트 "01", 최신 열린 버튼 흔들림 적용) */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1549,29 +1538,15 @@
             const totalHeight = startY + totalStages * rowGap + 60;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            nodesData.forEach((curr, index) => {
-                if (index < nodesData.length - 1) {
-                    const next = nodesData[index + 1];
-                    const cpY1 = curr.y + rowGap * 0.5;
-                    const cpY2 = next.y - rowGap * 0.5;
-
-                    const singleD = `M ${curr.x} ${curr.y} C ${curr.x} ${cpY1}, ${next.x} ${cpY2}, ${next.x} ${next.y}`;
-
-                    [-10, 0, 10].forEach(offset => {
-                        const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                        pathElement.setAttribute("d", singleD);
-                        pathElement.setAttribute("fill", "none");
-                        pathElement.setAttribute("stroke", "rgba(203, 213, 225, 0.6)");
-                        pathElement.setAttribute("stroke-width", "3");
-                        pathElement.setAttribute("stroke-dasharray", "6 6");
-                        pathElement.setAttribute("stroke-linecap", "round");
-                        if (offset !== 0) {
-                            pathElement.setAttribute("transform", `translate(${offset}, 0)`);
-                        }
-                        svgLayer.appendChild(pathElement);
-                    });
+            // 열려있는 버튼 중 가장 최신(번호가 가장 큰 unlocked 상태) 찾기
+            let highestUnlockedId = -1;
+            for (let i = 1; i <= totalStages; i++) {
+                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
+                const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
+                if (hasQuestions && !isCompleted) {
+                    highestUnlockedId = i;
                 }
-            });
+            }
 
             nodesData.forEach(data => {
                 const i = data.id;
@@ -1580,15 +1555,15 @@
 
                 const node = document.createElement('div');
                 let statusClass = 'locked';
-                let iconText = '🔒';
 
                 if (hasQuestions) {
                     if (isCompleted) {
-                        statusClass = 'completed';
-                        iconText = '🚩'; // 완료 시 깃발
+                        statusClass = 'completed'; // 연한 초록색 / 진한 초록색 그림자
                     } else {
-                        statusClass = 'unlocked';
-                        iconText = '🏝️'; // 미완료 시 섬
+                        statusClass = 'unlocked'; // 연한 분홍색 / 진한 분홍색 그림자
+                        if (i === highestUnlockedId) {
+                            statusClass += ' latest-unlocked'; // 가장 최신 열린 버튼 위아래 흔들림
+                        }
                     }
                 }
 
@@ -1596,9 +1571,10 @@
                 node.style.left = `${data.x}px`;
                 node.style.top = `${data.y - 54}px`;
 
+                // 이모티콘 제거 및 텍스트 01(02, 03...) 형식 적용
+                const formattedNum = String(i).padStart(2, '0');
                 node.innerHTML = `
-                    <span class="stage-num">day${i}</span>
-                    <span class="stage-icon">${iconText}</span>
+                    <span class="stage-num">${formattedNum}</span>
                 `;
 
                 if (hasQuestions) {
