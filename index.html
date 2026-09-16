@@ -38,7 +38,7 @@
             padding: 0;
             width: 100%;
             height: 100vh;
-            height: -webkit-fill-available;
+            height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -81,14 +81,14 @@
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 28px 22px;
+            padding: 24px 22px;
             border-radius: 32px;
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.06),
                 0 0 0 1px rgba(244, 114, 182, 0.2);
             width: 380px;
             height: 680px;
-            max-height: 90vh;
+            max-height: 92dvh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -103,16 +103,16 @@
             background-color: var(--primary-pink);
             color: #ffffff !important;
             border: 2px solid var(--primary-pink-dark);
-            padding: 15px 0;
+            padding: 13px 0;
             width: 100%;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             border-radius: 18px;
             cursor: pointer;
             box-shadow: 0 5px 0 var(--primary-pink-shadow);
             transition: all 0.1s ease;
             font-family: 'Pretendard', sans-serif;
-            margin-top: 12px;
+            margin-top: 10px;
             flex-shrink: 0;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
             display: flex;
@@ -158,7 +158,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* 이름 입력 화면 스타일 */
         .name-title {
             font-size: 22px;
             font-weight: 800;
@@ -191,7 +190,6 @@
             box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
         }
 
-        /* 타이틀 화면 */
         .title-wrapper {
             display: flex;
             flex-direction: column;
@@ -241,7 +239,7 @@
         }
 
         .title-image {
-            max-width: 160px;
+            max-width: 150px;
             width: 100%;
             height: auto;
             filter: drop-shadow(0 8px 16px rgba(236, 72, 153, 0.15));
@@ -256,7 +254,7 @@
         .subtitle { 
             font-size: 14px; 
             color: var(--text-muted); 
-            margin-bottom: 16px; 
+            margin-bottom: 12px; 
             font-weight: 600;
         }
 
@@ -550,6 +548,83 @@
         .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 800; font-family: 'Poppins', sans-serif; }
         .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
 
+        /* 설정 모달 패널 스타일 */
+        .settings-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 200; opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .settings-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .settings-modal {
+            background: #ffffff;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 340px;
+            padding: 24px 20px;
+            box-sizing: border-box;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .settings-header {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .setting-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .setting-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-pink); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
         .sheet-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -603,7 +678,7 @@
         <div class="intro-text">Doflalingo</div>
     </div>
 
-    <!-- 0.5. 이름 설정 화면 (새로 추가됨) -->
+    <!-- 0.5. 이름 설정 화면 -->
     <div id="name-screen" class="container hidden">
         <div class="name-title">이름을 설정해 주세요</div>
         <div class="name-subtitle">한글 최대 3자까지 입력 가능합니다.</div>
@@ -611,7 +686,7 @@
         <button class="btn" style="margin-top: 24px;" onclick="saveUserName()">시작하기</button>
     </div>
 
-    <!-- 1. 타이틀 화면 -->
+    <!-- 1. 타이틀 화면 (설정 버튼 추가) -->
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
@@ -623,6 +698,7 @@
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
             <button class="btn" style="background: #8b5cf6; border-color: #6d28d9; box-shadow: 0 5px 0 #5b21b6;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 오늘의 단어</button>
+            <button class="btn btn-secondary" onclick="playButtonSound(); openSettings()">설정 ⚙️</button>
         </div>
     </div>
 
@@ -651,7 +727,7 @@
                 <div class="quiz-top-bar">
                     <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
                     <div class="timer-badge">
-                        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                         <span id="quiz-timer">20</span>초
                     </div>
                 </div>
@@ -681,7 +757,7 @@
             <div class="quiz-top-bar">
                 <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
                 <div class="timer-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                     <span id="review-timer">5</span>초
                 </div>
             </div>
@@ -703,6 +779,39 @@
         <div style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">학습 완료!</div>
         <div class="subtitle">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
+    </div>
+
+    <!-- 설정 모달 패널 -->
+    <div id="settings-overlay" class="settings-overlay">
+        <div class="settings-modal">
+            <div class="settings-header">설정 ⚙️</div>
+            
+            <!-- 1. 닉네임 수정 -->
+            <div class="setting-item">
+                <div class="setting-label">닉네임 변경</div>
+                <input type="text" id="edit-username-input" class="name-input-box" style="font-size: 16px; padding: 10px;" maxlength="3">
+                <button class="btn" style="margin-top: 0; padding: 10px 0; font-size: 15px;" onclick="updateUserName()">닉네임 저장</button>
+            </div>
+
+            <!-- 2. 효과음 ON/OFF -->
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span>효과음</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="sound-toggle" onchange="toggleSoundSetting(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. 진행상황 초기화 -->
+            <div class="setting-item">
+                <div class="setting-label">진행 사항 초기화</div>
+                <button class="btn" style="background: #ef4444; border-color: #b91c1c; box-shadow: 0 4px 0 #991b1b; margin-top: 0; padding: 10px 0; font-size: 15px;" onclick="resetAllData()">전체 데이터 초기화</button>
+            </div>
+
+            <button class="btn btn-secondary" style="margin-top: 4px; padding: 10px 0; font-size: 15px;" onclick="closeSettings()">닫기</button>
+        </div>
     </div>
 
     <!-- 바텀 시트 -->
@@ -828,8 +937,12 @@
             });
         }
 
-        function hideAddressBar() {
-            setTimeout(() => { window.scrollTo(0, 1); }, 0);
+        /* 뷰포트 레이아웃 안정화 */
+        function initViewport() {
+            requestAnimationFrame(() => {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            });
         }
 
         function checkStreakSystem() {
@@ -857,6 +970,9 @@
         }
 
         function playSoundFile(filename) {
+            const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
+            if (!soundEnabled) return;
+
             try {
                 const audio = new Audio(filename);
                 audio.currentTime = 0;
@@ -865,19 +981,20 @@
         }
 
         function playButtonSound() {
-            hideAddressBar();
             playSoundFile('1.mp3');
         }
 
         window.onload = function() {
             preloadImages();
-            hideAddressBar();
+            initViewport();
             checkStreakSystem();
             playSoundFile('start.mp3');
 
             introTimer = setTimeout(() => { transitionNext(); }, 2500);
             initBottomSheetEvents();
         };
+
+        window.addEventListener('resize', initViewport);
 
         function skipIntro() {
             if (hasIntroPassed) return;
@@ -890,7 +1007,6 @@
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
             
-            // 저장된 이름이 없는 경우 이름 설정 화면으로 이동
             const savedName = localStorage.getItem('dofla_username');
             if (!savedName) {
                 document.getElementById('name-screen').classList.remove('hidden');
@@ -918,6 +1034,50 @@
             const randomTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
             document.getElementById('speech-bubble').innerText = `${userName}님, ${randomTaunt}`;
             document.getElementById('title-screen').classList.remove('hidden');
+        }
+
+        /* 설정 모달 컨트롤 */
+        function openSettings() {
+            const savedName = localStorage.getItem('dofla_username') || '';
+            const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
+            
+            document.getElementById('edit-username-input').value = savedName;
+            document.getElementById('sound-toggle').checked = soundEnabled;
+            
+            document.getElementById('settings-overlay').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-overlay').classList.remove('active');
+        }
+
+        function updateUserName() {
+            const nameInput = document.getElementById('edit-username-input').value.trim();
+            const koreanRegex = /^[가-힣]{1,3}$/;
+
+            if (!koreanRegex.test(nameInput)) {
+                alert('이름은 한글로 최대 3자까지만 입력이 가능합니다.');
+                return;
+            }
+
+            playButtonSound();
+            localStorage.setItem('dofla_username', nameInput);
+            showTitleScreen(nameInput);
+            alert('닉네임이 변경되었습니다.');
+            closeSettings();
+        }
+
+        function toggleSoundSetting(enabled) {
+            localStorage.setItem('dofla_sound_enabled', enabled ? 'true' : 'false');
+            if (enabled) playButtonSound();
+        }
+
+        function resetAllData() {
+            if (confirm('정말로 모든 데이터와 진행 상황을 초기화하시겠습니까?')) {
+                localStorage.clear();
+                alert('모든 데이터가 초기화되었습니다.');
+                location.reload();
+            }
         }
 
         function goToTitle() {
