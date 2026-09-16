@@ -113,7 +113,7 @@
             animation: screenShake 0.4s ease;
         }
 
-        /* 3D 입체 버튼 (cubic-bezier 적용) */
+        /* 3D 입체 버튼 */
         .btn {
             background: linear-gradient(145deg, #ff53b0 0%, #ec4899 50%, #db2777 100%);
             color: white;
@@ -143,7 +143,6 @@
             box-shadow: 0 2px 0 #be185d, 0 4px 8px rgba(236, 72, 153, 0.2);
         }
 
-        /* 서브 버튼 스타일 */
         .btn-secondary {
             background: linear-gradient(145deg, #f472b6 0%, #db2777 100%);
             box-shadow: 0 5px 0 #9d174d, 0 8px 15px rgba(219, 39, 119, 0.25);
@@ -188,7 +187,6 @@
             margin-bottom: 10px;
         }
 
-        /* 말풍선 */
         .speech-bubble {
             position: absolute;
             top: -52px;
@@ -261,7 +259,7 @@
             box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
         }
 
-        /* DAY 선택 화면 */
+        /* DAY 선택 화면 (잠금 및 위계감 부여 적용) */
         .streak-badge {
             display: flex;
             align-items: center;
@@ -273,7 +271,7 @@
             font-size: 16px;
             padding: 8px 18px;
             border-radius: 25px;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(225, 29, 72, 0.1);
         }
@@ -288,31 +286,52 @@
             margin-bottom: 15px;
         }
         
+        /* 기본 DAY 버튼 (활성 상태) */
         .day-btn {
             background: #ffffff;
-            color: #334155;
-            border: 1.5px solid #e2e8f0;
+            color: #db2777;
+            border: 1.5px solid #f472b6;
             padding: 12px 0;
-            font-size: 18px;
+            font-size: 17px;
             border-radius: 16px;
             cursor: pointer;
             font-family: 'Jua', sans-serif;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.12);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .day-btn:hover { 
             background: #fdf2f8;
-            border-color: #f472b6; 
-            color: #db2777;
+            border-color: #ec4899; 
             transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 6px 15px rgba(236, 72, 153, 0.15);
+            box-shadow: 0 6px 18px rgba(236, 72, 153, 0.22);
         }
 
+        /* 완료된 DAY 버튼 스타일 */
         .day-btn.completed {
             background: linear-gradient(145deg, #be185d 0%, #9d174d 100%);
             color: #ffffff;
             border: 1px solid #9d174d;
             box-shadow: 0 4px 0 #831843, 0 4px 12px rgba(157, 23, 77, 0.25);
+        }
+
+        /* 잠긴(Locked) DAY 버튼 스타일 */
+        .day-btn.locked {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border: 1.5px solid #e2e8f0;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+        .day-btn.locked:hover {
+            transform: none;
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            box-shadow: none;
         }
         
         .pagination-container {
@@ -450,16 +469,34 @@
         }
 
         .result-image {
-            max-width: 220px;
-            max-height: 200px;
+            max-width: 160px;
+            max-height: 150px;
             width: auto;
             height: auto;
-            border-radius: 18px;
-            margin-bottom: 12px;
+            border-radius: 16px;
+            margin-bottom: 8px;
             display: none;
             object-fit: contain;
         }
-        .result-text { font-size: 26px; margin-bottom: 8px; font-weight: bold; }
+        .result-text { font-size: 24px; margin-bottom: 6px; font-weight: bold; }
+
+        /* 결과 화면 내 해설 텍스트 상자 (원상복구형) */
+        .result-explanation {
+            font-size: 15px;
+            color: #1e293b;
+            line-height: 1.4;
+            background: #fdf2f8;
+            border: 1.5px dashed #f472b6;
+            padding: 10px 14px;
+            border-radius: 14px;
+            white-space: pre-line;
+            margin: 8px 0;
+            width: 90%;
+            text-align: left;
+            box-sizing: border-box;
+            max-height: 140px;
+            overflow-y: auto;
+        }
 
         .review-container {
             width: 100%;
@@ -497,7 +534,7 @@
         .card-content { font-size: 30px; color: #0f172a; font-weight: bold; word-break: break-all; }
 
         /* ===================================================
-           스무스 바텀 시트 (Smooth Bottom Sheet) 스타일
+           스무스 바텀 시트 (오늘의 단어 전용으로 유지)
         =================================================== */
         .sheet-backdrop {
             position: fixed;
@@ -505,7 +542,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.35); /* 블러 제거 후 깔끔한 반투명 색상 적용 */
+            background: rgba(15, 23, 42, 0.35);
             z-index: 100;
             opacity: 0;
             transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -531,7 +568,7 @@
                 0 0 0 1.5px rgba(244, 114, 182, 0.3);
             z-index: 101;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 12px 20px 20px 20px; /* 여백 축소로 해설 상향 배치 */
+            padding: 12px 20px 20px 20px;
             box-sizing: border-box;
             will-change: transform;
         }
@@ -539,7 +576,6 @@
             transform: translate(-50%, 0);
         }
 
-        /* 드래그 가능 핸들 영역 */
         .sheet-header {
             width: 100%;
             display: flex;
@@ -571,19 +607,6 @@
             overflow-y: auto;
             text-align: left;
             padding-right: 2px;
-        }
-        
-        .explanation-text {
-            font-size: 17px;
-            color: #1e293b;
-            line-height: 1.6;
-            background: #fdf2f8;
-            border: 1.5px dashed #f472b6;
-            padding: 16px;
-            border-radius: 16px;
-            white-space: pre-line;
-            margin-top: 6px;
-            margin-bottom: 6px;
         }
 
         .quick-word-list {
@@ -667,10 +690,11 @@
         </div>
     </div>
 
-    <!-- 5. 결과 화면 -->
+    <!-- 5. 결과 화면 (해설 포함 원상복구) -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
+        <div id="result-exp" class="result-explanation hidden"></div>
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
     </div>
 
@@ -695,14 +719,14 @@
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="complete.gif" alt="완료 이미지" style="width: 280px; height: 280px; object-fit: contain; border-radius: 20px; margin-bottom: 15px; display: block;" onerror="this.style.display='none';">
-        <div class="question-title" style="color: #db2777; margin-bottom: 8px; font-size: 26px; text-align: center; padding-left: 0;">학습 마스터 완료!</div>
-        <div class="subtitle" style="font-size: 18px; margin-bottom: 15px;">토익 해적단 토벌 완료.</div>
+        <img src="complete.gif" alt="완료 이미지" style="width: 250px; height: 250px; object-fit: contain; border-radius: 20px; margin-bottom: 10px; display: block;" onerror="this.style.display='none';">
+        <div class="question-title" style="color: #db2777; margin-bottom: 6px; font-size: 24px; text-align: center; padding-left: 0;">학습 마스터 완료!</div>
+        <div class="subtitle" style="font-size: 16px; margin-bottom: 12px;">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
     </div>
 
     <!-- ===================================================
-         스무스 바텀 시트 (Smooth Bottom Sheet) HTML
+         스무스 바텀 시트 (오늘의 단어 전용)
     =================================================== -->
     <div id="sheet-backdrop" class="sheet-backdrop" onclick="closeBottomSheet()"></div>
     
@@ -768,7 +792,7 @@
                     { label: "(D) experience", val: "D" }
                 ],
                 correct: "A",
-                explanation: "💡 해설\nworkforce(직원)를 꾸며주는 말이 나와야 함\nexperiencing workforce = 경험하는 직원 (어색)\nexperienced workforce = 숙련된 직원 (정답)"
+                explanation: "💡 해설\nworkforce(직원)를 꾸며주는 말이 나와야 함\nexperienced workforce = 숙련된 직원 (정답)"
             },
             {
                 number: 5,
@@ -781,7 +805,7 @@
                     { label: "(D) important", val: "D" }
                 ],
                 correct: "C",
-                explanation: "💡 해설\naccountable = 책임이 있는 (be accountable for)\nmodified = 수정된\nentitled = ~을 받을 자격이 있다 (be entitled to) (정답)"
+                explanation: "💡 해설\nentitled = ~을 받을 자격이 있다 (be entitled to) (정답)"
             }
         ];
 
@@ -826,26 +850,16 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // GIF 및 이미지 파일 미리로드
         function preloadImages() {
-            const imagesToPreload = [
-                'title.png',
-                'correct.gif',
-                'wrong.png',
-                'complete.gif'
-            ];
+            const imagesToPreload = ['title.png', 'correct.gif', 'wrong.png', 'complete.gif'];
             imagesToPreload.forEach(src => {
                 const img = new Image();
                 img.src = src;
             });
         }
 
-        // 브라우저 주소창 숨기기
         function hideAddressBar() {
-            setTimeout(() => {
-                window.scrollTo(0, 1);
-            }, 0);
-
+            setTimeout(() => { window.scrollTo(0, 1); }, 0);
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
             } else if (document.documentElement.webkitRequestFullscreen) {
@@ -866,8 +880,7 @@
 
             const lastDate = new Date(lastVisitDate);
             const nowDate = new Date(todayStr);
-            const diffTime = nowDate - lastDate;
-            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.round((nowDate - lastDate) / (1000 * 60 * 60 * 24));
 
             if (diffDays === 1) {
                 currentStreak += 1;
@@ -878,7 +891,6 @@
                 localStorage.setItem('dofla_streak', '1');
                 localStorage.setItem('dofla_last_visit', todayStr);
             }
-
             return currentStreak;
         }
 
@@ -927,10 +939,8 @@
         function transitionToIntoTitle() {
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
-            
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
-
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
@@ -943,7 +953,6 @@
 
         function goToTitleFromQuiz() {
             clearInterval(quizTimerInterval);
-            closeBottomSheet();
             document.getElementById('quiz-screen').classList.add('hidden');
             const randomIndex = Math.floor(Math.random() * randomTaunts.length);
             document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
@@ -974,11 +983,11 @@
                 [combined[i], combined[j]] = [combined[j], combined[i]];
             }
             activeFlashcards = combined;
-
             document.getElementById('title-screen').classList.add('hidden');
             startReview();
         }
 
+        // DAY 선택창 렌더링 (잠금 상태 및 위계감 부여 적용)
         function renderDayButtons() {
             const grid = document.getElementById('day-grid');
             grid.innerHTML = '';
@@ -993,19 +1002,21 @@
 
             for (let i = startDay; i <= endDay; i++) {
                 const btn = document.createElement('button');
-                btn.className = 'day-btn';
-                
-                if (i === 1 && isDay1Completed) {
-                    btn.classList.add('completed');
-                    btn.innerText = `DAY ${i} ✓`;
-                } else {
-                    btn.innerText = `DAY ${i}`;
-                }
                 
                 if (i === 1) {
+                    if (isDay1Completed) {
+                        btn.className = 'day-btn completed';
+                        btn.innerHTML = `DAY ${i} ✓`;
+                    } else {
+                        btn.className = 'day-btn';
+                        btn.innerHTML = `DAY ${i} ✨`;
+                    }
                     btn.onclick = () => { playButtonSound(); showRuleScreen(); };
                 } else {
-                    btn.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 준비 중이다! 훗훗훗...`); };
+                    // DAY 2 이후는 잠긴(Locked) 위계감 적용
+                    btn.className = 'day-btn locked';
+                    btn.innerHTML = `DAY ${i} 🔒`;
+                    btn.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 잠겨 있다! 먼저 이전 과제를 완료해라 훗훗훗...`); };
                 }
                 grid.appendChild(btn);
             }
@@ -1033,7 +1044,6 @@
 
         function loadQuestion(index) {
             clearInterval(quizTimerInterval);
-            closeBottomSheet();
             quizTimeLeft = 20;
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
@@ -1079,6 +1089,7 @@
 
             const resultImg = document.getElementById('result-img');
             const resultMsg = document.getElementById('result-msg');
+            const resultExp = document.getElementById('result-exp');
             const actionBtn = document.getElementById('action-btn');
             
             resultImg.style.display = 'block';
@@ -1086,12 +1097,11 @@
             resultImg.src = "wrong.png"; 
             resultMsg.style.color = "#dc2626";
             resultMsg.innerText = "시간 초과! 죽어";
+            resultExp.classList.add('hidden');
             actionBtn.innerText = "다시";
 
             playSoundFile('wrong.mp3');
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100]); 
-            }
+            if (navigator.vibrate) { navigator.vibrate([100, 50, 100]); }
         }
 
         function checkAnswer(selectedOption) {
@@ -1101,6 +1111,7 @@
 
             const resultImg = document.getElementById('result-img');
             const resultMsg = document.getElementById('result-msg');
+            const resultExp = document.getElementById('result-exp');
             const actionBtn = document.getElementById('action-btn');
             
             resultImg.style.display = 'block';
@@ -1111,12 +1122,14 @@
                 resultMsg.style.color = "#db2777";
                 resultMsg.innerText = "도~황!";
                 
+                // 결과 화면 안에 해설 표시 (원상복구)
+                resultExp.innerText = q.explanation;
+                resultExp.classList.remove('hidden');
+
                 let nextText = (currentQuizIndex + 1 < questions.length) ? "다음" : "복습하기";
                 actionBtn.innerText = nextText;
 
                 playSoundFile('correct.mp3');
-                // 정답 해설 바텀 시트 노출
-                openExplanationSheet(q.explanation);
             } else {
                 isCorrectAnswer = false;
                 
@@ -1127,17 +1140,15 @@
                 resultImg.src = "wrong.png"; 
                 resultMsg.style.color = "#dc2626";
                 resultMsg.innerText = "죽어";
+                resultExp.classList.add('hidden');
                 actionBtn.innerText = "다시";
 
                 playSoundFile('wrong.mp3');
-                if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]); 
-                }
+                if (navigator.vibrate) { navigator.vibrate([100, 50, 100]); }
             }
         }
 
         function handleNextAction() {
-            closeBottomSheet();
             if (isCorrectAnswer) {
                 currentQuizIndex++;
                 if (currentQuizIndex < questions.length) {
@@ -1199,7 +1210,6 @@
                 cardLabel.innerText = "뜻";
                 cardText.innerText = card.meaning;
                 cardText.style.color = "#db2777";
-                
                 if (currentReviewIndex === activeFlashcards.length - 1) {
                     reviewBtn.innerText = "학습 완료";
                 } else {
@@ -1229,9 +1239,7 @@
             clearInterval(reviewTimerInterval);
             playSoundFile('end.mp3');
 
-            if (navigator.vibrate) {
-                navigator.vibrate(300);
-            }
+            if (navigator.vibrate) { navigator.vibrate(300); }
 
             try {
                 confetti({
@@ -1240,9 +1248,7 @@
                     origin: { y: 0.6 },
                     colors: ['#ec4899', '#f472b6', '#db2777']
                 });
-            } catch(e) {
-                console.log("Confetti library load fail", e);
-            }
+            } catch(e) { console.log("Confetti library load fail", e); }
 
             document.getElementById('review-screen').classList.add('hidden');
             document.getElementById('complete-screen').classList.remove('hidden');
@@ -1256,7 +1262,7 @@
         }
 
         /* ===================================================
-           스무스 바텀 시트 (Smooth Bottom Sheet) 제어 로직
+           스무스 바텀 시트 (오늘의 단어 전용 제어)
         =================================================== */
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetBackdrop = document.getElementById('sheet-backdrop');
@@ -1280,7 +1286,6 @@
             sheetBackdrop.classList.remove('active');
         }
 
-        // 1. 오늘의 단어 모드 바텀시트
         function openQuickWordSheet() {
             sheetTitle.innerText = "도황의 오늘의 단어 ⚡";
             sheetContent.innerHTML = `
@@ -1299,17 +1304,7 @@
             openBottomSheet();
         }
 
-        // 2. 정답 맞췄을 때 문제 해설 바텀시트 (버튼 제거 버전)
-        function openExplanationSheet(expText) {
-            sheetTitle.innerText = "정답입니다! 🎯";
-            sheetContent.innerHTML = `
-                <div class="explanation-text">${expText}</div>
-            `;
-            openBottomSheet();
-        }
-
         function initBottomSheetEvents() {
-            // Touch Events for Dragging Down to Dismiss
             sheetHeader.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
                 isDragging = true;
@@ -1320,7 +1315,6 @@
                 if (!isDragging) return;
                 currentY = e.touches[0].clientY;
                 const deltaY = currentY - startY;
-
                 if (deltaY > 0) {
                     bottomSheet.style.transform = `translate(-50%, ${deltaY}px)`;
                 }
