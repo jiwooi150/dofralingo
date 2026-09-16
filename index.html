@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>도플라링고 - 도황의 영어공부법</title>
     
+    <!-- 모바일 전체화면(주소창 감추기) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="도플라링고">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#ffffff">
@@ -31,6 +32,12 @@
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-light: #e2e8f0;
+            --vh: 1vh;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent; /* 터치 시 파란색/회색 하이라이트 박스 제거 */
+            box-sizing: border-box;
         }
 
         html, body {
@@ -38,6 +45,7 @@
             padding: 0;
             width: 100%;
             height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
             height: 100dvh;
             display: flex;
             justify-content: center;
@@ -88,17 +96,18 @@
                 0 0 0 1px rgba(244, 114, 182, 0.2);
             width: 380px;
             height: 680px;
+            max-height: calc(var(--vh, 1vh) * 92);
             max-height: 92dvh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
-            box-sizing: border-box;
             overflow: hidden; 
             z-index: 1;
         }
 
+        /* 모바일 터치 모션이 확실하게 작동하도록 수정된 버튼 스타일 */
         .btn {
             background-color: var(--primary-pink);
             color: #ffffff !important;
@@ -110,7 +119,7 @@
             border-radius: 18px;
             cursor: pointer;
             box-shadow: 0 5px 0 var(--primary-pink-shadow);
-            transition: all 0.1s ease;
+            transition: transform 0.05s ease, box-shadow 0.05s ease;
             font-family: 'Pretendard', sans-serif;
             margin-top: 10px;
             flex-shrink: 0;
@@ -118,11 +127,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            outline: none;
+            touch-action: manipulation;
         }
 
-        .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0 var(--primary-pink-shadow);
+        .btn:active, .btn.touch-active {
+            transform: translateY(4px) !important;
+            box-shadow: 0 1px 0 var(--primary-pink-shadow) !important;
         }
 
         .btn-secondary {
@@ -133,9 +144,9 @@
             text-shadow: none;
         }
 
-        .btn-secondary:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0 #94a3b8;
+        .btn-secondary:active, .btn-secondary.touch-active {
+            transform: translateY(4px) !important;
+            box-shadow: 0 1px 0 #94a3b8 !important;
         }
 
         .intro-container {
@@ -172,7 +183,6 @@
         }
         .name-input-box {
             width: 100%;
-            box-sizing: border-box;
             background: #ffffff;
             border: 2px solid #fbcfe8;
             border-radius: 18px;
@@ -284,7 +294,6 @@
             flex: 1;
             overflow-y: auto;
             padding: 4px;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -296,19 +305,18 @@
             background: #ffffff;
             border-radius: 20px;
             padding: 16px 20px;
-            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border: 2px solid var(--border-light);
             box-shadow: 0 4px 0 #cbd5e1;
             cursor: pointer;
-            transition: all 0.1s ease;
+            transition: transform 0.05s ease, box-shadow 0.05s ease;
         }
 
-        .day-island:active { 
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #cbd5e1;
+        .day-island:active, .day-island.touch-active { 
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 #cbd5e1 !important;
         }
 
         .day-island-title {
@@ -367,7 +375,6 @@
             font-weight: 600;
             line-height: 1.8;
             margin-bottom: 20px;
-            box-sizing: border-box;
             border: 2px solid #fbcfe8;
         }
 
@@ -377,7 +384,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-sizing: border-box;
         }
 
         .quiz-top-bar {
@@ -398,11 +404,11 @@
             color: var(--text-dark);
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.1s ease;
+            transition: transform 0.05s ease, box-shadow 0.05s ease;
         }
-        .quiz-home-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #94a3b8;
+        .quiz-home-btn:active, .quiz-home-btn.touch-active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 #94a3b8 !important;
         }
 
         .timer-badge {
@@ -473,19 +479,17 @@
             border-radius: 16px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.1s ease;
+            transition: transform 0.05s ease, box-shadow 0.05s ease;
             box-shadow: 0 4px 0 #cbd5e1;
             display: flex;
             align-items: center;
         }
-        .option-btn:hover { 
+        .option-btn:active, .option-btn.touch-active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 #cbd5e1 !important;
             background: #fdf2f8;
             border-color: var(--primary-pink); 
             color: var(--primary-pink) !important;
-        }
-        .option-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #cbd5e1;
         }
 
         .result-image {
@@ -512,7 +516,6 @@
             margin: 8px 0 12px 0;
             width: 100%;
             text-align: left;
-            box-sizing: border-box;
             max-height: 120px;
             overflow-y: auto;
         }
@@ -540,7 +543,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-sizing: border-box;
             padding: 24px;
             box-shadow: 0 6px 0 #fbcfe8;
         }
@@ -548,7 +550,7 @@
         .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 800; font-family: 'Poppins', sans-serif; }
         .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
 
-        /* 설정 모달 패널 스타일 */
+        /* 설정 모달 패널 */
         .settings-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -568,7 +570,6 @@
             width: 90%;
             max-width: 340px;
             padding: 24px 20px;
-            box-sizing: border-box;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
@@ -645,7 +646,6 @@
             z-index: 101;
             transition: transform 0.3s ease;
             padding: 16px 20px 24px 20px;
-            box-sizing: border-box;
         }
         .bottom-sheet.active { transform: translate(-50%, 0); }
 
@@ -686,7 +686,7 @@
         <button class="btn" style="margin-top: 24px;" onclick="saveUserName()">시작하기</button>
     </div>
 
-    <!-- 1. 타이틀 화면 (설정 버튼 추가) -->
+    <!-- 1. 타이틀 화면 -->
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
@@ -786,14 +786,12 @@
         <div class="settings-modal">
             <div class="settings-header">설정 ⚙️</div>
             
-            <!-- 1. 닉네임 수정 -->
             <div class="setting-item">
                 <div class="setting-label">닉네임 변경</div>
                 <input type="text" id="edit-username-input" class="name-input-box" style="font-size: 16px; padding: 10px;" maxlength="3">
                 <button class="btn" style="margin-top: 0; padding: 10px 0; font-size: 15px;" onclick="updateUserName()">닉네임 저장</button>
             </div>
 
-            <!-- 2. 효과음 ON/OFF -->
             <div class="setting-item">
                 <div class="setting-label">
                     <span>효과음</span>
@@ -804,7 +802,6 @@
                 </div>
             </div>
 
-            <!-- 3. 진행상황 초기화 -->
             <div class="setting-item">
                 <div class="setting-label">진행 사항 초기화</div>
                 <button class="btn" style="background: #ef4444; border-color: #b91c1c; box-shadow: 0 4px 0 #991b1b; margin-top: 0; padding: 10px 0; font-size: 15px;" onclick="resetAllData()">전체 데이터 초기화</button>
@@ -909,7 +906,6 @@
             ],
         };
 
-        // 거칠고 비꼬는 어조의 말풍선 대사 목록 ('님' 제외)
         const randomTaunts = [
             "${userName}, 아직도 그 모양인가? 훗훗훗... 그렇게 멍청하게 서 있을 시간이 없을 텐데?",
             "오호, ${userName}. 그 머리로 영어 공부라는 걸 하겠다고? 아주 가상하군 그래!",
@@ -938,12 +934,39 @@
             });
         }
 
-        /* 뷰포트 레이아웃 안정화 */
+        /* 모바일 브라우저 뷰포트 및 주소창 숨김 호환성 보정 */
         function initViewport() {
-            requestAnimationFrame(() => {
-                let vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
-            });
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            // 모바일 스크롤시 주소창 자동 숨김 조치
+            window.scrollTo(0, 1);
+        }
+
+        /* 모바일 터치 시 버튼 들어가는 효과 바인딩 */
+        function setupTouchFeedback() {
+            const targets = '.btn, .day-island, .quiz-home-btn, .option-btn';
+            
+            document.addEventListener('touchstart', (e) => {
+                const target = e.target.closest(targets);
+                if (target) {
+                    target.classList.add('touch-active');
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                const target = e.target.closest(targets);
+                if (target) {
+                    setTimeout(() => target.classList.remove('touch-active'), 80);
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchcancel', (e) => {
+                const target = e.target.closest(targets);
+                if (target) {
+                    target.classList.remove('touch-active');
+                }
+            }, { passive: true });
         }
 
         function checkStreakSystem() {
@@ -988,6 +1011,7 @@
         window.onload = function() {
             preloadImages();
             initViewport();
+            setupTouchFeedback();
             checkStreakSystem();
             playSoundFile('start.mp3');
 
@@ -996,6 +1020,7 @@
         };
 
         window.addEventListener('resize', initViewport);
+        window.addEventListener('orientationchange', () => setTimeout(initViewport, 200));
 
         function skipIntro() {
             if (hasIntroPassed) return;
@@ -1038,7 +1063,6 @@
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
-        /* 설정 모달 컨트롤 */
         function openSettings() {
             const savedName = localStorage.getItem('dofla_username') || '';
             const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
