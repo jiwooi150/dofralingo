@@ -51,7 +51,6 @@
             position: relative;
         }
 
-        /* 배경 그래디언트 */
         body::before {
             content: '';
             position: absolute;
@@ -77,7 +76,6 @@
             z-index: 0;
         }
 
-        /* 메인 패널 컨테이너 */
         .container {
             text-align: center;
             background: var(--card-bg);
@@ -101,7 +99,6 @@
             z-index: 1;
         }
 
-        /* 입체감 있는 3D 입체 스타일 버튼 적용 */
         .btn {
             background-color: var(--primary-pink);
             color: #ffffff !important;
@@ -141,7 +138,6 @@
             box-shadow: 0 1px 0 #94a3b8;
         }
 
-        /* 1. 인트로 화면 폰트 수정 */
         .intro-container {
             background: #fdf2f8;
             cursor: pointer;
@@ -160,6 +156,39 @@
         @keyframes slideFadeIn {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 이름 입력 화면 스타일 */
+        .name-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .name-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        .name-input-box {
+            width: 100%;
+            box-sizing: border-box;
+            background: #ffffff;
+            border: 2px solid #fbcfe8;
+            border-radius: 18px;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary-pink-dark);
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+        .name-input-box:focus {
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
         }
 
         /* 타이틀 화면 */
@@ -231,7 +260,6 @@
             font-weight: 600;
         }
 
-        /* DAY 선택 화면 */
         #day-screen {
             padding: 24px 12px 16px 12px;
             justify-content: flex-start;
@@ -324,7 +352,6 @@
             box-shadow: 0 4px 0 #e2e8f0;
         }
 
-        /* 규칙 화면 */
         .rule-title { 
             font-size: 22px; 
             font-weight: 800;
@@ -346,7 +373,6 @@
             border: 2px solid #fbcfe8;
         }
 
-        /* 퀴즈 화면 UI */
         .quiz-content-wrapper {
             width: 100%;
             height: 100%;
@@ -432,7 +458,6 @@
             font-weight: 800;
         }
 
-        /* 문제 보기 버튼 입체감 적용 */
         .options { 
             display: flex; 
             flex-direction: column; 
@@ -465,7 +490,6 @@
             box-shadow: 0 1px 0 #cbd5e1;
         }
 
-        /* 결과 화면 */
         .result-image {
             width: 85%;
             max-width: 280px;
@@ -495,7 +519,6 @@
             overflow-y: auto;
         }
 
-        /* 단어 카드 복습 */
         .review-container {
             width: 100%;
             height: 100%;
@@ -527,7 +550,6 @@
         .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 800; font-family: 'Poppins', sans-serif; }
         .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
 
-        /* 바텀 시트 */
         .sheet-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -576,9 +598,17 @@
 </head>
 <body>
 
-    <!-- 0. 인트로 화면 (폰트 복구) -->
+    <!-- 0. 인트로 화면 -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
         <div class="intro-text">Doflalingo</div>
+    </div>
+
+    <!-- 0.5. 이름 설정 화면 (새로 추가됨) -->
+    <div id="name-screen" class="container hidden">
+        <div class="name-title">이름을 설정해 주세요</div>
+        <div class="name-subtitle">한글 최대 3자까지 입력 가능합니다.</div>
+        <input type="text" id="username-input" class="name-input-box" placeholder="이름 입력" maxlength="3">
+        <button class="btn" style="margin-top: 24px;" onclick="saveUserName()">시작하기</button>
     </div>
 
     <!-- 1. 타이틀 화면 -->
@@ -637,7 +667,7 @@
         </div>
     </div>
 
-    <!-- 5. 결과 화면 (다시풀기 / 다음문제 버튼) -->
+    <!-- 5. 결과 화면 -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
@@ -645,7 +675,7 @@
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">다음</button>
     </div>
 
-    <!-- 6. 단어 복습 화면 (정답확인 버튼) -->
+    <!-- 6. 단어 복습 화면 -->
     <div id="review-screen" class="container hidden">
         <div class="review-container">
             <div class="quiz-top-bar">
@@ -845,7 +875,7 @@
             checkStreakSystem();
             playSoundFile('start.mp3');
 
-            introTimer = setTimeout(() => { transitionToIntoTitle(); }, 2500);
+            introTimer = setTimeout(() => { transitionNext(); }, 2500);
             initBottomSheetEvents();
         };
 
@@ -853,13 +883,40 @@
             if (hasIntroPassed) return;
             hasIntroPassed = true;
             clearTimeout(introTimer);
-            transitionToIntoTitle();
+            transitionNext();
         }
 
-        function transitionToIntoTitle() {
+        function transitionNext() {
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('speech-bubble').innerText = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
+            
+            // 저장된 이름이 없는 경우 이름 설정 화면으로 이동
+            const savedName = localStorage.getItem('dofla_username');
+            if (!savedName) {
+                document.getElementById('name-screen').classList.remove('hidden');
+            } else {
+                showTitleScreen(savedName);
+            }
+        }
+
+        function saveUserName() {
+            const nameInput = document.getElementById('username-input').value.trim();
+            const koreanRegex = /^[가-힣]{1,3}$/;
+
+            if (!koreanRegex.test(nameInput)) {
+                alert('이름은 한글로 최대 3자까지만 입력이 가능합니다.');
+                return;
+            }
+
+            playButtonSound();
+            localStorage.setItem('dofla_username', nameInput);
+            document.getElementById('name-screen').classList.add('hidden');
+            showTitleScreen(nameInput);
+        }
+
+        function showTitleScreen(userName) {
+            const randomTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
+            document.getElementById('speech-bubble').innerText = `${userName}님, ${randomTaunt}`;
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
@@ -1109,7 +1166,6 @@
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
-        /* 바텀시트 제어 */
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetBackdrop = document.getElementById('sheet-backdrop');
 
