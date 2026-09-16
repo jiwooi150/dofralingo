@@ -283,8 +283,9 @@
         }
 
         #day-screen {
-            padding: 24px 12px 16px 12px;
+            padding: 20px 12px 16px 12px;
             justify-content: flex-start;
+            background: #fffdfa;
         }
 
         .streak-badge {
@@ -299,75 +300,123 @@
             font-weight: 700;
             padding: 8px 16px;
             border-radius: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.1);
         }
 
-        .island-scroll-container {
+        /* 월드맵 스테이지 지도 컨셉 스타일 */
+        .worldmap-scroll-container {
             width: 100%;
             flex: 1;
             overflow-y: auto;
-            padding: 4px;
+            padding: 20px 10px 40px 10px;
+            -webkit-overflow-scrolling: touch;
+            background: 
+                radial-gradient(#e2e8f0 1.5px, transparent 1.5px) 0 0 / 24px 24px,
+                linear-gradient(135deg, #fefce8 0%, #fff1f2 100%);
+            border-radius: 24px;
+            border: 2px dashed #f472b6;
+            position: relative;
+        }
+
+        .worldmap-path-wrapper {
+            position: relative;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            -webkit-overflow-scrolling: touch;
+            align-items: center;
         }
 
-        .day-island {
+        .map-stage-row {
             width: 100%;
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border: 2px solid var(--border-light);
-            box-shadow: 0 4px 0 #cbd5e1;
-            cursor: pointer;
-            transition: transform 0.05s ease, box-shadow 0.05s ease;
+            position: relative;
+            margin-bottom: 32px;
         }
 
-        .day-island:active, .day-island.touch-active { 
-            transform: translateY(3px) !important;
-            box-shadow: 0 1px 0 #cbd5e1 !important;
-        }
+        .map-stage-row.pos-left { justify-content: flex-start; padding-left: 20px; }
+        .map-stage-row.pos-center { justify-content: center; }
+        .map-stage-row.pos-right { justify-content: flex-end; padding-right: 20px; }
 
-        .day-island-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-dark);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .day-island-status {
-            width: 36px;
-            height: 36px;
+        .map-node {
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            background: #fdf2f8;
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            box-shadow: 0 6px 0 #94a3b8, 0 8px 15px rgba(0,0,0,0.1);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.1s ease;
+        }
+
+        .map-node:active, .map-node.touch-active {
+            transform: translateY(4px) scale(0.96) !important;
+            box-shadow: 0 2px 0 #94a3b8 !important;
+        }
+
+        .map-node .stage-num {
+            font-family: 'Poppins', sans-serif;
             font-size: 16px;
-            color: var(--primary-pink);
-            font-weight: 700;
+            font-weight: 800;
+            color: #64748b;
+        }
+        .map-node .stage-icon {
+            font-size: 18px;
+            margin-top: -2px;
         }
 
-        .day-island.completed {
+        .map-node.unlocked {
+            border-color: var(--primary-pink);
+            background: #ffffff;
+            box-shadow: 0 6px 0 var(--primary-pink-shadow), 0 0 15px rgba(236, 72, 153, 0.3);
+            animation: pulseNode 2s infinite ease-in-out;
+        }
+        .map-node.unlocked .stage-num {
+            color: var(--primary-pink-dark);
+        }
+
+        @keyframes pulseNode {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        .map-node.completed {
             background: #fdf2f8;
-            border-color: #fbcfe8;
-            box-shadow: 0 4px 0 #f472b6;
+            border-color: #f472b6;
+            box-shadow: 0 6px 0 #be185d;
+            animation: none;
         }
-        .day-island.completed .day-island-status {
-            background: var(--primary-pink);
-            color: white;
+        .map-node.completed .stage-num {
+            color: var(--primary-pink-dark);
         }
 
-        .day-island.locked {
-            opacity: 0.6;
-            background: #f8fafc;
+        .map-node.locked {
+            opacity: 0.75;
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 0 #94a3b8;
             cursor: not-allowed;
-            box-shadow: 0 4px 0 #e2e8f0;
+        }
+
+        .map-path-line {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .map-decor {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.35;
+            pointer-events: none;
         }
 
         .rule-title { 
@@ -768,15 +817,17 @@
             <div class="subtitle">도황의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
-            <button class="btn" style="background: #8b5cf6; border-color: #6d28d9; box-shadow: 0 5px 0 #5b21b6;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 오늘의 단어</button>
+            <button class="btn" style="background: #8b5cf6; border-color: #6d28d9; box-shadow: 0 5px 0 #5b21b6;" onclick="openQuickWordSheet()">⚡ 오늘의 단어</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); openSettings()">설정 ⚙️</button>
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 -->
+    <!-- 2. DAY 선택 화면 (월드맵 / 스테이지 지도 컨셉) -->
     <div id="day-screen" class="container hidden">
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
-        <div id="island-container" class="island-scroll-container"></div>
+        <div id="island-container" class="worldmap-scroll-container">
+            <div id="worldmap-path" class="worldmap-path-wrapper"></div>
+        </div>
         <button class="btn btn-secondary" style="margin-top: 12px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
@@ -788,7 +839,6 @@
             2. 명사/동사 위치 구분하기<br><br>
             3. 모르면 울지 말고 근거 있게 찍기
         </div>
-        <!-- 문제 풀기 버튼을 누를 때 퀴즈 진입 -->
         <button class="btn" onclick="startQuiz()">문제 풀기</button>
     </div>
 
@@ -1191,7 +1241,7 @@
         }
 
         function setupTouchFeedback() {
-            const targets = '.btn, .day-island, .quiz-home-btn, .option-btn';
+            const targets = '.btn, .map-node, .quiz-home-btn, .option-btn';
             
             document.addEventListener('touchstart', (e) => {
                 requestFullScreen();
@@ -1387,7 +1437,7 @@
 
         function goToDaySelect() {
             document.getElementById('title-screen').classList.add('hidden');
-            renderIslandDays();
+            renderWorldMapDays();
             document.getElementById('day-screen').classList.remove('hidden');
         }
 
@@ -1422,34 +1472,51 @@
             startReview();
         }
 
-        function renderIslandDays() {
-            const container = document.getElementById('island-container');
-            container.innerHTML = '';
+        /* 월드맵 스테이지 지도 레이아웃 렌더링 */
+        function renderWorldMapDays() {
+            const pathWrapper = document.getElementById('worldmap-path');
+            pathWrapper.innerHTML = '';
             document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${localStorage.getItem('dofla_streak') || '1'}일째`;
 
-            for (let i = 1; i <= 30; i++) {
-                const island = document.createElement('div');
-                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
-                
-                const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
-                const isUnlocked = hasQuestions;
+            // 스테이지 배치 패턴: 왼쪽 -> 중앙 -> 오른쪽 -> 중앙 반복
+            const positions = ['pos-center', 'pos-left', 'pos-center', 'pos-right'];
 
-                if (isUnlocked) {
-                    island.className = isCompleted ? 'day-island completed' : 'day-island';
-                    island.innerHTML = `
-                        <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
-                        <div class="day-island-status">${isCompleted ? '✓' : '➔'}</div>
-                    `;
-                    island.onclick = () => { playButtonSound(); selectDay(i); };
-                } else {
-                    island.className = 'day-island locked';
-                    island.innerHTML = `
-                        <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
-                        <div class="day-island-status">🔒</div>
-                    `;
-                    island.onclick = () => { playButtonSound(); alert('아직 문제가 업로드되지 않은 DAY다!'); };
+            for (let i = 1; i <= 30; i++) {
+                const row = document.createElement('div');
+                const posClass = positions[(i - 1) % positions.length];
+                row.className = `map-stage-row ${posClass}`;
+
+                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
+                const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
+                
+                const node = document.createElement('div');
+                let statusClass = 'locked';
+                let iconText = '🔒';
+
+                if (hasQuestions) {
+                    if (isCompleted) {
+                        statusClass = 'completed';
+                        iconText = '⭐';
+                    } else {
+                        statusClass = 'unlocked';
+                        iconText = '☠️';
+                    }
                 }
-                container.appendChild(island);
+
+                node.className = `map-node ${statusClass}`;
+                node.innerHTML = `
+                    <span class="stage-num">${i < 10 ? '0' + i : i}</span>
+                    <span class="stage-icon">${iconText}</span>
+                `;
+
+                if (hasQuestions) {
+                    node.onclick = () => { playButtonSound(); selectDay(i); };
+                } else {
+                    node.onclick = () => { playButtonSound(); alert('아직 토벌할 수 없는 스테이지다!'); };
+                }
+
+                row.appendChild(node);
+                pathWrapper.appendChild(row);
             }
         }
 
@@ -1693,13 +1760,10 @@
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetBackdrop = document.getElementById('sheet-backdrop');
 
-        function openBottomSheet(isAutoIntro = false) {
+        function openBottomSheet() {
             sheetBackdrop.classList.add('active');
             bottomSheet.classList.add('active');
-
-            if (isAutoIntro) {
-                playSoundFile('ping.mp3');
-            }
+            playSoundFile('ping.mp3');
         }
 
         function closeBottomSheet() {
@@ -1707,7 +1771,7 @@
             sheetBackdrop.classList.remove('active');
         }
 
-        function openQuickWordSheet(isAutoIntro = false) {
+        function openQuickWordSheet() {
             const dailyWords = getDailyWords();
             let htmlList = '<div class="quick-word-list">';
             dailyWords.forEach(item => {
@@ -1716,7 +1780,7 @@
             htmlList += '</div>';
 
             document.getElementById('sheet-content').innerHTML = htmlList;
-            openBottomSheet(isAutoIntro);
+            openBottomSheet();
         }
 
         function initBottomSheetEvents() {
