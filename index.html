@@ -282,11 +282,12 @@
             font-weight: 600;
         }
 
-        /* DAY 선택 화면 개편 */
+        /* DAY 선택 화면 개편 - 연하늘 바다 & 파도 애니메이션 적용 */
         #day-screen {
             padding: 20px 12px 16px 12px;
             justify-content: flex-start;
-            background: #ffffff;
+            background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+            position: relative;
         }
 
         .worldmap-scroll-container {
@@ -295,11 +296,35 @@
             overflow-y: auto;
             padding: 20px 0 40px 0;
             -webkit-overflow-scrolling: touch;
-            background: #ffffff;
+            background: transparent;
             position: relative;
             scrollbar-width: none;
+            z-index: 2;
         }
         .worldmap-scroll-container::-webkit-scrollbar { display: none; }
+
+        /* 바다 파도 배경 애니메이션 효과 */
+        .wave-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
+                radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 18%);
+            background-size: 200% 200%;
+            animation: oceanWaves 10s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes oceanWaves {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 100%; }
+        }
 
         .worldmap-path-wrapper {
             position: relative;
@@ -307,7 +332,7 @@
             min-height: 100%;
         }
 
-        /* 동그라미 섬 스타일 (기존 72px -> 1.5배인 108px) */
+        /* 동그라미 노드 스타일 */
         .island-node {
             position: absolute;
             width: 108px;
@@ -327,12 +352,12 @@
             transform: scale(0.92) !important;
         }
 
-        /* 연초록색 버튼 + 연갈색 섬 아래 입체층 */
+        /* 버튼 및 노드 입체감 설정 */
         .island-node.unlocked {
-            background: linear-gradient(145deg, #a3e635 0%, #84cc16 100%);
+            background: linear-gradient(145deg, #38bdf8 0%, #0284c7 100%);
             box-shadow: 
-                0 10px 0 #8d6e63, 
-                0 14px 22px rgba(132, 204, 22, 0.35),
+                0 10px 0 #0369a1, 
+                0 14px 22px rgba(2, 132, 199, 0.35),
                 inset 0 2px 4px rgba(255,255,255,0.7);
             border: 4px solid #ffffff;
             animation: islandFloat 2.4s infinite ease-in-out;
@@ -341,7 +366,7 @@
         .island-node.completed {
             background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
             box-shadow: 
-                0 10px 0 #8d6e63, 
+                0 10px 0 #b45309, 
                 0 12px 20px rgba(245, 158, 11, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.8);
             border: 4px solid #ffffff;
@@ -350,7 +375,7 @@
         .island-node.locked {
             background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
             box-shadow: 
-                0 8px 0 #bcaaa4, 
+                0 8px 0 #94a3b8, 
                 0 6px 12px rgba(0,0,0,0.04);
             border: 4px solid #ffffff;
             opacity: 0.85;
@@ -849,14 +874,15 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (연속출석 배너 삭제 적용) -->
+    <!-- 2. DAY 선택 화면 (연하늘 배경 + 파도 물결 애니메이션) -->
     <div id="day-screen" class="container hidden">
+        <div class="wave-bg"></div>
         <div id="island-container" class="worldmap-scroll-container">
             <div id="worldmap-path" class="worldmap-path-wrapper">
                 <svg id="map-svg-layer" class="map-svg-layer"></svg>
             </div>
         </div>
-        <button class="btn btn-secondary" style="margin-top: 12px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
+        <button class="btn btn-secondary" style="margin-top: 12px; z-index: 2;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
     <!-- 3. 문제풀이 규칙 화면 -->
@@ -1511,7 +1537,7 @@
             startReview();
         }
 
-        /* 맵 그리기 (간격 2배 확장 및 점선 3개씩 배치) */
+        /* 맵 그리기 (별 이모티콘 ⭐ 적용) */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1522,7 +1548,7 @@
             const totalStages = 30;
             const containerWidth = 330; 
             const startY = 70;
-            const rowGap = 170; // 간격을 기존 85px에서 2배(170px)로 확장
+            const rowGap = 170;
 
             const nodesData = [];
 
@@ -1537,7 +1563,7 @@
             const totalHeight = startY + totalStages * rowGap + 60;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            // 섬과 섬 사이를 연결하는 점선 경로 (3줄) 생성
+            // 섬과 섬 사이를 연결하는 점선 경로
             nodesData.forEach((curr, index) => {
                 if (index < nodesData.length - 1) {
                     const next = nodesData[index + 1];
@@ -1546,12 +1572,11 @@
 
                     const singleD = `M ${curr.x} ${curr.y} C ${curr.x} ${cpY1}, ${next.x} ${cpY2}, ${next.x} ${next.y}`;
 
-                    // 중앙, 좌 offset(-10), 우 offset(+10) 총 3개의 점선 배치
                     [-10, 0, 10].forEach(offset => {
                         const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
                         pathElement.setAttribute("d", singleD);
                         pathElement.setAttribute("fill", "none");
-                        pathElement.setAttribute("stroke", "#cbd5e1");
+                        pathElement.setAttribute("stroke", "rgba(255, 255, 255, 0.7)");
                         pathElement.setAttribute("stroke-width", "3");
                         pathElement.setAttribute("stroke-dasharray", "6 6");
                         pathElement.setAttribute("stroke-linecap", "round");
@@ -1578,7 +1603,7 @@
                         iconText = '⭐';
                     } else {
                         statusClass = 'unlocked';
-                        iconText = '🏝️';
+                        iconText = '⭐';
                     }
                 }
 
