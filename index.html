@@ -130,6 +130,7 @@
             font-family: 'Jua', sans-serif;
             margin-top: 12px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            flex-shrink: 0;
         }
         .btn:hover {
             transform: translateY(-2px) scale(1.02);
@@ -259,7 +260,14 @@
             box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
         }
 
-        /* DAY 선택 화면 (잠금 및 위계감 부여 적용) */
+        /* ----------------------------------------------------
+           DAY 선택 화면 (둥근 섬 Island 버티컬 스크롤 레이아웃)
+        ---------------------------------------------------- */
+        #day-screen {
+            padding: 20px 10px 15px 10px;
+            justify-content: flex-start;
+        }
+
         .streak-badge {
             display: flex;
             align-items: center;
@@ -271,93 +279,119 @@
             font-size: 16px;
             padding: 8px 18px;
             border-radius: 25px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(225, 29, 72, 0.1);
+            flex-shrink: 0;
         }
 
-        .day-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        /* 섬 카드들이 배치되는 세로 스크롤 리스트 영역 */
+        .island-scroll-container {
             width: 100%;
-            padding: 0 10px;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px 12px 20px 12px;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            /* 스크롤바 숨기기 스타일 */
+            scrollbar-width: thin;
+            scrollbar-color: #f472b6 transparent;
+            -webkit-overflow-scrolling: touch;
         }
-        
-        /* 기본 DAY 버튼 (활성 상태) */
-        .day-btn {
+
+        .island-scroll-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .island-scroll-container::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+
+        /* 둥근 섬(Island) 스타일 카드 */
+        .day-island {
+            width: 92%;
             background: #ffffff;
-            color: #db2777;
-            border: 1.5px solid #f472b6;
-            padding: 12px 0;
-            font-size: 17px;
-            border-radius: 16px;
+            border-radius: 30px; /* 섬 모양의 아주 둥근 라운딩 */
+            padding: 16px 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 
+                0 10px 20px rgba(236, 72, 153, 0.1),
+                0 2px 6px rgba(0,0,0,0.03);
+            border: 2px solid #fbcfe8;
             cursor: pointer;
-            font-family: 'Jua', sans-serif;
-            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.12);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .day-island:active {
+            transform: scale(0.97);
+        }
+
+        .day-island-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .day-island-title {
+            font-size: 22px;
+            color: #db2777;
+            font-weight: bold;
+        }
+
+        .day-island-sub {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .day-island-status {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #fdf2f8;
+            border: 1.5px solid #f472b6;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-        }
-        .day-btn:hover { 
-            background: #fdf2f8;
-            border-color: #ec4899; 
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 6px 18px rgba(236, 72, 153, 0.22);
+            font-size: 20px;
+            box-shadow: 0 3px 8px rgba(236, 72, 153, 0.15);
         }
 
-        /* 완료된 DAY 버튼 스타일 */
-        .day-btn.completed {
-            background: linear-gradient(145deg, #be185d 0%, #9d174d 100%);
-            color: #ffffff;
-            border: 1px solid #9d174d;
-            box-shadow: 0 4px 0 #831843, 0 4px 12px rgba(157, 23, 77, 0.25);
+        /* 완료된 섬 카드 */
+        .day-island.completed {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            border-color: #ec4899;
+        }
+        .day-island.completed .day-island-status {
+            background: #db2777;
+            color: white;
+            border-color: #be185d;
         }
 
-        /* 잠긴(Locked) DAY 버튼 스타일 */
-        .day-btn.locked {
-            background: #f1f5f9;
-            color: #94a3b8;
-            border: 1.5px solid #e2e8f0;
-            box-shadow: none;
-            cursor: not-allowed;
-            opacity: 0.75;
-        }
-        .day-btn.locked:hover {
-            transform: none;
-            background: #f1f5f9;
+        /* 잠긴 섬 카드 */
+        .day-island.locked {
+            background: #f8fafc;
             border-color: #e2e8f0;
             box-shadow: none;
+            opacity: 0.65;
+            cursor: not-allowed;
         }
-        
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
+        .day-island.locked .day-island-title {
+            color: #64748b;
         }
-        .page-arrow {
-            background: linear-gradient(145deg, #f472b6, #ec4899);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-family: 'Jua', sans-serif;
-            box-shadow: 0 3px 0 #be185d, 0 4px 10px rgba(236, 72, 153, 0.2);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        .day-island.locked .day-island-status {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
         }
-        .page-arrow:hover {
-            transform: scale(1.1);
-        }
-        .page-indicator { font-size: 16px; color: #db2777; font-weight: bold; }
 
         .rule-title { 
             font-size: 26px; 
@@ -468,19 +502,22 @@
             transform: translateY(-2px);
         }
 
+        /* ----------------------------------------------------
+           결과 이미지 크기 극대화 (화면을 꽉 채우도록 설정)
+        ---------------------------------------------------- */
         .result-image {
-            max-width: 160px;
-            max-height: 150px;
-            width: auto;
-            height: auto;
-            border-radius: 16px;
-            margin-bottom: 8px;
+            width: 88%;
+            max-width: 320px;
+            height: 250px;
+            border-radius: 24px;
+            margin-bottom: 12px;
             display: none;
             object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(236, 72, 153, 0.25));
         }
-        .result-text { font-size: 24px; margin-bottom: 6px; font-weight: bold; }
+        .result-text { font-size: 28px; margin-bottom: 6px; font-weight: bold; }
 
-        /* 결과 화면 내 해설 텍스트 상자 (원상복구형) */
+        /* 결과 화면 내 해설 텍스트 상자 */
         .result-explanation {
             font-size: 15px;
             color: #1e293b;
@@ -490,11 +527,11 @@
             padding: 10px 14px;
             border-radius: 14px;
             white-space: pre-line;
-            margin: 8px 0;
+            margin: 6px 0 10px 0;
             width: 90%;
             text-align: left;
             box-sizing: border-box;
-            max-height: 140px;
+            max-height: 120px;
             overflow-y: auto;
         }
 
@@ -534,7 +571,7 @@
         .card-content { font-size: 30px; color: #0f172a; font-weight: bold; word-break: break-all; }
 
         /* ===================================================
-           스무스 바텀 시트 (오늘의 단어 전용으로 유지)
+           스무스 바텀 시트 (오늘의 단어 전용)
         =================================================== */
         .sheet-backdrop {
             position: fixed;
@@ -653,16 +690,14 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 -->
+    <!-- 2. DAY 선택 화면 (섬 버티컬 스크롤 형태) -->
     <div id="day-screen" class="container hidden">
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
-        <div id="day-grid" class="day-grid"></div>
-        <div class="pagination-container">
-            <button class="page-arrow" onclick="playButtonSound(); changePage(-1)">◀</button>
-            <span id="page-indicator" class="page-indicator">1 / 3 페이지</span>
-            <button class="page-arrow" onclick="playButtonSound(); changePage(1)">▶</button>
-        </div>
-        <button class="btn" style="width: 50%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
+        
+        <!-- DAY 1 ~ 30까지 세로로 슬라이드해서 내릴 수 있는 섬 카드 영역 -->
+        <div id="island-container" class="island-scroll-container"></div>
+
+        <button class="btn" style="width: 70%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
     <!-- 3. 문제풀이 규칙 화면 -->
@@ -690,7 +725,7 @@
         </div>
     </div>
 
-    <!-- 5. 결과 화면 (해설 포함 원상복구) -->
+    <!-- 5. 결과 화면 (이미지 크기 극대화) -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
@@ -837,7 +872,6 @@
 
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
-        let currentDayPage = 0;
         let activeFlashcards = []; 
         let currentReviewIndex = 0;
         let isShowingMeaning = false;
@@ -969,7 +1003,7 @@
 
         function goToDaySelect() {
             document.getElementById('title-screen').classList.add('hidden');
-            renderDayButtons();
+            renderIslandDays();
             document.getElementById('day-screen').classList.remove('hidden');
         }
 
@@ -987,48 +1021,55 @@
             startReview();
         }
 
-        // DAY 선택창 렌더링 (잠금 상태 및 위계감 부여 적용)
-        function renderDayButtons() {
-            const grid = document.getElementById('day-grid');
-            grid.innerHTML = '';
-            
-            const startDay = currentDayPage * 10 + 1;
-            const endDay = startDay + 9;
+        /* ----------------------------------------------------
+           섬(Island) 버티컬 스크롤 DAY 1 ~ 30 생성 함수
+        ---------------------------------------------------- */
+        function renderIslandDays() {
+            const container = document.getElementById('island-container');
+            container.innerHTML = '';
 
             const isDay1Completed = localStorage.getItem('dofla_day1_completed') === 'true';
             const currentStreak = localStorage.getItem('dofla_streak') || '1';
             
             document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${currentStreak}일째 버티는 중`;
 
-            for (let i = startDay; i <= endDay; i++) {
-                const btn = document.createElement('button');
+            for (let i = 1; i <= 30; i++) {
+                const island = document.createElement('div');
                 
                 if (i === 1) {
                     if (isDay1Completed) {
-                        btn.className = 'day-btn completed';
-                        btn.innerHTML = `DAY ${i} ✓`;
+                        island.className = 'day-island completed';
+                        island.innerHTML = `
+                            <div class="day-island-info">
+                                <span class="day-island-title">DAY 1</span>
+                                <span class="day-island-sub">학습 완료!</span>
+                            </div>
+                            <div class="day-island-status">✓</div>
+                        `;
                     } else {
-                        btn.className = 'day-btn';
-                        btn.innerHTML = `DAY ${i} ✨`;
+                        island.className = 'day-island';
+                        island.innerHTML = `
+                            <div class="day-island-info">
+                                <span class="day-island-title">DAY 1</span>
+                                <span class="day-island-sub">도황의 기초 해적훈련</span>
+                            </div>
+                            <div class="day-island-status">✨</div>
+                        `;
                     }
-                    btn.onclick = () => { playButtonSound(); showRuleScreen(); };
+                    island.onclick = () => { playButtonSound(); showRuleScreen(); };
                 } else {
-                    // DAY 2 이후는 잠긴(Locked) 위계감 적용
-                    btn.className = 'day-btn locked';
-                    btn.innerHTML = `DAY ${i} 🔒`;
-                    btn.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 잠겨 있다! 먼저 이전 과제를 완료해라 훗훗훗...`); };
+                    island.className = 'day-island locked';
+                    island.innerHTML = `
+                        <div class="day-island-info">
+                            <span class="day-island-title">DAY ${i}</span>
+                            <span class="day-island-sub">잠겨 있음</span>
+                        </div>
+                        <div class="day-island-status">🔒</div>
+                    `;
+                    island.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 잠겨 있다! 먼저 이전 과제를 완료해라 훗훗훗...`); };
                 }
-                grid.appendChild(btn);
+                container.appendChild(island);
             }
-
-            document.getElementById('page-indicator').innerText = `${currentDayPage + 1} / 3 페이지`;
-        }
-
-        function changePage(direction) {
-            currentDayPage += direction;
-            if (currentDayPage < 0) currentDayPage = 2; 
-            if (currentDayPage > 2) currentDayPage = 0;
-            renderDayButtons();
         }
 
         function showRuleScreen() {
@@ -1122,7 +1163,6 @@
                 resultMsg.style.color = "#db2777";
                 resultMsg.innerText = "도~황!";
                 
-                // 결과 화면 안에 해설 표시 (원상복구)
                 resultExp.innerText = q.explanation;
                 resultExp.classList.remove('hidden');
 
