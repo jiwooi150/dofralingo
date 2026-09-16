@@ -282,11 +282,11 @@
             font-weight: 600;
         }
 
-        /* DAY 선택 화면 개편 - 연하늘 바다 & 파도 애니메이션 적용 */
+        /* DAY 선택 화면 개편 - 배경 하얀색으로 변경 */
         #day-screen {
             padding: 20px 12px 16px 12px;
             justify-content: flex-start;
-            background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+            background: #ffffff;
             position: relative;
         }
 
@@ -303,27 +303,9 @@
         }
         .worldmap-scroll-container::-webkit-scrollbar { display: none; }
 
-        /* 바다 파도 배경 애니메이션 효과 */
+        /* 바다 파도 배경 제거를 위해 display: none 처리 */
         .wave-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
-                radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
-                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 18%);
-            background-size: 200% 200%;
-            animation: oceanWaves 10s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes oceanWaves {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 100%; }
+            display: none;
         }
 
         .worldmap-path-wrapper {
@@ -352,22 +334,23 @@
             transform: scale(0.92) !important;
         }
 
-        /* 버튼 및 노드 입체감 설정 */
+        /* 미완료(기본) 섬 버튼 - 연한 초록색 배경, 연한 갈색 그림자 */
         .island-node.unlocked {
-            background: linear-gradient(145deg, #38bdf8 0%, #0284c7 100%);
+            background: #bbf7d0; 
             box-shadow: 
-                0 10px 0 #0369a1, 
-                0 14px 22px rgba(2, 132, 199, 0.35),
+                0 10px 0 #d4a373, 
+                0 14px 22px rgba(212, 163, 115, 0.35),
                 inset 0 2px 4px rgba(255,255,255,0.7);
             border: 4px solid #ffffff;
             animation: islandFloat 2.4s infinite ease-in-out;
         }
 
+        /* 완료된 섬 버튼 - 노란색 배경, 연한 노란색 그림자 */
         .island-node.completed {
-            background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
+            background: #fde047;
             box-shadow: 
-                0 10px 0 #b45309, 
-                0 12px 20px rgba(245, 158, 11, 0.3),
+                0 10px 0 #fef08a, 
+                0 12px 20px rgba(253, 224, 71, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.8);
             border: 4px solid #ffffff;
         }
@@ -389,10 +372,10 @@
 
         .island-node .stage-num {
             font-family: 'Poppins', sans-serif;
-            font-size: 22px;
+            font-size: 16px;
             font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            color: #334155;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
             line-height: 1;
         }
         
@@ -401,9 +384,11 @@
             text-shadow: none;
         }
 
+        /* 이모티콘 크기 3배 확대 (60px) */
         .island-node .stage-icon {
-            font-size: 20px;
+            font-size: 60px;
             margin-top: 2px;
+            line-height: 1;
         }
 
         .map-svg-layer {
@@ -874,7 +859,7 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (연하늘 배경 + 파도 물결 애니메이션) -->
+    <!-- 2. DAY 선택 화면 (배경 하얀색) -->
     <div id="day-screen" class="container hidden">
         <div class="wave-bg"></div>
         <div id="island-container" class="worldmap-scroll-container">
@@ -1369,7 +1354,8 @@
 
             try {
                 const audio = new Audio(filename);
-                if (filename === 'correct.mp3') {
+                // 2.mp3 파일일 경우 볼륨을 절반(0.5)으로 설정
+                if (filename === '2.mp3') {
                     audio.volume = 0.5;
                 }
                 audio.currentTime = 0;
@@ -1537,7 +1523,7 @@
             startReview();
         }
 
-        /* 맵 그리기 (별 이모티콘 ⭐ 적용) */
+        /* 맵 그리기 수정 완료 (미완료: 연초록/연갈색 그림자/섬 이모티콘, 완료: 노란색/연노란색 그림자/깃발 이모티콘, 문구: day1 형식) */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1563,7 +1549,6 @@
             const totalHeight = startY + totalStages * rowGap + 60;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            // 섬과 섬 사이를 연결하는 점선 경로
             nodesData.forEach((curr, index) => {
                 if (index < nodesData.length - 1) {
                     const next = nodesData[index + 1];
@@ -1576,7 +1561,7 @@
                         const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
                         pathElement.setAttribute("d", singleD);
                         pathElement.setAttribute("fill", "none");
-                        pathElement.setAttribute("stroke", "rgba(255, 255, 255, 0.7)");
+                        pathElement.setAttribute("stroke", "rgba(203, 213, 225, 0.6)");
                         pathElement.setAttribute("stroke-width", "3");
                         pathElement.setAttribute("stroke-dasharray", "6 6");
                         pathElement.setAttribute("stroke-linecap", "round");
@@ -1600,10 +1585,10 @@
                 if (hasQuestions) {
                     if (isCompleted) {
                         statusClass = 'completed';
-                        iconText = '⭐';
+                        iconText = '🚩'; // 완료 시 깃발
                     } else {
                         statusClass = 'unlocked';
-                        iconText = '⭐';
+                        iconText = '🏝️'; // 미완료 시 섬
                     }
                 }
 
@@ -1612,7 +1597,7 @@
                 node.style.top = `${data.y - 54}px`;
 
                 node.innerHTML = `
-                    <span class="stage-num">${i < 10 ? '0' + i : i}</span>
+                    <span class="stage-num">day${i}</span>
                     <span class="stage-icon">${iconText}</span>
                 `;
 
