@@ -19,10 +19,22 @@
     <link rel="apple-touch-icon" href="title.png">
     <link rel="icon" type="image/png" href="title.png">
     
+    <!-- 세련된 Pretendard & 포인트 폰트 적용 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    
     <!-- 컨페티 효과 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --primary: #ec4899;
+            --primary-dark: #be185d;
+            --primary-light: #fdf2f8;
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --bg-card: rgba(255, 255, 255, 0.95);
+        }
+
         html, body {
             margin: 0;
             padding: 0;
@@ -32,8 +44,69 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f8fafc;
-            font-family: 'Jua', sans-serif;
+            background-color: #f1f5f9;
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto문제 풀이 UI를 깔끔하고 세련된 미니멀리즘 스타일로 전면 개편했습니다.
+
+### ✨ 디자인 및 폰트 변경 포인트
+1. **서체 변경 (Pretendard & Poppins)**:
+   - 가독성이 높고 트렌디한 **Pretendard** 폰트를 기본 글꼴로 채택하고, 숫자와 영어 타이머에는 **Poppins**를 적용해 세련된 감성을 더했습니다.
+2. **미니멀리즘 UI (모던 카드 스타일)**:
+   - 과도한 원색을 빼고 **밝은 샌드/파스텔 핑크(Pastel Pink)**톤을 베이스로 사용했습니다.
+   - 복잡했던 요소들을 단순화하여 **여백과 둥근 라운딩(20px)** 중심의 깔끔한 카드 디자인으로 구성했습니다.
+3. **직관적인 보기(Options) 상태 디자인**:
+   - 투박했던 버튼 형태 대신 Hover 및 Click 시 자연스러운 색상 변환과 부드러운 전환(Transition) 효과를 적용했습니다.
+4. **타이머 & 상단바 정돈**:
+   - 상단 버튼과 타이머 배지를 깔끔하게 정렬하여 한눈에 들어오도록 개선했습니다.
+
+---
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>도플라링고 - 도황의 영어공부법</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="도플라링고">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="manifest" href='data:application/manifest+json,{"name":"도플라링고","short_name":"도플라링고","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#ec4899","icons":[{"src":"title.png","sizes":"192x192","type":"image/png"}]}'>
+    
+    <link rel="apple-touch-icon" href="title.png">
+    <link rel="icon" type="image/png" href="title.png">
+    
+    <!-- Pretendard & Poppins 고급 모던 폰트 적용 -->
+    <link rel="stylesheet" as="style" crossorigin href="[https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css](https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css)" />
+    <link href="[https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js](https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js)"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary-pink: #ec4899;
+            --primary-dark: #be185d;
+            --accent-pink: #f472b6;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #f1f5f9;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            height: -webkit-fill-available;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
             touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
@@ -41,54 +114,45 @@
             position: relative;
         }
 
-        /* 은은한 네온 은하수 그래디언트 */
+        /* 은은한 배경 오로라 그래디언트 */
         body::before {
             content: '';
             position: absolute;
-            width: 350px;
-            height: 350px;
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(251, 207, 232, 0.6) 0%, rgba(251, 207, 232, 0) 70%);
+            background: radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(251, 207, 232, 0) 70%);
             top: 5%;
             left: 5%;
             filter: blur(50px);
             z-index: 0;
-            animation: neonPulse 8s infinite alternate ease-in-out;
         }
         body::after {
             content: '';
             position: absolute;
-            width: 400px;
-            height: 400px;
+            width: 380px;
+            height: 380px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(233, 213, 255, 0.6) 0%, rgba(233, 213, 255, 0) 70%);
+            background: radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, rgba(244, 114, 182, 0) 70%);
             bottom: 5%;
             right: 5%;
             filter: blur(60px);
             z-index: 0;
-            animation: neonPulse 10s infinite alternate-reverse ease-in-out;
         }
 
-        @keyframes neonPulse {
-            0% { transform: scale(0.9) translate(0, 0); opacity: 0.7; }
-            100% { transform: scale(1.1) translate(15px, -15px); opacity: 1; }
-        }
-
-        /* 스마트폰 형태 메인 컨테이너 */
+        /* 스마트폰 모던 패널 메인 컨테이너 */
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.92);
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 25px 20px;
-            border-radius: 35px;
+            padding: 28px 22px;
+            border-radius: 32px;
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.08),
-                0 0 0 1px rgba(236, 72, 153, 0.15),
-                inset 0 1px 2px rgba(255, 255, 255, 0.9);
-            border: 1.5px solid rgba(244, 114, 182, 0.25);
+                0 20px 40px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(244, 114, 182, 0.15);
             width: 380px;
-            height: 700px;
+            height: 680px;
             max-height: 90vh;
             display: flex;
             flex-direction: column;
@@ -103,70 +167,64 @@
         /* 오답 시 Shake 애니메이션 */
         @keyframes screenShake {
             0% { transform: translate(0, 0); }
-            20% { transform: translate(-8px, 0); }
-            40% { transform: translate(8px, 0); }
-            60% { transform: translate(-6px, 0); }
-            80% { transform: translate(6px, 0); }
+            20% { transform: translate(-6px, 0); }
+            40% { transform: translate(6px, 0); }
+            60% { transform: translate(-4px, 0); }
+            80% { transform: translate(4px, 0); }
             100% { transform: translate(0, 0); }
         }
-        .shake-anim {
-            animation: screenShake 0.4s ease;
-        }
+        .shake-anim { animation: screenShake 0.4s ease; }
 
-        /* 3D 입체 버튼 */
+        /* 세련된 세미 플랫 버튼 */
         .btn {
-            background: linear-gradient(145deg, #ff53b0 0%, #ec4899 50%, #db2777 100%);
+            background: var(--primary-pink);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 14px 0;
-            width: 80%;
-            font-size: 20px;
+            border: none;
+            padding: 16px 0;
+            width: 100%;
+            font-size: 17px;
+            font-weight: 600;
             border-radius: 18px;
             cursor: pointer;
-            box-shadow: 
-                0 5px 0 #be185d, 
-                0 8px 15px rgba(236, 72, 153, 0.3);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: 'Jua', sans-serif;
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.25);
+            transition: all 0.2s ease;
+            font-family: 'Pretendard', sans-serif;
             margin-top: 12px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
             flex-shrink: 0;
         }
         .btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            filter: brightness(1.08);
-            box-shadow: 
-                0 7px 0 #be185d, 
-                0 12px 20px rgba(236, 72, 153, 0.4);
+            background: #be185d;
+            transform: translateY(-1px);
         }
         .btn:active {
-            transform: translateY(3px) scale(1);
-            box-shadow: 0 2px 0 #be185d, 0 4px 8px rgba(236, 72, 153, 0.2);
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.2);
         }
 
         .btn-secondary {
-            background: linear-gradient(145deg, #f472b6 0%, #db2777 100%);
-            box-shadow: 0 5px 0 #9d174d, 0 8px 15px rgba(219, 39, 119, 0.25);
+            background: #ffffff;
+            color: var(--primary-pink);
+            border: 1.5px solid rgba(236, 72, 153, 0.3);
+            box-shadow: none;
         }
 
         /* 인트로 화면 */
         .intro-container {
-            background: rgba(253, 242, 248, 0.95);
+            background: #fdf2f8;
             cursor: pointer;
         }
         .intro-text {
-            font-size: 52px;
-            font-weight: bold;
-            color: #db2777;
-            letter-spacing: 3px;
-            text-shadow: 0 4px 12px rgba(219, 39, 119, 0.25);
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-pink);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.5px;
             opacity: 0;
-            transform: translateY(30px);
-            animation: slideFadeIn 1.2s ease forwards;
+            animation: slideFadeIn 1s ease forwards;
         }
 
         @keyframes slideFadeIn {
-            0% { opacity: 0; transform: translateY(30px); }
+            0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
@@ -176,8 +234,6 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
         }
 
         .character-area {
@@ -185,86 +241,64 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .speech-bubble {
             position: absolute;
-            top: -52px;
+            top: -48px;
             background: #ffffff;
-            border: 2px solid #ec4899;
-            border-radius: 18px;
-            padding: 8px 16px;
-            font-size: 15px;
-            color: #1f2937;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 16px;
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
             white-space: nowrap;
-            box-shadow: 0 6px 15px rgba(236, 72, 153, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
             animation: bubbleBounce 2s infinite ease-in-out;
             z-index: 10;
         }
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -9px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 9px 8px 0 8px;
-            border-style: solid;
-            border-color: #ec4899 transparent;
-            display: block;
-            width: 0;
-        }
-        .speech-bubble::before {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 7px 6px 0 6px;
+            border-width: 8px 7px 0 7px;
             border-style: solid;
             border-color: #ffffff transparent;
             display: block;
             width: 0;
-            z-index: 1;
         }
 
         @keyframes bubbleBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-4px); }
         }
 
         .title-image {
-            max-width: 180px;
+            max-width: 160px;
             width: 100%;
             height: auto;
-            border: none;
-            box-shadow: none;
-            background: transparent;
-            filter: drop-shadow(0 4px 12px rgba(236, 72, 153, 0.25));
+            filter: drop-shadow(0 8px 16px rgba(236, 72, 153, 0.15));
         }
         .logo { 
-            font-size: 36px; 
-            color: #db2777; 
+            font-size: 28px; 
+            font-weight: 700;
+            color: var(--text-dark); 
             margin-bottom: 4px; 
-            text-shadow: 0 2px 4px rgba(219, 39, 119, 0.15);
         }
         .subtitle { 
-            font-size: 15px; 
-            color: #be185d; 
-            margin-bottom: 12px; 
-            font-weight: bold;
-            background: #fce7f3;
-            padding: 6px 18px;
-            border-radius: 20px;
-            border: 1px solid #f472b6;
-            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
+            font-size: 14px; 
+            color: var(--text-muted); 
+            margin-bottom: 16px; 
+            font-weight: 500;
         }
 
-        /* ----------------------------------------------------
-           DAY 선택 화면 (둥근 섬 Island 버티컬 스크롤 레이아웃)
-        ---------------------------------------------------- */
+        /* DAY 선택 화면 */
         #day-screen {
-            padding: 20px 10px 15px 10px;
+            padding: 24px 12px 16px 12px;
             justify-content: flex-start;
         }
 
@@ -272,398 +306,326 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            background: #ffe4e6;
-            border: 1.5px solid #fda4af;
-            color: #be185d;
-            font-size: 16px;
-            padding: 8px 18px;
-            border-radius: 25px;
-            margin-bottom: 12px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.1);
+            gap: 6px;
+            background: #fdf2f8;
+            border: 1px solid #fbcfe8;
+            color: var(--primary-dark);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
             flex-shrink: 0;
         }
 
-        /* 섬 카드들이 배치되는 세로 스크롤 리스트 영역 */
         .island-scroll-container {
             width: 100%;
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden;
-            padding: 10px 12px 20px 12px;
+            padding: 4px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            /* 스크롤바 숨기기 스타일 */
-            scrollbar-width: thin;
-            scrollbar-color: #f472b6 transparent;
+            gap: 12px;
             -webkit-overflow-scrolling: touch;
         }
 
-        .island-scroll-container::-webkit-scrollbar {
-            width: 5px;
-        }
-        .island-scroll-container::-webkit-scrollbar-thumb {
-            background: #f472b6;
-            border-radius: 10px;
-        }
-
-        /* 둥근 섬(Island) 스타일 카드 */
         .day-island {
-            width: 92%;
+            width: 100%;
             background: #ffffff;
-            border-radius: 30px; /* 섬 모양의 아주 둥근 라운딩 */
+            border-radius: 20px;
             padding: 16px 20px;
             box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 
-                0 10px 20px rgba(236, 72, 153, 0.1),
-                0 2px 6px rgba(0,0,0,0.03);
-            border: 2px solid #fbcfe8;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            transition: all 0.2s ease;
         }
 
-        .day-island:active {
-            transform: scale(0.97);
-        }
-
-        .day-island-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
-        }
+        .day-island:active { transform: scale(0.98); }
 
         .day-island-title {
-            font-size: 22px;
-            color: #db2777;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
         }
 
-        .day-island-sub {
-            font-size: 13px;
-            color: #94a3b8;
-        }
+        .day-island-sub { font-size: 13px; color: var(--text-muted); }
 
         .day-island-status {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: #fdf2f8;
-            border: 1.5px solid #f472b6;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 3px 8px rgba(236, 72, 153, 0.15);
+            font-size: 16px;
+            color: var(--primary-pink);
         }
 
-        /* 완료된 섬 카드 */
         .day-island.completed {
-            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-            border-color: #ec4899;
+            background: #fdf2f8;
+            border-color: #fbcfe8;
         }
         .day-island.completed .day-island-status {
-            background: #db2777;
+            background: var(--primary-pink);
             color: white;
-            border-color: #be185d;
         }
 
-        /* 잠긴 섬 카드 */
         .day-island.locked {
+            opacity: 0.5;
             background: #f8fafc;
-            border-color: #e2e8f0;
-            box-shadow: none;
-            opacity: 0.65;
             cursor: not-allowed;
         }
-        .day-island.locked .day-island-title {
-            color: #64748b;
-        }
-        .day-island.locked .day-island-status {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
-            color: #94a3b8;
-        }
 
+        /* 규칙 화면 */
         .rule-title { 
-            font-size: 26px; 
-            color: #be185d; 
-            margin-bottom: 20px; 
-            font-weight: bold;
+            font-size: 22px; 
+            font-weight: 700;
+            color: var(--text-dark); 
+            margin-bottom: 16px; 
         }
         .rule-box {
             background: #fdf2f8;
-            border: 1.5px dashed #f472b6;
             border-radius: 20px;
-            padding: 20px;
-            width: 85%;
-            text-align: left;
-            font-size: 18px;
-            color: #334155;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
-
-        .quiz-content-wrapper {
+            padding: 24px 20px;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            padding-top: 15px; 
-        }
-
-        .quiz-home-btn {
-            position: absolute;
-            top: -15px;
-            left: 10px;
-            background: #ffffff;
-            border: 1px solid #f472b6;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: #db2777;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Jua', sans-serif;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .quiz-home-btn:hover {
-            transform: scale(1.05);
-            background: #fdf2f8;
-        }
-
-        .timer-badge {
-            position: absolute;
-            top: -15px;
-            right: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: #fce7f3;
-            border: 1px solid #f472b6;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 15px;
-            color: #be185d;
-            font-weight: bold;
-        }
-        .timer-badge svg { width: 16px; height: 16px; fill: #be185d; }
-
-        .question-title { 
-            font-size: 24px; 
-            color: #db2777; 
-            margin-bottom: 15px; 
-            width: 100%; 
-            text-align: left; 
-            padding-left: 10px; 
-            box-sizing: border-box;
-        }
-        .question-text { 
-            font-size: 17px; 
-            color: #1e293b; 
-            margin-bottom: 20px; 
-            line-height: 1.5; 
-            text-align: left; 
-            width: 100%; 
-            padding: 0 10px; 
-            box-sizing: border-box;
-        }
-        
-        .options { display: flex; flex-direction: column; gap: 10px; width: 100%; padding: 0 10px; box-sizing: border-box; }
-        
-        .option-btn {
-            background: #ffffff;
-            color: #1e293b;
-            border: 1.5px solid #cbd5e1;
-            padding: 12px 14px;
-            font-size: 17px;
-            border-radius: 16px;
-            cursor: pointer;
             text-align: left;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: 'Jua', sans-serif;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
-        }
-        .option-btn:hover { 
-            background: #fdf2f8;
-            border-color: #ec4899; 
-            color: #db2777;
-            transform: translateY(-2px);
+            font-size: 15px;
+            color: #334155;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #fbcfe8;
         }
 
         /* ----------------------------------------------------
-           결과 이미지 크기 극대화 (화면을 꽉 채우도록 설정)
+           개선된 퀴즈 화면 모던 UI (1~5번 문제)
         ---------------------------------------------------- */
+        .quiz-content-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+
+        .quiz-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .quiz-home-btn {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quiz-home-btn:hover { background: #f8fafc; color: var(--text-dark); }
+
+        .timer-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #fdf2f8;
+            border: 1px solid #fbcfe8;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--primary-pink);
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+        .timer-badge svg { width: 14px; height: 14px; fill: var(--primary-pink); }
+
+        .question-title { 
+            font-size: 14px; 
+            font-weight: 700;
+            color: var(--primary-pink); 
+            text-align: left;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* 문제 텍스트 스타일 */
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 20px 18px;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            margin-bottom: 16px;
+        }
+
+        .question-text { 
+            font-size: 16px; 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            font-weight: 500;
+            word-break: keep-all;
+        }
+        
+        .question-text u {
+            color: var(--primary-pink);
+            text-decoration-color: var(--primary-pink);
+            text-underline-offset: 4px;
+            font-weight: 700;
+        }
+
+        /* 세련된 보기 버튼 시스템 */
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            width: 100%; 
+        }
+        
+        .option-btn {
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+        }
+        .option-btn:hover { 
+            background: #fdf2f8;
+            border-color: #fbcfe8; 
+            color: var(--primary-pink);
+            transform: translateY(-1px);
+        }
+        .option-btn:active {
+            transform: translateY(1px);
+            background: #fce7f3;
+        }
+
+        /* 결과 화면 */
         .result-image {
-            width: 88%;
-            max-width: 320px;
-            height: 250px;
-            border-radius: 24px;
+            width: 85%;
+            max-width: 280px;
+            height: 220px;
+            border-radius: 20px;
             margin-bottom: 12px;
             display: none;
             object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(236, 72, 153, 0.25));
         }
-        .result-text { font-size: 28px; margin-bottom: 6px; font-weight: bold; }
+        .result-text { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
 
-        /* 결과 화면 내 해설 텍스트 상자 */
         .result-explanation {
-            font-size: 15px;
-            color: #1e293b;
-            line-height: 1.4;
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.6;
             background: #fdf2f8;
-            border: 1.5px dashed #f472b6;
-            padding: 10px 14px;
-            border-radius: 14px;
+            border: 1px solid #fbcfe8;
+            padding: 14px 16px;
+            border-radius: 16px;
             white-space: pre-line;
-            margin: 6px 0 10px 0;
-            width: 90%;
+            margin: 8px 0 12px 0;
+            width: 100%;
             text-align: left;
             box-sizing: border-box;
             max-height: 120px;
             overflow-y: auto;
         }
 
+        /* 복습 플래시 카드 */
         .review-container {
             width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            position: relative;
-            padding-top: 15px;
+            justify-content: space-between;
         }
 
         .flashcard-scene {
-            width: 88%;
-            height: 190px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            height: 220px;
+            margin: 16px 0;
         }
         .flashcard {
             width: 100%;
             height: 100%;
             background: #ffffff;
-            border: 1.5px solid #f472b6;
-            border-radius: 22px;
+            border: 1px solid #fbcfe8;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.12);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.08);
         }
 
-        .card-label { font-size: 14px; color: #db2777; margin-bottom: 6px; font-weight: bold; }
-        .card-content { font-size: 30px; color: #0f172a; font-weight: bold; word-break: break-all; }
+        .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 600; font-family: 'Poppins', sans-serif; }
+        .card-content { font-size: 28px; color: var(--text-dark); font-weight: 700; word-break: break-all; }
 
-        /* ===================================================
-           스무스 바텀 시트 (오늘의 단어 전용)
-        =================================================== */
+        /* 바텀 시트 */
         .sheet-backdrop {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(15, 23, 42, 0.35);
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 100; opacity: 0;
+            transition: opacity 0.3s ease;
             pointer-events: none;
         }
-        .sheet-backdrop.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .sheet-backdrop.active { opacity: 1; pointer-events: auto; }
 
         .bottom-sheet {
-            position: fixed;
-            left: 50%;
-            bottom: 0;
+            position: fixed; left: 50%; bottom: 0;
             transform: translate(-50%, 100%);
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.98);
-            border-top-left-radius: 28px;
-            border-top-right-radius: 28px;
-            box-shadow: 
-                0 -10px 40px rgba(0, 0, 0, 0.15),
-                0 0 0 1.5px rgba(244, 114, 182, 0.3);
+            width: 100%; max-width: 420px;
+            background: #ffffff;
+            border-top-left-radius: 28px; border-top-right-radius: 28px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
             z-index: 101;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 12px 20px 20px 20px;
+            transition: transform 0.3s ease;
+            padding: 16px 20px 24px 20px;
             box-sizing: border-box;
-            will-change: transform;
         }
-        .bottom-sheet.active {
-            transform: translate(-50%, 0);
-        }
+        .bottom-sheet.active { transform: translate(-50%, 0); }
 
         .sheet-header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 6px;
-            cursor: grab;
-            touch-action: none;
+            width: 100%; display: flex; flex-direction: column; align-items: center;
+            padding-bottom: 8px; cursor: grab; touch-action: none;
         }
         .sheet-handle {
-            width: 45px;
-            height: 5px;
-            background: #cbd5e1;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin-bottom: 12px;
         }
-        .sheet-header:active .sheet-handle {
-            background: #ec4899;
-        }
-        .sheet-title {
-            font-size: 20px;
-            color: #db2777;
-            font-weight: bold;
-        }
+        .sheet-title { font-size: 18px; color: var(--text-dark); font-weight: 700; }
 
-        .sheet-content {
-            max-height: 50vh;
-            overflow-y: auto;
-            text-align: left;
-            padding-right: 2px;
-        }
-
-        .quick-word-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
+        .sheet-content { max-height: 50vh; overflow-y: auto; text-align: left; }
+        .quick-word-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
         .quick-word-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: #fdf2f8;
-            border-radius: 14px;
-            border: 1px solid #fbcfe8;
-            font-size: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; background: #f8fafc; border-radius: 12px; font-size: 15px;
         }
-        .quick-word-item .word { font-weight: bold; color: #be185d; }
-        .quick-word-item .meaning { color: #475569; }
+        .quick-word-item .word { font-weight: 600; color: var(--primary-dark); }
+        .quick-word-item .meaning { color: var(--text-muted); }
 
         .hidden { display: none !important; }
     </style>
@@ -686,100 +648,105 @@
             <div class="subtitle">도황의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
-            <button class="btn" style="background: linear-gradient(145deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87, 0 8px 15px rgba(168, 85, 247, 0.25); font-size: 17px; padding: 11px 0;" onclick="playButtonSound(); openQuickWordSheet()">⚡ 오늘의 단어</button>
+            <button class="btn" style="background: #8b5cf6; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);" onclick="playButtonSound(); openQuickWordSheet()">⚡ 오늘의 단어</button>
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (섬 버티컬 스크롤 형태) -->
+    <!-- 2. DAY 선택 화면 -->
     <div id="day-screen" class="container hidden">
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
-        
-        <!-- DAY 1 ~ 30까지 세로로 슬라이드해서 내릴 수 있는 섬 카드 영역 -->
         <div id="island-container" class="island-scroll-container"></div>
-
-        <button class="btn" style="width: 70%; padding: 10px 0; font-size: 16px; margin-top: 10px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
+        <button class="btn btn-secondary" style="margin-top: 12px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
     <!-- 3. 문제풀이 규칙 화면 -->
     <div id="rule-screen" class="container hidden">
-        <div class="rule-title">&lt;문제풀이규칙&gt;</div>
+        <div class="rule-title">문제풀이 규칙</div>
         <div class="rule-box">
-            1. 보기 먼저 확인<br><br>
-            2. 명사 동사 나누기<br><br>
+            1. 보기 먼저 확인하기<br><br>
+            2. 명사/동사 위치 구분하기<br><br>
             3. 모르면 울지 말고 근거 있게 찍기
         </div>
-        <button class="btn" onclick="playButtonSound(); startQuiz()">문제풀기</button>
+        <button class="btn" onclick="playButtonSound(); startQuiz()">문제 풀기</button>
     </div>
 
-    <!-- 4. 퀴즈 화면 -->
+    <!-- 4. 퀴즈 화면 (1~5번 문제 개선 UI) -->
     <div id="quiz-screen" class="container hidden">
         <div id="quiz-wrapper" class="quiz-content-wrapper">
-            <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
-            <div class="timer-badge">
-                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
-                <span id="quiz-timer">20</span>초
+            <div>
+                <div class="quiz-top-bar">
+                    <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromQuiz()">🏠 메인</button>
+                    <div class="timer-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                        <span id="quiz-timer">20</span>초
+                    </div>
+                </div>
+                
+                <div id="q-title" class="question-title">QUESTION 01</div>
+                
+                <div class="question-card">
+                    <div id="q-text" class="question-text"></div>
+                </div>
             </div>
-            <div id="q-title" class="question-title">1번 문제 (틀리면 죽자)</div>
-            <div id="q-text" class="question-text"></div>
+
             <div id="q-options" class="options"></div>
         </div>
     </div>
 
-    <!-- 5. 결과 화면 (이미지 크기 극대화) -->
+    <!-- 5. 결과 화면 -->
     <div id="result-screen" class="container hidden">
         <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
         <div id="result-msg" class="result-text"></div>
         <div id="result-exp" class="result-explanation hidden"></div>
-        <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">버튼</button>
+        <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">다음</button>
     </div>
 
     <!-- 6. 단어 복습 화면 -->
     <div id="review-screen" class="container hidden">
         <div class="review-container">
-            <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
-            <div class="timer-badge">
-                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
-                <span id="review-timer">5</span>초
+            <div class="quiz-top-bar">
+                <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
+                <div class="timer-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <span id="review-timer">5</span>초
+                </div>
             </div>
-            <div class="question-title" style="color: #db2777; margin-bottom: 10px; text-align: center; padding-left: 0;">단어장 학습</div>
+            
             <div class="flashcard-scene">
                 <div id="flashcard" class="flashcard">
-                    <div id="card-label" class="card-label">단어</div>
+                    <div id="card-label" class="card-label">WORD</div>
                     <div id="card-text" class="card-content"></div>
                 </div>
             </div>
-            <button id="review-btn" class="btn" style="margin-top: 5px;" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
+            
+            <button id="review-btn" class="btn" onclick="playButtonSound(); handleReviewAction()">정답 확인</button>
         </div>
     </div>
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="complete.gif" alt="완료 이미지" style="width: 250px; height: 250px; object-fit: contain; border-radius: 20px; margin-bottom: 10px; display: block;" onerror="this.style.display='none';">
-        <div class="question-title" style="color: #db2777; margin-bottom: 6px; font-size: 24px; text-align: center; padding-left: 0;">학습 마스터 완료!</div>
-        <div class="subtitle" style="font-size: 16px; margin-bottom: 12px;">토익 해적단 토벌 완료.</div>
+        <img src="complete.gif" alt="완료 이미지" style="width: 220px; height: 220px; object-fit: contain; border-radius: 16px; margin-bottom: 12px;" onerror="this.style.display='none';">
+        <div style="font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">학습 완료!</div>
+        <div class="subtitle">토익 해적단 토벌 완료.</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
     </div>
 
-    <!-- ===================================================
-         스무스 바텀 시트 (오늘의 단어 전용)
-    =================================================== -->
+    <!-- 바텀 시트 -->
     <div id="sheet-backdrop" class="sheet-backdrop" onclick="closeBottomSheet()"></div>
     
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="sheet-header" id="sheet-header">
             <div class="sheet-handle"></div>
-            <div class="sheet-title" id="sheet-title">도황의 오늘의 단어 ⚡</div>
+            <div class="sheet-title" id="sheet-title">오늘의 단어 ⚡</div>
         </div>
-        <div class="sheet-content" id="sheet-content">
-            <!-- 자바스크립트로 유동적 동적 삽입 -->
-        </div>
+        <div class="sheet-content" id="sheet-content"></div>
     </div>
 
     <script>
         const questions = [
             {
                 number: 1,
-                title: "DAY 1 - 1번 문제",
+                title: "QUESTION 01",
                 text: "To attract young consumers, promoting new products online is more <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> than advertising on television.",
                 options: [
                     { label: "(A) effects", val: "A" },
@@ -788,11 +755,11 @@
                     { label: "(D) effective", val: "D" }
                 ],
                 correct: "D",
-                explanation: "💡 해설\nmore 이니까 뒤에 형용사"
+                explanation: "💡 해설\nmore 뒤에는 형용사가 올 수 있습니다."
             },
             {
                 number: 2,
-                title: "DAY 1 - 2번 문제",
+                title: "QUESTION 02",
                 text: "Twins Excursions employs licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
                 options: [
                     { label: "(A) conduct", val: "A" },
@@ -805,7 +772,7 @@
             },
             {
                 number: 3,
-                title: "DAY 1 - 3번 문제",
+                title: "QUESTION 03",
                 text: "Director Philip Anderson's movie Silent Moon received a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> for the Best Film Award this year.",
                 options: [
                     { label: "(A) nomination", val: "A" },
@@ -814,11 +781,11 @@
                     { label: "(D) creation", val: "D" }
                 ],
                 correct: "A",
-                explanation: "💡 해설\nnomination = 수상 후보, 지명\nsubscription = 신청, 구독"
+                explanation: "💡 해설\nnomination = 수상 후보, 지명\nsubscription = 구독"
             },
             {
                 number: 4,
-                title: "DAY 1 - 4번 문제",
+                title: "QUESTION 04",
                 text: "During peak shopping seasons, Johnson's Sportswear provides additional staff training to ensure an <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> workforce.",
                 options: [
                     { label: "(A) experienced", val: "A" },
@@ -827,11 +794,11 @@
                     { label: "(D) experience", val: "D" }
                 ],
                 correct: "A",
-                explanation: "💡 해설\nworkforce(직원)를 꾸며주는 말이 나와야 함\nexperienced workforce = 숙련된 직원 (정답)"
+                explanation: "💡 해설\nworkforce(직원)를 수식하는 형용사 필요\nexperienced workforce = 숙련된 직원"
             },
             {
                 number: 5,
-                title: "DAY 1 - 5번 문제",
+                title: "QUESTION 05",
                 text: "Only staff employed for more than 15 years are <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> to receive an Excellent Worker Award.",
                 options: [
                     { label: "(A) accountable", val: "A" },
@@ -840,7 +807,7 @@
                     { label: "(D) important", val: "D" }
                 ],
                 correct: "C",
-                explanation: "💡 해설\nentitled = ~을 받을 자격이 있다 (be entitled to) (정답)"
+                explanation: "💡 해설\nentitled = 자격이 있는 (be entitled to)"
             }
         ];
 
@@ -861,13 +828,10 @@
 
         const randomTaunts = [
             "공부 안 하고 뭐 하냐? 훗훗훗!",
-            "설마 아직도 영어 단어를 몰라서 헤매는 건 아니겠지?",
-            "세상은 실력자만이 살아남는 법이지. 단어부터 외워라!",
-            "오늘도 놀기만 할 건가? 토익이 너를 기다린다!",
-            "내 밑으로 집합! 영어 공부는 제대로 하고 있겠지?",
-            "흐름을 읽어라! 영어도 전략이다.",
-            "실망시키지 마라, 훗훗훗... 얼른 과제를 시작해!",
-            "늦었다고 생각할 때가 진짜 늦은 거다. 당장 풀어라!"
+            "영어 단어부터 차근차근 외워라!",
+            "실력자만이 살아남는 법이지.",
+            "오늘도 1문제라도 제대로 풀어라!",
+            "늦었다고 생각할 때가 빠른 거다."
         ];
 
         let currentQuizIndex = 0;
@@ -885,20 +849,13 @@
         let reviewTimeLeft = 5;
 
         function preloadImages() {
-            const imagesToPreload = ['title.png', 'correct.gif', 'wrong.png', 'complete.gif'];
-            imagesToPreload.forEach(src => {
-                const img = new Image();
-                img.src = src;
+            ['title.png', 'correct.gif', 'wrong.png', 'complete.gif'].forEach(src => {
+                const img = new Image(); img.src = src;
             });
         }
 
         function hideAddressBar() {
             setTimeout(() => { window.scrollTo(0, 1); }, 0);
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            }
         }
 
         function checkStreakSystem() {
@@ -912,10 +869,7 @@
                 return 1;
             }
 
-            const lastDate = new Date(lastVisitDate);
-            const nowDate = new Date(todayStr);
-            const diffDays = Math.round((nowDate - lastDate) / (1000 * 60 * 60 * 24));
-
+            const diffDays = Math.round((new Date(todayStr) - new Date(lastVisitDate)) / (1000 * 60 * 60 * 24));
             if (diffDays === 1) {
                 currentStreak += 1;
                 localStorage.setItem('dofla_streak', currentStreak.toString());
@@ -932,13 +886,8 @@
             try {
                 const audio = new Audio(filename);
                 audio.currentTime = 0;
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(e => console.log(filename + " play skip:", e));
-                }
-            } catch(e) {
-                console.log("Audio play error", e);
-            }
+                audio.play().catch(() => {});
+            } catch(e) {}
         }
 
         function playButtonSound() {
@@ -952,18 +901,11 @@
             checkStreakSystem();
             playSoundFile('start.mp3');
 
-            introTimer = setTimeout(() => {
-                transitionToIntoTitle();
-            }, 3000); 
-
+            introTimer = setTimeout(() => { transitionToIntoTitle(); }, 2500);
             initBottomSheetEvents();
         };
 
-        window.addEventListener('touchstart', hideAddressBar, { once: true });
-        window.addEventListener('click', hideAddressBar, { once: true });
-
         function skipIntro() {
-            hideAddressBar();
             if (hasIntroPassed) return;
             hasIntroPassed = true;
             clearTimeout(introTimer);
@@ -973,31 +915,24 @@
         function transitionToIntoTitle() {
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
-            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
-            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
+            document.getElementById('speech-bubble').innerText = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
         function goToTitle() {
             document.getElementById('day-screen').classList.add('hidden');
-            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
-            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
         function goToTitleFromQuiz() {
             clearInterval(quizTimerInterval);
             document.getElementById('quiz-screen').classList.add('hidden');
-            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
-            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
         function goToTitleFromReview() {
             clearInterval(reviewTimerInterval);
             document.getElementById('review-screen').classList.add('hidden');
-            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
-            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
@@ -1012,61 +947,39 @@
             for (let dayKey in allDayFlashcards) {
                 combined = combined.concat(allDayFlashcards[dayKey]);
             }
-            for (let i = combined.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [combined[i], combined[j]] = [combined[j], combined[i]];
-            }
-            activeFlashcards = combined;
+            activeFlashcards = combined.sort(() => Math.random() - 0.5);
             document.getElementById('title-screen').classList.add('hidden');
             startReview();
         }
 
-        /* ----------------------------------------------------
-           섬(Island) 버티컬 스크롤 DAY 1 ~ 30 생성 함수
-        ---------------------------------------------------- */
         function renderIslandDays() {
             const container = document.getElementById('island-container');
             container.innerHTML = '';
-
             const isDay1Completed = localStorage.getItem('dofla_day1_completed') === 'true';
-            const currentStreak = localStorage.getItem('dofla_streak') || '1';
-            
-            document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${currentStreak}일째 버티는 중`;
+            document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${localStorage.getItem('dofla_streak') || '1'}일째`;
 
             for (let i = 1; i <= 30; i++) {
                 const island = document.createElement('div');
-                
                 if (i === 1) {
-                    if (isDay1Completed) {
-                        island.className = 'day-island completed';
-                        island.innerHTML = `
-                            <div class="day-island-info">
-                                <span class="day-island-title">DAY 1</span>
-                                <span class="day-island-sub">학습 완료!</span>
-                            </div>
-                            <div class="day-island-status">✓</div>
-                        `;
-                    } else {
-                        island.className = 'day-island';
-                        island.innerHTML = `
-                            <div class="day-island-info">
-                                <span class="day-island-title">DAY 1</span>
-                                <span class="day-island-sub">도황의 기초 해적훈련</span>
-                            </div>
-                            <div class="day-island-status">✨</div>
-                        `;
-                    }
+                    island.className = isDay1Completed ? 'day-island completed' : 'day-island';
+                    island.innerHTML = `
+                        <div>
+                            <div class="day-island-title">DAY 01</div>
+                            <div class="day-island-sub">${isDay1Completed ? '학습 완료' : '기초 훈련'}</div>
+                        </div>
+                        <div class="day-island-status">${isDay1Completed ? '✓' : '➔'}</div>
+                    `;
                     island.onclick = () => { playButtonSound(); showRuleScreen(); };
                 } else {
                     island.className = 'day-island locked';
                     island.innerHTML = `
-                        <div class="day-island-info">
-                            <span class="day-island-title">DAY ${i}</span>
-                            <span class="day-island-sub">잠겨 있음</span>
+                        <div>
+                            <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
+                            <div class="day-island-sub">잠김</div>
                         </div>
                         <div class="day-island-status">🔒</div>
                     `;
-                    island.onclick = () => { playButtonSound(); alert(`DAY ${i}는 아직 잠겨 있다! 먼저 이전 과제를 완료해라 훗훗훗...`); };
+                    island.onclick = () => { playButtonSound(); alert('이전 과제를 먼저 완료해라!'); };
                 }
                 container.appendChild(island);
             }
@@ -1124,25 +1037,16 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
-            const resultScreenContainer = document.getElementById('result-screen');
-            resultScreenContainer.classList.add('shake-anim');
-            setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
-
             const resultImg = document.getElementById('result-img');
-            const resultMsg = document.getElementById('result-msg');
-            const resultExp = document.getElementById('result-exp');
-            const actionBtn = document.getElementById('action-btn');
-            
             resultImg.style.display = 'block';
             isCorrectAnswer = false;
             resultImg.src = "wrong.png"; 
-            resultMsg.style.color = "#dc2626";
-            resultMsg.innerText = "시간 초과! 죽어";
-            resultExp.classList.add('hidden');
-            actionBtn.innerText = "다시";
+            document.getElementById('result-msg').style.color = "#dc2626";
+            document.getElementById('result-msg').innerText = "시간 초과!";
+            document.getElementById('result-exp').classList.add('hidden');
+            document.getElementById('action-btn').innerText = "다시 풀기";
 
             playSoundFile('wrong.mp3');
-            if (navigator.vibrate) { navigator.vibrate([100, 50, 100]); }
         }
 
         function checkAnswer(selectedOption) {
@@ -1151,40 +1055,28 @@
             document.getElementById('result-screen').classList.remove('hidden');
 
             const resultImg = document.getElementById('result-img');
-            const resultMsg = document.getElementById('result-msg');
-            const resultExp = document.getElementById('result-exp');
-            const actionBtn = document.getElementById('action-btn');
-            
             resultImg.style.display = 'block';
 
             if (selectedOption === q.correct) {
                 isCorrectAnswer = true;
                 resultImg.src = "correct.gif"; 
-                resultMsg.style.color = "#db2777";
-                resultMsg.innerText = "도~황!";
+                document.getElementById('result-msg').style.color = "var(--primary-pink)";
+                document.getElementById('result-msg').innerText = "정답입니다!";
                 
-                resultExp.innerText = q.explanation;
-                resultExp.classList.remove('hidden');
+                document.getElementById('result-exp').innerText = q.explanation;
+                document.getElementById('result-exp').classList.remove('hidden');
 
-                let nextText = (currentQuizIndex + 1 < questions.length) ? "다음" : "복습하기";
-                actionBtn.innerText = nextText;
-
+                document.getElementById('action-btn').innerText = (currentQuizIndex + 1 < questions.length) ? "다음 문제" : "복습하기";
                 playSoundFile('correct.mp3');
             } else {
                 isCorrectAnswer = false;
-                
-                const resultScreenContainer = document.getElementById('result-screen');
-                resultScreenContainer.classList.add('shake-anim');
-                setTimeout(() => { resultScreenContainer.classList.remove('shake-anim'); }, 400);
-
                 resultImg.src = "wrong.png"; 
-                resultMsg.style.color = "#dc2626";
-                resultMsg.innerText = "죽어";
-                resultExp.classList.add('hidden');
-                actionBtn.innerText = "다시";
+                document.getElementById('result-msg').style.color = "#dc2626";
+                document.getElementById('result-msg').innerText = "오답입니다!";
+                document.getElementById('result-exp').classList.add('hidden');
+                document.getElementById('action-btn').innerText = "다시 풀기";
 
                 playSoundFile('wrong.mp3');
-                if (navigator.vibrate) { navigator.vibrate([100, 50, 100]); }
             }
         }
 
@@ -1195,16 +1087,7 @@
                     loadQuestion(currentQuizIndex);
                 } else {
                     document.getElementById('result-screen').classList.add('hidden');
-                    let combined = [];
-                    for (let dayKey in allDayFlashcards) {
-                        combined = combined.concat(allDayFlashcards[dayKey]);
-                    }
-                    for (let i = combined.length - 1; i > 0; i--) {
-                        let j = Math.floor(Math.random() * (i + 1));
-                        [combined[i], combined[j]] = [combined[j], combined[i]];
-                    }
-                    activeFlashcards = combined;
-                    startReview();
+                    startVocabularyDeck();
                 }
             } else {
                 loadQuestion(currentQuizIndex);
@@ -1214,11 +1097,11 @@
         function startReview() {
             currentReviewIndex = 0;
             isShowingMeaning = false;
-            updateFlashcardContent(true);
+            updateFlashcardContent();
             document.getElementById('review-screen').classList.remove('hidden');
         }
 
-        function updateFlashcardContent(isInitial) {
+        function updateFlashcardContent() {
             clearInterval(reviewTimerInterval);
             reviewTimeLeft = 5;
             document.getElementById('review-timer').innerText = reviewTimeLeft;
@@ -1228,7 +1111,17 @@
             const cardText = document.getElementById('card-text');
             const reviewBtn = document.getElementById('review-btn');
 
-            setCardTextData(card, cardLabel, cardText, reviewBtn);
+            if (!isShowingMeaning) {
+                cardLabel.innerText = "WORD";
+                cardText.innerText = card.word;
+                cardText.style.color = "var(--text-dark)";
+                reviewBtn.innerText = "정답 확인";
+            } else {
+                cardLabel.innerText = "MEANING";
+                cardText.innerText = card.meaning;
+                cardText.style.color = "var(--primary-pink)";
+                reviewBtn.innerText = (currentReviewIndex === activeFlashcards.length - 1) ? "학습 완료" : "다음 단어";
+            }
 
             reviewTimerInterval = setInterval(() => {
                 reviewTimeLeft--;
@@ -1240,34 +1133,16 @@
             }, 1000);
         }
 
-        function setCardTextData(card, cardLabel, cardText, reviewBtn) {
-            if (!isShowingMeaning) {
-                cardLabel.innerText = "단어";
-                cardText.innerText = card.word;
-                cardText.style.color = "#0f172a";
-                reviewBtn.innerText = "정답 확인";
-            } else {
-                cardLabel.innerText = "뜻";
-                cardText.innerText = card.meaning;
-                cardText.style.color = "#db2777";
-                if (currentReviewIndex === activeFlashcards.length - 1) {
-                    reviewBtn.innerText = "학습 완료";
-                } else {
-                    reviewBtn.innerText = "다음 단어";
-                }
-            }
-        }
-
         function handleReviewAction() {
             clearInterval(reviewTimerInterval);
             if (!isShowingMeaning) {
                 isShowingMeaning = true;
-                updateFlashcardContent(false);
+                updateFlashcardContent();
             } else {
                 currentReviewIndex++;
                 if (currentReviewIndex < activeFlashcards.length) {
                     isShowingMeaning = false;
-                    updateFlashcardContent(false);
+                    updateFlashcardContent();
                 } else {
                     localStorage.setItem('dofla_day1_completed', 'true');
                     triggerCompletionEffects();
@@ -1276,19 +1151,10 @@
         }
 
         function triggerCompletionEffects() {
-            clearInterval(reviewTimerInterval);
             playSoundFile('end.mp3');
-
-            if (navigator.vibrate) { navigator.vibrate(300); }
-
             try {
-                confetti({
-                    particleCount: 120,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#ec4899', '#f472b6', '#db2777']
-                });
-            } catch(e) { console.log("Confetti library load fail", e); }
+                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+            } catch(e) {}
 
             document.getElementById('review-screen').classList.add('hidden');
             document.getElementById('complete-screen').classList.remove('hidden');
@@ -1296,48 +1162,30 @@
 
         function returnToMainFromComplete() {
             document.getElementById('complete-screen').classList.add('hidden');
-            const randomIndex = Math.floor(Math.random() * randomTaunts.length);
-            document.getElementById('speech-bubble').innerText = randomTaunts[randomIndex];
             document.getElementById('title-screen').classList.remove('hidden');
         }
 
-        /* ===================================================
-           스무스 바텀 시트 (오늘의 단어 전용 제어)
-        =================================================== */
+        /* 바텀시트 제어 */
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetBackdrop = document.getElementById('sheet-backdrop');
-        const sheetHeader = document.getElementById('sheet-header');
-        const sheetTitle = document.getElementById('sheet-title');
-        const sheetContent = document.getElementById('sheet-content');
-
-        let startY = 0;
-        let currentY = 0;
-        let isDragging = false;
 
         function openBottomSheet() {
             sheetBackdrop.classList.add('active');
             bottomSheet.classList.add('active');
-            bottomSheet.style.transform = 'translate(-50%, 0)';
         }
 
         function closeBottomSheet() {
-            bottomSheet.style.transform = '';
             bottomSheet.classList.remove('active');
             sheetBackdrop.classList.remove('active');
         }
 
         function openQuickWordSheet() {
-            sheetTitle.innerText = "도황의 오늘의 단어 ⚡";
-            sheetContent.innerHTML = `
-                <p style="margin: 0 0 10px 0; color: #64748b; font-size: 14px; text-align: center;">아래로 당기거나 배경을 누르면 닫힙니다.</p>
+            document.getElementById('sheet-content').innerHTML = `
                 <div class="quick-word-list">
                     <div class="quick-word-item"><span class="word">Formerly</span><span class="meaning">이전에</span></div>
                     <div class="quick-word-item"><span class="word">withdraw</span><span class="meaning">철회하다</span></div>
                     <div class="quick-word-item"><span class="word">aside</span><span class="meaning">따로</span></div>
                     <div class="quick-word-item"><span class="word">representation</span><span class="meaning">대표단</span></div>
-                    <div class="quick-word-item"><span class="word">along with</span><span class="meaning">~와 함께</span></div>
-                    <div class="quick-word-item"><span class="word">owing to</span><span class="meaning">~때문에</span></div>
-                    <div class="quick-word-item"><span class="word">despite</span><span class="meaning">~에도 불구하고</span></div>
                     <div class="quick-word-item"><span class="word">recession</span><span class="meaning">불경기</span></div>
                 </div>
             `;
@@ -1345,34 +1193,11 @@
         }
 
         function initBottomSheetEvents() {
-            sheetHeader.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].clientY;
-                isDragging = true;
-                bottomSheet.style.transition = 'none';
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                currentY = e.touches[0].clientY;
-                const deltaY = currentY - startY;
-                if (deltaY > 0) {
-                    bottomSheet.style.transform = `translate(-50%, ${deltaY}px)`;
-                }
-            }, { passive: true });
-
-            window.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                bottomSheet.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
-
-                const deltaY = currentY - startY;
-                if (deltaY > 100) {
-                    closeBottomSheet();
-                } else {
-                    bottomSheet.style.transform = 'translate(-50%, 0)';
-                }
-                startY = 0;
-                currentY = 0;
+            let startY = 0;
+            const header = document.getElementById('sheet-header');
+            header.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+            header.addEventListener('touchend', (e) => {
+                if (e.changedTouches[0].clientY - startY > 50) closeBottomSheet();
             });
         }
     </script>
