@@ -157,8 +157,9 @@
             box-shadow: 0 1px 0 #94a3b8 !important;
         }
 
+        /* 1. 인트로 배경 흰색으로 수정 */
         .intro-container {
-            background: #fdf2f8;
+            background: #ffffff;
             cursor: pointer;
         }
         
@@ -324,7 +325,6 @@
             min-height: 100%;
         }
 
-        /* 세련된 섬 스테이지 스타일 */
         .island-node {
             position: absolute;
             width: 72px;
@@ -344,7 +344,6 @@
             transform: scale(0.92) !important;
         }
 
-        /* 진행 중 섬 (Pink Island) */
         .island-node.unlocked {
             background: linear-gradient(145deg, #f472b6 0%, #ec4899 100%);
             box-shadow: 
@@ -355,7 +354,6 @@
             animation: islandFloat 2.4s infinite ease-in-out;
         }
 
-        /* 완료된 섬 (Gold/Emerald Island) */
         .island-node.completed {
             background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
             box-shadow: 
@@ -365,7 +363,6 @@
             border: 3px solid #ffffff;
         }
 
-        /* 잠긴 섬 (Grey Cloud Island) */
         .island-node.locked {
             background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
             box-shadow: 
@@ -410,24 +407,80 @@
             z-index: 1;
         }
 
+        /* 2. 문제풀이 규칙 화면 세련된 디자인 및 애니메이션 스타일 */
+        .rule-card-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: rulePopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes rulePopIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
         .rule-title { 
-            font-size: 22px; 
+            font-size: 24px; 
             font-weight: 800;
             color: var(--text-dark); 
-            margin-bottom: 16px; 
+            margin-bottom: 20px; 
+            letter-spacing: -0.5px;
         }
+
         .rule-box {
-            background: #fdf2f8;
-            border-radius: 20px;
-            padding: 24px 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+            border-radius: 24px;
+            padding: 28px 24px;
             width: 100%;
             text-align: left;
             font-size: 15px;
             color: var(--text-dark);
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1.8;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             border: 2px solid #fbcfe8;
+            box-shadow: 0 12px 24px rgba(236, 72, 153, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .rule-number {
+            background: var(--primary-pink);
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+        }
+
+        .rule-text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .quiz-content-wrapper {
@@ -784,7 +837,7 @@
 </head>
 <body>
 
-    <!-- 0. 인트로 화면 -->
+    <!-- 0. 인트로 화면 (배경 흰색 적용) -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
         <div class="intro-text">Doflalingo</div>
     </div>
@@ -813,7 +866,7 @@
         </div>
     </div>
 
-    <!-- 2. DAY 선택 화면 (개편된 세련된 아일랜드 월드맵) -->
+    <!-- 2. DAY 선택 화면 -->
     <div id="day-screen" class="container hidden">
         <div id="streak-badge" class="streak-badge">🔥 연속 출석: 1일째</div>
         <div id="island-container" class="worldmap-scroll-container">
@@ -824,15 +877,26 @@
         <button class="btn btn-secondary" style="margin-top: 12px;" onclick="playButtonSound(); goToTitle()">메인으로</button>
     </div>
 
-    <!-- 3. 문제풀이 규칙 화면 -->
+    <!-- 3. 문제풀이 규칙 화면 (새로운 디자인 및 애니메이션) -->
     <div id="rule-screen" class="container hidden">
-        <div class="rule-title">문제풀이 규칙</div>
-        <div class="rule-box">
-            1. 보기 먼저 확인하기<br><br>
-            2. 명사/동사 위치 구분하기<br><br>
-            3. 모르면 울지 말고 근거 있게 찍기
+        <div id="rule-card" class="rule-card-wrapper">
+            <div class="rule-title">문제풀이 규칙</div>
+            <div class="rule-box">
+                <div class="rule-item">
+                    <span class="rule-number">1</span>
+                    <span class="rule-text">보기 먼저 확인하기</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">2</span>
+                    <span class="rule-text">명사/동사 위치 구분하기</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">3</span>
+                    <span class="rule-text">모르면 울지 말고 근거 있게 찍기</span>
+                </div>
+            </div>
+            <button class="btn" onclick="startQuiz()">문제 풀기</button>
         </div>
-        <button class="btn" onclick="startQuiz()">문제 풀기</button>
     </div>
 
     <!-- 4. 퀴즈 화면 -->
@@ -873,7 +937,7 @@
                 <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
                 <div id="card-counter" class="card-counter-badge">1 / 10</div>
                 <div class="timer-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                     <span id="review-timer">5</span>초
                 </div>
             </div>
@@ -1465,7 +1529,6 @@
             startReview();
         }
 
-        /* 3D 섬 컨셉 및 곡선 배치 적용된 깔끔한 월드맵 렌더링 */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1483,7 +1546,6 @@
             const nodesData = [];
 
             for (let i = 1; i <= totalStages; i++) {
-                // 부드러운 곡선 및 불규칙성을 만드는 좌표 계산
                 const offsetX = Math.sin(i * 0.85) * 85 + Math.cos(i * 0.4) * 20; 
                 const posX = (containerWidth / 2) + offsetX;
                 const posY = startY + (i - 1) * rowGap;
@@ -1494,7 +1556,6 @@
             const totalHeight = startY + totalStages * rowGap + 40;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            // 스테이지 노드 간 세련된 연결선 생성
             let pathD = "";
             for (let i = 0; i < nodesData.length - 1; i++) {
                 const curr = nodesData[i];
@@ -1517,7 +1578,6 @@
             pathElement.setAttribute("stroke-linecap", "round");
             svgLayer.appendChild(pathElement);
 
-            // 섬 노드 엘리먼트 배치
             nodesData.forEach(data => {
                 const i = data.id;
                 const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
@@ -1547,7 +1607,7 @@
                 `;
 
                 if (hasQuestions) {
-                    node.onclick = () => { playButtonSound(); selectDay(i); };
+                    node.onclick = () => { selectDay(i); };
                 } else {
                     node.onclick = () => { playButtonSound(); alert('아직 개척되지 않은 섬입니다!'); };
                 }
@@ -1561,13 +1621,21 @@
             showRuleScreen();
         }
 
+        /* 3. 문제풀이 규칙 화면 호출 시 2.mp3 재생 및 애니메이션 재설정 */
         function showRuleScreen() {
+            playSoundFile('2.mp3');
             document.getElementById('day-screen').classList.add('hidden');
+            
+            const ruleCard = document.getElementById('rule-card');
+            ruleCard.style.animation = 'none';
+            void ruleCard.offsetWidth; // reflow 강제 실행
+            ruleCard.style.animation = 'rulePopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+
             document.getElementById('rule-screen').classList.remove('hidden');
         }
 
         function startQuiz() {
-            playSoundFile('2.mp3');
+            playButtonSound();
             currentQuizIndex = 0;
             document.getElementById('rule-screen').classList.add('hidden');
             loadQuestion(currentQuizIndex);
