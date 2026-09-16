@@ -453,6 +453,19 @@
         }
         .timer-badge svg { width: 14px; height: 14px; fill: var(--primary-pink); }
 
+        /* 단어장 상단 카운터 뱃지 */
+        .card-counter-badge {
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
         .question-title { 
             font-size: 14px; 
             font-weight: 800;
@@ -693,7 +706,7 @@
             border-top-left-radius: 28px; border-top-right-radius: 28px;
             box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
             z-index: 101;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             padding: 16px 20px 24px 20px;
         }
         .bottom-sheet.active { transform: translate(-50%, 0); }
@@ -704,6 +717,16 @@
         }
         .sheet-handle {
             width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin-bottom: 12px;
+        }
+        .sheet-banner-text {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-pink);
+            background: #fdf2f8;
+            border: 1.5px solid #fbcfe8;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 10px;
         }
         .sheet-title { font-size: 18px; color: var(--text-dark); font-weight: 800; }
 
@@ -805,8 +828,12 @@
         <div class="review-container">
             <div class="quiz-top-bar">
                 <button class="quiz-home-btn" onclick="playButtonSound(); goToTitleFromReview()">🏠 메인</button>
+                
+                <!-- 카운터 표시 추가 -->
+                <div id="card-counter" class="card-counter-badge">1 / 10</div>
+                
                 <div class="timer-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 12,22A10,10 0 0,0 12,4M12.5,7H11V13L16.25,16.15L17,14.92L12.5,12.25V7Z"/></svg>
                     <span id="review-timer">5</span>초
                 </div>
             </div>
@@ -865,6 +892,8 @@
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="sheet-header" id="sheet-header">
             <div class="sheet-handle"></div>
+            <!-- 상단 안내 문구 추가 -->
+            <div class="sheet-banner-text">✨ 오늘의 단어를 먼저 외워보세요!</div>
             <div class="sheet-title" id="sheet-title">오늘의 단어 ⚡</div>
         </div>
         <div class="sheet-content" id="sheet-content"></div>
@@ -1084,7 +1113,7 @@
         let isShowingMeaning = false;
         let introTimer = null;
         let hasIntroPassed = false;
-        let isCardAnimating = false; // 카드가 연타에 겹치지 않게 제어
+        let isCardAnimating = false;
         
         let quizTimerInterval = null;
         let quizTimeLeft = 20;
@@ -1262,6 +1291,11 @@
             const formattedTaunt = rawTaunt.replace(/\${userName}/g, userName);
             document.getElementById('speech-bubble').innerText = formattedTaunt;
             document.getElementById('title-screen').classList.remove('hidden');
+
+            // 인트로가 끝나고 메인 타이틀 진입 시 바텀시트 자동 오픈
+            setTimeout(() => {
+                openQuickWordSheet();
+            }, 300);
         }
 
         function openSettings() {
@@ -1418,10 +1452,9 @@
                 optionsContainer.appendChild(btn);
             });
 
-            // 문제 등장 및 전환 애니메이션 적용
             const quizWrapper = document.getElementById('quiz-wrapper');
             quizWrapper.classList.remove('quiz-enter-animation');
-            void quizWrapper.offsetWidth; // reflow 강제 실행
+            void quizWrapper.offsetWidth;
             quizWrapper.classList.add('quiz-enter-animation');
 
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -1524,6 +1557,9 @@
             reviewTimeLeft = 5;
             document.getElementById('review-timer').innerText = reviewTimeLeft;
 
+            // 순서 / 총단어수 카운터 업데이트
+            document.getElementById('card-counter').innerText = `${currentReviewIndex + 1} / ${activeFlashcards.length}`;
+
             const flashcardEl = document.getElementById('flashcard');
             const cardText = document.getElementById('card-text');
             const reviewBtn = document.getElementById('review-btn');
@@ -1544,11 +1580,10 @@
             if (animated) {
                 isCardAnimating = true;
                 flashcardEl.classList.remove('card-flip-quick', 'card-slide-next');
-                void flashcardEl.offsetWidth; // Reflow
+                void flashcardEl.offsetWidth;
 
                 if (animType === 'flip') {
                     flashcardEl.classList.add('card-flip-quick');
-                    // 뒤집기 중간 시점(110ms)에 단어/뜻 텍스트 교체
                     setTimeout(() => { renderData(); }, 110);
                     setTimeout(() => { 
                         flashcardEl.classList.remove('card-flip-quick');
@@ -1556,7 +1591,6 @@
                     }, 220);
                 } else if (animType === 'slide') {
                     flashcardEl.classList.add('card-slide-next');
-                    // 카드가 화면 밖으로 빠져나가는 중간 시점(125ms)에 새 단어 교체
                     setTimeout(() => { renderData(); }, 125);
                     setTimeout(() => { 
                         flashcardEl.classList.remove('card-slide-next');
@@ -1578,17 +1612,17 @@
         }
 
         function handleReviewAction() {
-            if (isCardAnimating) return; // 애니메이션 진행 중 중복 클릭 방지
+            if (isCardAnimating) return;
 
             clearInterval(reviewTimerInterval);
             if (!isShowingMeaning) {
                 isShowingMeaning = true;
-                updateFlashcardContent(true, 'flip'); // 카드 뒤집기 애니메이션
+                updateFlashcardContent(true, 'flip');
             } else {
                 currentReviewIndex++;
                 if (currentReviewIndex < activeFlashcards.length) {
                     isShowingMeaning = false;
-                    updateFlashcardContent(true, 'slide'); // 다음 카드로 빠르게 넘어가는 애니메이션
+                    updateFlashcardContent(true, 'slide');
                 } else {
                     if (currentSelectedDay) {
                         localStorage.setItem(`dofla_day${currentSelectedDay}_completed`, 'true');
