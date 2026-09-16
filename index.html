@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>도플라링고 - 도황의 영어공부법</title>
     
-    <!-- 모바일 전체화면(주소창 감추기) 설정 -->
+    <!-- 모바일 전체화면(주소창 감추기 & PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="도플라링고">
@@ -36,7 +36,7 @@
         }
 
         * {
-            -webkit-tap-highlight-color: transparent; /* 터치 시 파란색/회색 하이라이트 박스 제거 */
+            -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
 
@@ -107,7 +107,6 @@
             z-index: 1;
         }
 
-        /* 모바일 터치 모션이 확실하게 작동하도록 수정된 버튼 스타일 */
         .btn {
             background-color: var(--primary-pink);
             color: #ffffff !important;
@@ -213,19 +212,23 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 12px;
+            margin-top: 20px;
         }
 
         .speech-bubble {
             position: absolute;
-            top: -48px;
+            top: -58px;
             background: #ffffff;
             border: 2px solid rgba(236, 72, 153, 0.3);
-            border-radius: 16px;
-            padding: 8px 14px;
-            font-size: 14px;
+            border-radius: 18px;
+            padding: 8px 16px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-dark);
-            white-space: nowrap;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            max-width: 260px;
+            line-height: 1.35;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
             animation: bubbleBounce 2s infinite ease-in-out;
             z-index: 10;
@@ -550,7 +553,6 @@
         .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 800; font-family: 'Poppins', sans-serif; }
         .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
 
-        /* 설정 모달 패널 */
         .settings-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -690,7 +692,7 @@
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
-                <div id="speech-bubble" class="speech-bubble">공부 안 하고 뭐 하냐? 훗훗훗!</div>
+                <div id="speech-bubble" class="speech-bubble">공부 안 하고 뭐 하냐?\n훗훗훗!</div>
                 <img src="title.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
             </div>
             <div class="logo">도플라링고</div>
@@ -907,11 +909,11 @@
         };
 
         const randomTaunts = [
-            "${userName}, 아직도 그 모양인가? 훗훗훗... 그렇게 멍청하게 서 있을 시간이 없을 텐데?",
-            "오호, ${userName}. 그 머리로 영어 공부라는 걸 하겠다고? 아주 가상하군 그래!",
-            "이봐 ${userName}, 단어 몇 개 외운다고 네 인생이 바뀔 것 같나? 현실은 그리 호락호락하지 않아!",
-            "훗훗훗... ${userName}, 또 틀릴 준비는 되었나? 네가 절망하는 모습을 빨리 보고 싶군!",
-            "덤벼라 ${userName}! 네 무지와 오만이 어디까지 가나 한번 구경해 볼까?"
+            "${userName}, 아직도 그 모양인가?\n훗훗훗... 공부 안 해?",
+            "오호, ${userName}. 그 머리로\n영어 공부를 하겠다고?",
+            "${userName}, 단어 몇 개 외운다고\n네 인생이 바뀔 것 같나?",
+            "훗훗훗... ${userName}, 또 틀릴\n준비는 되었나?",
+            "덤벼라 ${userName}! 네 무지가\n어디까지 가나 구경하지!"
         ];
 
         let currentQuizIndex = 0;
@@ -928,26 +930,35 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
+        // 전체화면 요청 함수 (주소창 숨기기)
+        function requestFullScreen() {
+            const doc = document.documentElement;
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (doc.requestFullscreen) {
+                    doc.requestFullscreen().catch(() => {});
+                } else if (doc.webkitRequestFullscreen) {
+                    doc.webkitRequestFullscreen();
+                }
+            }
+        }
+
+        function initViewport() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            window.scrollTo(0, 1);
+        }
+
         function preloadImages() {
             ['title.png', 'correct.gif', 'wrong.png', 'complete.gif'].forEach(src => {
                 const img = new Image(); img.src = src;
             });
         }
 
-        /* 모바일 브라우저 뷰포트 및 주소창 숨김 호환성 보정 */
-        function initViewport() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-            
-            // 모바일 스크롤시 주소창 자동 숨김 조치
-            window.scrollTo(0, 1);
-        }
-
-        /* 모바일 터치 시 버튼 들어가는 효과 바인딩 */
         function setupTouchFeedback() {
             const targets = '.btn, .day-island, .quiz-home-btn, .option-btn';
             
             document.addEventListener('touchstart', (e) => {
+                requestFullScreen(); // 터치 시 주소창 자동 숨김/전체화면 진입
                 const target = e.target.closest(targets);
                 if (target) {
                     target.classList.add('touch-active');
@@ -967,6 +978,10 @@
                     target.classList.remove('touch-active');
                 }
             }, { passive: true });
+
+            document.addEventListener('click', () => {
+                requestFullScreen(); // 첫 클릭 시 전체화면 시도
+            }, { once: true });
         }
 
         function checkStreakSystem() {
