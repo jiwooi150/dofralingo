@@ -550,8 +550,7 @@
             box-shadow: 0 6px 0 #fbcfe8;
         }
 
-        .card-label { font-size: 13px; color: var(--primary-pink); margin-bottom: 8px; font-weight: 800; font-family: 'Poppins', sans-serif; }
-        .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
+        .card-content { font-size: 30px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
 
         .settings-overlay {
             position: fixed;
@@ -766,7 +765,6 @@
             
             <div class="flashcard-scene">
                 <div id="flashcard" class="flashcard">
-                    <div id="card-label" class="card-label">WORD</div>
                     <div id="card-text" class="card-content"></div>
                 </div>
             </div>
@@ -893,6 +891,7 @@
             }
         ];
 
+        // 기본 과제/복습 단어장
         const allDayFlashcards = {
             day1: [
                 { word: "Formerly", meaning: "이전에" },
@@ -907,6 +906,40 @@
                 { word: "recession", meaning: "불경기" }
             ],
         };
+
+        // 매일 10개씩 무작위 추출할 난이도 있는 고난도 단어 풀 (오늘의 단어용)
+        const advancedDailyWordPool = [
+            { word: "meticulous", meaning: "꼼꼼한, 세심한" },
+            { word: "ambiguous", meaning: "모호한, 애매한" },
+            { word: "prevalent", meaning: "널리 퍼진, 유행하는" },
+            { word: "substantive", meaning: "실질적인, 상당한" },
+            { word: "consolidate", meaning: "통합하다, 강화하다" },
+            { word: "discrepancy", meaning: "불일치, 차이" },
+            { word: "unprecedented", meaning: "전례 없는" },
+            { word: "scrutinize", meaning: "면밀히 조사하다" },
+            { word: "detrimental", meaning: "해로운, 유해한" },
+            { word: "feasibility", meaning: "실행 가능성" },
+            { word: "contingency", meaning: "비상사태, 만일의 사태" },
+            { word: "subordinate", meaning: "부하, 하위의" },
+            { word: "exacerbate", meaning: "악화시키다" },
+            { word: "remuneration", meaning: "보수, 보상" },
+            { word: "jurisdiction", meaning: "사법권, 관할권" },
+            { word: "requisite", meaning: "필수적인, 필요조건" },
+            { word: "versatile", meaning: "다재다능한, 다용도의" },
+            { word: "indispensable", meaning: "없어서는 안 될" },
+            { word: "discretion", meaning: "재량권, 신중함" },
+            { word: "proactive", meaning: "주도적인, 적극적인" },
+            { word: "comprehensive", meaning: "포괄적인, 종합적인" },
+            { word: "reluctant", meaning: "꺼리는, 마지못해 하는" },
+            { word: "alleviate", meaning: "완화하다, 경감하다" },
+            { word: "lucrative", meaning: "수익성이 좋은" },
+            { word: "impending", meaning: "임박한, 눈앞에 다가온" },
+            { word: "coincide", meaning: "일치하다, 동시에 일어나다" },
+            { word: "deteriorate", meaning: "악화되다" },
+            { word: "impeccable", meaning: "흠잡을 데 없는" },
+            { word: "mandatory", meaning: "의무적인, 강제적인" },
+            { word: "fluctuate", meaning: "변동하다, 오르내리다" }
+        ];
 
         const randomTaunts = [
             "${userName}, 아직도 그 모양인가?\n훗훗훗... 공부 안 해?",
@@ -930,7 +963,28 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // 전체화면 요청 함수 (주소창 숨기기)
+        // 오늘 날짜 기반으로 매일 다른 단어 10개 추출
+        function getDailyWords() {
+            const now = new Date();
+            const dateSeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+            
+            let pool = [...advancedDailyWordPool];
+            let daily10 = [];
+
+            let seed = dateSeed;
+            function pseudoRandom() {
+                let x = Math.sin(seed++) * 10000;
+                return x - Math.floor(x);
+            }
+
+            for (let i = 0; i < 10; i++) {
+                if (pool.length === 0) break;
+                const randomIndex = Math.floor(pseudoRandom() * pool.length);
+                daily10.push(pool.splice(randomIndex, 1)[0]);
+            }
+            return daily10;
+        }
+
         function requestFullScreen() {
             const doc = document.documentElement;
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -958,7 +1012,7 @@
             const targets = '.btn, .day-island, .quiz-home-btn, .option-btn';
             
             document.addEventListener('touchstart', (e) => {
-                requestFullScreen(); // 터치 시 주소창 자동 숨김/전체화면 진입
+                requestFullScreen();
                 const target = e.target.closest(targets);
                 if (target) {
                     target.classList.add('touch-active');
@@ -980,7 +1034,7 @@
             }, { passive: true });
 
             document.addEventListener('click', () => {
-                requestFullScreen(); // 첫 클릭 시 전체화면 시도
+                requestFullScreen();
             }, { once: true });
         }
 
@@ -1309,17 +1363,14 @@
             document.getElementById('review-timer').innerText = reviewTimeLeft;
 
             const card = activeFlashcards[currentReviewIndex];
-            const cardLabel = document.getElementById('card-label');
             const cardText = document.getElementById('card-text');
             const reviewBtn = document.getElementById('review-btn');
 
             if (!isShowingMeaning) {
-                cardLabel.innerText = "WORD";
                 cardText.innerText = card.word;
                 cardText.style.color = "var(--text-dark)";
                 reviewBtn.innerText = "정답 확인";
             } else {
-                cardLabel.innerText = "MEANING";
                 cardText.innerText = card.meaning;
                 cardText.style.color = "var(--primary-pink)";
                 reviewBtn.innerText = (currentReviewIndex === activeFlashcards.length - 1) ? "학습 완료" : "다음 단어";
@@ -1381,15 +1432,14 @@
         }
 
         function openQuickWordSheet() {
-            document.getElementById('sheet-content').innerHTML = `
-                <div class="quick-word-list">
-                    <div class="quick-word-item"><span class="word">Formerly</span><span class="meaning">이전에</span></div>
-                    <div class="quick-word-item"><span class="word">withdraw</span><span class="meaning">철회하다</span></div>
-                    <div class="quick-word-item"><span class="word">aside</span><span class="meaning">따로</span></div>
-                    <div class="quick-word-item"><span class="word">representation</span><span class="meaning">대표단</span></div>
-                    <div class="quick-word-item"><span class="word">recession</span><span class="meaning">불경기</span></div>
-                </div>
-            `;
+            const dailyWords = getDailyWords();
+            let htmlList = '<div class="quick-word-list">';
+            dailyWords.forEach(item => {
+                htmlList += `<div class="quick-word-item"><span class="word">${item.word}</span><span class="meaning">${item.meaning}</span></div>`;
+            });
+            htmlList += '</div>';
+
+            document.getElementById('sheet-content').innerHTML = htmlList;
             openBottomSheet();
         }
 
