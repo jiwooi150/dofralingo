@@ -221,13 +221,12 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 12px;
-            margin-top: 48px; /* 말풍선이 잘리지 않도록 상단 여백 증가 */
+            margin-top: 48px;
         }
 
-        /* 말풍선 수정: 위치 올리고 가로 폭 확장 */
         .speech-bubble {
             position: absolute;
-            top: -95px; /* 이미지를 가리지 않도록 위치 상향 */
+            top: -95px;
             background: #ffffff;
             border: 2px solid rgba(236, 72, 153, 0.3);
             border-radius: 18px;
@@ -238,7 +237,7 @@
             white-space: pre-wrap;
             word-break: keep-all;
             width: max-content;
-            max-width: 350px; /* 말풍선 가로 폭 증가 */
+            max-width: 350px;
             line-height: 1.4;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
             animation: bubbleBounce 2s infinite ease-in-out;
@@ -247,7 +246,7 @@
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -10px; /* 말풍선 꼬리 길이 및 위치 조정 */
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
             border-width: 10px 8px 0 8px;
@@ -559,7 +558,7 @@
             box-shadow: 0 6px 0 #fbcfe8;
         }
 
-        .card-content { font-size: 30px; color: var(--text-dark); font-weight: 800; word-break: break-all; }
+        .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; text-align: center; }
 
         .settings-overlay {
             position: fixed;
@@ -832,73 +831,142 @@
     </div>
 
     <script>
-        const questions = [
-            {
-                number: 1,
-                title: "QUESTION 01",
-                text: "To attract young consumers, promoting new products online is more <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> than advertising on television.",
-                options: [
-                    { label: "(A) effects", val: "A" },
-                    { label: "(B) effectively", val: "B" },
-                    { label: "(C) effecting", val: "C" },
-                    { label: "(D) effective", val: "D" }
-                ],
-                correct: "D",
-                explanation: "💡 해설\nmore 뒤에는 형용사가 올 수 있습니다."
-            },
-            {
-                number: 2,
-                title: "QUESTION 02",
-                text: "Twins Excursions employs licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
-                options: [
-                    { label: "(A) conduct", val: "A" },
-                    { label: "(B) receive", val: "B" },
-                    { label: "(C) inspect", val: "C" },
-                    { label: "(D) distribute", val: "D" }
-                ],
-                correct: "A",
-                explanation: "💡 해설\nconduct = 안내하다, 수행하다\ninspect = 검사하다\ndistribute = 분배하다"
-            },
-            {
-                number: 3,
-                title: "QUESTION 03",
-                text: "Director Philip Anderson's movie Silent Moon received a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> for the Best Film Award this year.",
-                options: [
-                    { label: "(A) nomination", val: "A" },
-                    { label: "(B) subscription", val: "B" },
-                    { label: "(C) destination", val: "C" },
-                    { label: "(D) creation", val: "D" }
-                ],
-                correct: "A",
-                explanation: "💡 해설\nnomination = 수상 후보, 지명\nsubscription = 구독"
-            },
-            {
-                number: 4,
-                title: "QUESTION 04",
-                text: "During peak shopping seasons, Johnson's Sportswear provides additional staff training to ensure an <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> workforce.",
-                options: [
-                    { label: "(A) experienced", val: "A" },
-                    { label: "(B) experiencing", val: "B" },
-                    { label: "(C) experiences", val: "C" },
-                    { label: "(D) experience", val: "D" }
-                ],
-                correct: "A",
-                explanation: "💡 해설\nworkforce(직원)를 수식하는 형용사 필요\nexperienced workforce = 숙련된 직원"
-            },
-            {
-                number: 5,
-                title: "QUESTION 05",
-                text: "Only staff employed for more than 15 years are <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> to receive an Excellent Worker Award.",
-                options: [
-                    { label: "(A) accountable", val: "A" },
-                    { label: "(B) modified", val: "B" },
-                    { label: "(C) entitled", val: "C" },
-                    { label: "(D) important", val: "D" }
-                ],
-                correct: "C",
-                explanation: "💡 해설\nentitled = 자격이 있는 (be entitled to)"
-            }
-        ];
+        const allQuestions = {
+            day1: [
+                {
+                    number: 1,
+                    title: "QUESTION 01",
+                    text: "To attract young consumers, promoting new products online is more <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> than advertising on television.",
+                    options: [
+                        { label: "(A) effects", val: "A" },
+                        { label: "(B) effectively", val: "B" },
+                        { label: "(C) effecting", val: "C" },
+                        { label: "(D) effective", val: "D" }
+                    ],
+                    correct: "D",
+                    explanation: "💡 해설\nmore 뒤에는 형용사가 올 수 있습니다."
+                },
+                {
+                    number: 2,
+                    title: "QUESTION 02",
+                    text: "Twins Excursions employs licensed guides who <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> tours in five different languages.",
+                    options: [
+                        { label: "(A) conduct", val: "A" },
+                        { label: "(B) receive", val: "B" },
+                        { label: "(C) inspect", val: "C" },
+                        { label: "(D) distribute", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nconduct = 안내하다, 수행하다\ninspect = 검사하다\ndistribute = 분배하다"
+                },
+                {
+                    number: 3,
+                    title: "QUESTION 03",
+                    text: "Director Philip Anderson's movie Silent Moon received a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> for the Best Film Award this year.",
+                    options: [
+                        { label: "(A) nomination", val: "A" },
+                        { label: "(B) subscription", val: "B" },
+                        { label: "(C) destination", val: "C" },
+                        { label: "(D) creation", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nnomination = 수상 후보, 지명\nsubscription = 구독"
+                },
+                {
+                    number: 4,
+                    title: "QUESTION 04",
+                    text: "During peak shopping seasons, Johnson's Sportswear provides additional staff training to ensure an <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> workforce.",
+                    options: [
+                        { label: "(A) experienced", val: "A" },
+                        { label: "(B) experiencing", val: "B" },
+                        { label: "(C) experiences", val: "C" },
+                        { label: "(D) experience", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nworkforce(직원)를 수식하는 형용사 필요\nexperienced workforce = 숙련된 직원"
+                },
+                {
+                    number: 5,
+                    title: "QUESTION 05",
+                    text: "Only staff employed for more than 15 years are <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> to receive an Excellent Worker Award.",
+                    options: [
+                        { label: "(A) accountable", val: "A" },
+                        { label: "(B) modified", val: "B" },
+                        { label: "(C) entitled", val: "C" },
+                        { label: "(D) important", val: "D" }
+                    ],
+                    correct: "C",
+                    explanation: "💡 해설\nentitled = 자격이 있는 (be entitled to)"
+                }
+            ],
+            day2: [
+                {
+                    number: 1,
+                    title: "QUESTION 01",
+                    text: "The new recruitment process <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> all future job candidates to submit their resumes via e-mail.",
+                    options: [
+                        { label: "(A) requirement", val: "A" },
+                        { label: "(B) requires", val: "B" },
+                        { label: "(C) require", val: "C" },
+                        { label: "(D) requiring", val: "D" }
+                    ],
+                    correct: "B",
+                    explanation: "💡 해설\nThe new recruitment process가 주어이며, 단수 주어에 맞는 단수 동사 requires가 정답입니다."
+                },
+                {
+                    number: 2,
+                    title: "QUESTION 02",
+                    text: "The recent economic downturn does not <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> mean that the unemployment rate will increase.",
+                    options: [
+                        { label: "(A) necessarily", val: "A" },
+                        { label: "(B) expectedly", val: "B" },
+                        { label: "(C) hesitantly", val: "C" },
+                        { label: "(D) consciously", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nnecessarily = 반드시, 필연적으로\ndownturn = 침체\nhesitantly = 머뭇거리며\nconsciously = 의식적으로"
+                },
+                {
+                    number: 3,
+                    title: "QUESTION 03",
+                    text: "The Foley Dental Clinic requests that patients reconfirm an appointment at least two days <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> its scheduled date.",
+                    options: [
+                        { label: "(A) prior to", val: "A" },
+                        { label: "(B) provided that", val: "B" },
+                        { label: "(C) among", val: "C" },
+                        { label: "(D) since", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nprior to = ~이전에\nprovided that = 오직 ~하는 경우에만\namong = ~사이에"
+                },
+                {
+                    number: 4,
+                    title: "QUESTION 04",
+                    text: "A recent poll indicates that residents are <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> of City Council's plan to raise taxes for a new park.",
+                    options: [
+                        { label: "(A) supporting", val: "A" },
+                        { label: "(B) supportive", val: "B" },
+                        { label: "(C) supported", val: "C" },
+                        { label: "(D) supports", val: "D" }
+                    ],
+                    correct: "B",
+                    explanation: "💡 해설\nbe supportive of = ~를 지지하다"
+                },
+                {
+                    number: 5,
+                    title: "QUESTION 05",
+                    text: "The <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> reason for the negative reviews of the Central Highland Gym is the poor condition of the pool.",
+                    options: [
+                        { label: "(A) principal", val: "A" },
+                        { label: "(B) considerate", val: "B" },
+                        { label: "(C) secure", val: "C" },
+                        { label: "(D) beneficial", val: "D" }
+                    ],
+                    correct: "A",
+                    explanation: "💡 해설\nprincipal = 주요한\nconsiderate = 사려깊은"
+                }
+            ]
+        };
 
         const allDayFlashcards = {
             day1: [
@@ -913,6 +981,18 @@
                 { word: "now that", meaning: "~이므로" },
                 { word: "recession", meaning: "불경기" }
             ],
+            day2: [
+                { word: "conduct", meaning: "안내하다, 수행하다" },
+                { word: "inspect", meaning: "검사하다" },
+                { word: "distribute", meaning: "분배하다" },
+                { word: "be accountable for", meaning: "~에 대한 책임이 있다" },
+                { word: "recruitment", meaning: "채용, 모집" },
+                { word: "downturn", meaning: "침체, 불황" },
+                { word: "necessarily", meaning: "반드시, 필연적으로" },
+                { word: "prior to", meaning: "~이전에" },
+                { word: "supportive", meaning: "지지하는" },
+                { word: "principal", meaning: "주요한" }
+            ]
         };
 
         const advancedDailyWordPool = [
@@ -956,6 +1036,7 @@
             "덤벼라 ${userName}! 네 무지가\n어디까지 가나 구경하지!"
         ];
 
+        let currentSelectedDay = 1;
         let currentQuizIndex = 0;
         let isCorrectAnswer = false;
         let activeFlashcards = []; 
@@ -969,6 +1050,10 @@
 
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
+
+        function getCurrentQuestions() {
+            return allQuestions[`day${currentSelectedDay}`] || allQuestions.day1;
+        }
 
         function getDailyWords() {
             const now = new Date();
@@ -1205,6 +1290,7 @@
         }
 
         function startVocabularyDeck() {
+            currentSelectedDay = null;
             let combined = [];
             for (let dayKey in allDayFlashcards) {
                 combined = combined.concat(allDayFlashcards[dayKey]);
@@ -1214,22 +1300,28 @@
             startReview();
         }
 
-        /* Day 선택 영역 텍스트 정리 (심플하게 DAY와 아이콘만 표시) */
+        function startDayVocabularyDeck(dayNum) {
+            activeFlashcards = [...(allDayFlashcards[`day${dayNum}`] || allDayFlashcards.day1)];
+            startReview();
+        }
+
         function renderIslandDays() {
             const container = document.getElementById('island-container');
             container.innerHTML = '';
-            const isDay1Completed = localStorage.getItem('dofla_day1_completed') === 'true';
             document.getElementById('streak-badge').innerHTML = `🔥 연속 출석: ${localStorage.getItem('dofla_streak') || '1'}일째`;
 
             for (let i = 1; i <= 30; i++) {
                 const island = document.createElement('div');
-                if (i === 1) {
-                    island.className = isDay1Completed ? 'day-island completed' : 'day-island';
+                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
+                const isUnlocked = (i === 1) || (localStorage.getItem(`dofla_day${i - 1}_completed`) === 'true');
+
+                if (isUnlocked) {
+                    island.className = isCompleted ? 'day-island completed' : 'day-island';
                     island.innerHTML = `
-                        <div class="day-island-title">DAY 01</div>
-                        <div class="day-island-status">${isDay1Completed ? '✓' : '➔'}</div>
+                        <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
+                        <div class="day-island-status">${isCompleted ? '✓' : '➔'}</div>
                     `;
-                    island.onclick = () => { playButtonSound(); showRuleScreen(); };
+                    island.onclick = () => { playButtonSound(); selectDay(i); };
                 } else {
                     island.className = 'day-island locked';
                     island.innerHTML = `
@@ -1240,6 +1332,11 @@
                 }
                 container.appendChild(island);
             }
+        }
+
+        function selectDay(dayNum) {
+            currentSelectedDay = dayNum;
+            showRuleScreen();
         }
 
         function showRuleScreen() {
@@ -1258,6 +1355,7 @@
             quizTimeLeft = 20;
             document.getElementById('quiz-timer').innerText = quizTimeLeft;
 
+            const questions = getCurrentQuestions();
             const q = questions[index];
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-text').innerHTML = q.text;
@@ -1312,6 +1410,7 @@
         }
 
         function checkAnswer(selectedOption) {
+            const questions = getCurrentQuestions();
             const q = questions[currentQuizIndex];
             const resultScreen = document.getElementById('result-screen');
             document.getElementById('quiz-screen').classList.add('hidden');
@@ -1349,13 +1448,14 @@
         }
 
         function handleNextAction() {
+            const questions = getCurrentQuestions();
             if (isCorrectAnswer) {
                 currentQuizIndex++;
                 if (currentQuizIndex < questions.length) {
                     loadQuestion(currentQuizIndex);
                 } else {
                     document.getElementById('result-screen').classList.add('hidden');
-                    startVocabularyDeck();
+                    startDayVocabularyDeck(currentSelectedDay);
                 }
             } else {
                 loadQuestion(currentQuizIndex);
@@ -1409,7 +1509,9 @@
                     isShowingMeaning = false;
                     updateFlashcardContent();
                 } else {
-                    localStorage.setItem('dofla_day1_completed', 'true');
+                    if (currentSelectedDay) {
+                        localStorage.setItem(`dofla_day${currentSelectedDay}_completed`, 'true');
+                    }
                     triggerCompletionEffects();
                 }
             }
