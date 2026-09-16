@@ -162,7 +162,6 @@
             cursor: pointer;
         }
         
-        /* 1. 인트로 팝업 애니메이션 */
         .intro-text {
             font-size: 42px;
             font-weight: 800;
@@ -718,7 +717,6 @@
             width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin-bottom: 12px;
         }
         
-        /* 4. 오늘의 단어를 먼저 외워보세요! 폰트 크기 확대 */
         .sheet-banner-text {
             font-size: 18px;
             font-weight: 800;
@@ -790,7 +788,8 @@
             2. 명사/동사 위치 구분하기<br><br>
             3. 모르면 울지 말고 근거 있게 찍기
         </div>
-        <button class="btn" onclick="playButtonSound(); startQuiz()">문제 풀기</button>
+        <!-- 문제 풀기 버튼을 누를 때 퀴즈 진입 -->
+        <button class="btn" onclick="startQuiz()">문제 풀기</button>
     </div>
 
     <!-- 4. 퀴즈 화면 -->
@@ -1249,7 +1248,6 @@
             return currentStreak;
         }
 
-        /* 2. correct.mp3 소리 50% 줄임 조절 */
         function playSoundFile(filename) {
             const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
             if (!soundEnabled) return;
@@ -1257,7 +1255,7 @@
             try {
                 const audio = new Audio(filename);
                 if (filename === 'correct.mp3') {
-                    audio.volume = 0.5; // 소리 50%로 설정
+                    audio.volume = 0.5;
                 }
                 audio.currentTime = 0;
                 audio.play().catch(() => {});
@@ -1316,7 +1314,6 @@
             showTitleScreen(nameInput);
         }
 
-        /* 3. ping.mp3가 빠른 타이밍(50ms)에 바로 등장하도록 수정 */
         function showTitleScreen(userName) {
             const rawTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
             const formattedTaunt = rawTaunt.replace(/\${userName}/g, userName);
@@ -1466,7 +1463,9 @@
             document.getElementById('rule-screen').classList.remove('hidden');
         }
 
+        /* 1. 문제풀기 버튼을 눌러 첫번째 문제가 등장할 때 2.mp3 재생 */
         function startQuiz() {
+            playSoundFile('2.mp3');
             currentQuizIndex = 0;
             document.getElementById('rule-screen').classList.add('hidden');
             loadQuestion(currentQuizIndex);
@@ -1589,7 +1588,9 @@
             }
         }
 
+        /* 2. 단어장/복습 진입 시 첫번째 단어가 등장할 때 2.mp3 재생 */
         function startReview() {
+            playSoundFile('2.mp3');
             currentReviewIndex = 0;
             isShowingMeaning = false;
             isCardAnimating = false;
