@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>도플라링고 - 도황의 영어공부법</title>
     
-    <!-- 모바일 전체화면(주소창 감추기 & PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="도플라링고">
@@ -17,7 +16,6 @@
     <link rel="apple-touch-icon" href="title.png">
     <link rel="icon" type="image/png" href="title.png">
     
-    <!-- Pretendard & Poppins & Jua 웹폰트 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -105,6 +103,17 @@
             position: relative;
             overflow: hidden; 
             z-index: 1;
+        }
+
+        .shake-animation {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
         }
 
         .btn {
@@ -212,23 +221,25 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 12px;
-            margin-top: 20px;
+            margin-top: 48px; /* 말풍선이 잘리지 않도록 상단 여백 증가 */
         }
 
+        /* 말풍선 수정: 위치 올리고 가로 폭 확장 */
         .speech-bubble {
             position: absolute;
-            top: -58px;
+            top: -95px; /* 이미지를 가리지 않도록 위치 상향 */
             background: #ffffff;
             border: 2px solid rgba(236, 72, 153, 0.3);
             border-radius: 18px;
-            padding: 8px 16px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-dark);
             white-space: pre-wrap;
             word-break: keep-all;
-            max-width: 260px;
-            line-height: 1.35;
+            width: max-content;
+            max-width: 350px; /* 말풍선 가로 폭 증가 */
+            line-height: 1.4;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
             animation: bubbleBounce 2s infinite ease-in-out;
             z-index: 10;
@@ -236,10 +247,10 @@
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -10px; /* 말풍선 꼬리 길이 및 위치 조정 */
             left: 50%;
             transform: translateX(-50%);
-            border-width: 8px 7px 0 7px;
+            border-width: 10px 8px 0 8px;
             border-style: solid;
             border-color: #ffffff transparent;
             display: block;
@@ -328,8 +339,6 @@
             color: var(--text-dark);
             font-family: 'Poppins', sans-serif;
         }
-
-        .day-island-sub { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
         .day-island-status {
             width: 36px;
@@ -504,7 +513,7 @@
             display: none;
             object-fit: contain;
         }
-        .result-text { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .result-text { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
 
         .result-explanation {
             font-size: 14px;
@@ -891,7 +900,6 @@
             }
         ];
 
-        // 기본 과제/복습 단어장
         const allDayFlashcards = {
             day1: [
                 { word: "Formerly", meaning: "이전에" },
@@ -907,7 +915,6 @@
             ],
         };
 
-        // 매일 10개씩 무작위 추출할 난이도 있는 고난도 단어 풀 (오늘의 단어용)
         const advancedDailyWordPool = [
             { word: "meticulous", meaning: "꼼꼼한, 세심한" },
             { word: "ambiguous", meaning: "모호한, 애매한" },
@@ -963,7 +970,6 @@
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
 
-        // 오늘 날짜 기반으로 매일 다른 단어 10개 추출
         function getDailyWords() {
             const now = new Date();
             const dateSeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
@@ -1208,6 +1214,7 @@
             startReview();
         }
 
+        /* Day 선택 영역 텍스트 정리 (심플하게 DAY와 아이콘만 표시) */
         function renderIslandDays() {
             const container = document.getElementById('island-container');
             container.innerHTML = '';
@@ -1219,20 +1226,14 @@
                 if (i === 1) {
                     island.className = isDay1Completed ? 'day-island completed' : 'day-island';
                     island.innerHTML = `
-                        <div>
-                            <div class="day-island-title">DAY 01</div>
-                            <div class="day-island-sub">${isDay1Completed ? '학습 완료' : '기초 훈련'}</div>
-                        </div>
+                        <div class="day-island-title">DAY 01</div>
                         <div class="day-island-status">${isDay1Completed ? '✓' : '➔'}</div>
                     `;
                     island.onclick = () => { playButtonSound(); showRuleScreen(); };
                 } else {
                     island.className = 'day-island locked';
                     island.innerHTML = `
-                        <div>
-                            <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
-                            <div class="day-island-sub">잠김</div>
-                        </div>
+                        <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
                         <div class="day-island-status">🔒</div>
                     `;
                     island.onclick = () => { playButtonSound(); alert('이전 과제를 먼저 완료해라!'); };
@@ -1290,15 +1291,20 @@
         }
 
         function handleQuizTimeout() {
+            const resultScreen = document.getElementById('result-screen');
             document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
+            resultScreen.classList.remove('hidden');
+
+            resultScreen.classList.remove('shake-animation');
+            void resultScreen.offsetWidth; 
+            resultScreen.classList.add('shake-animation');
 
             const resultImg = document.getElementById('result-img');
             resultImg.style.display = 'block';
             isCorrectAnswer = false;
             resultImg.src = "wrong.png"; 
             document.getElementById('result-msg').style.color = "#dc2626";
-            document.getElementById('result-msg').innerText = "시간 초과!";
+            document.getElementById('result-msg').innerText = "죽어";
             document.getElementById('result-exp').classList.add('hidden');
             document.getElementById('action-btn').innerText = "다시 풀기";
 
@@ -1307,17 +1313,19 @@
 
         function checkAnswer(selectedOption) {
             const q = questions[currentQuizIndex];
+            const resultScreen = document.getElementById('result-screen');
             document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
+            resultScreen.classList.remove('hidden');
 
             const resultImg = document.getElementById('result-img');
             resultImg.style.display = 'block';
 
             if (selectedOption === q.correct) {
                 isCorrectAnswer = true;
+                resultScreen.classList.remove('shake-animation'); 
                 resultImg.src = "correct.gif"; 
                 document.getElementById('result-msg').style.color = "var(--primary-pink)";
-                document.getElementById('result-msg').innerText = "정답입니다!";
+                document.getElementById('result-msg').innerText = "도~황";
                 
                 document.getElementById('result-exp').innerText = q.explanation;
                 document.getElementById('result-exp').classList.remove('hidden');
@@ -1326,9 +1334,13 @@
                 playSoundFile('correct.mp3');
             } else {
                 isCorrectAnswer = false;
+                resultScreen.classList.remove('shake-animation');
+                void resultScreen.offsetWidth; 
+                resultScreen.classList.add('shake-animation');
+
                 resultImg.src = "wrong.png"; 
                 document.getElementById('result-msg').style.color = "#dc2626";
-                document.getElementById('result-msg').innerText = "오답입니다!";
+                document.getElementById('result-msg').innerText = "죽어";
                 document.getElementById('result-exp').classList.add('hidden');
                 document.getElementById('action-btn').innerText = "다시 풀기";
 
