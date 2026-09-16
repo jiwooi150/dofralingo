@@ -161,6 +161,8 @@
             background: #fdf2f8;
             cursor: pointer;
         }
+        
+        /* 1. 인트로 팝업 애니메이션 */
         .intro-text {
             font-size: 42px;
             font-weight: 800;
@@ -168,13 +170,13 @@
             font-family: 'Poppins', 'Jua', sans-serif !important;
             letter-spacing: -0.5px;
             opacity: 0;
-            animation: slideFadeIn 1s ease forwards;
-            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.2);
+            animation: introPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            text-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
         }
 
-        @keyframes slideFadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes introPopIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .name-title {
@@ -715,13 +717,15 @@
         .sheet-handle {
             width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin-bottom: 12px;
         }
+        
+        /* 4. 오늘의 단어를 먼저 외워보세요! 폰트 크기 확대 */
         .sheet-banner-text {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--primary-pink);
             background: #fdf2f8;
             border: 1.5px solid #fbcfe8;
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             margin-bottom: 10px;
         }
@@ -1118,7 +1122,6 @@
             return allQuestions[`day${currentSelectedDay}`] || allQuestions.day1;
         }
 
-        // 날짜 기반 오늘의 단어 추출 함수
         function getDailyWordsByDate(targetDateObj) {
             const dateSeed = targetDateObj.getFullYear() * 10000 + (targetDateObj.getMonth() + 1) * 100 + targetDateObj.getDate();
             
@@ -1143,7 +1146,6 @@
             return getDailyWordsByDate(new Date());
         }
 
-        // 최초 사용일부터 어제까지 누적된 오늘의 단어를 단어장에 추가하는 함수
         function getPassedDailyWords() {
             const firstVisitStr = localStorage.getItem('dofla_first_visit_date');
             if (!firstVisitStr) return [];
@@ -1151,7 +1153,6 @@
             const firstVisit = new Date(firstVisitStr);
             const today = new Date();
             
-            // 시/분/초 초기화 (날짜 단위 비교)
             firstVisit.setHours(0,0,0,0);
             const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, 0, 0, 0, 0);
 
@@ -1225,7 +1226,6 @@
             let lastVisitDate = localStorage.getItem('dofla_last_visit');
             let currentStreak = parseInt(localStorage.getItem('dofla_streak') || '1', 10);
 
-            // 최초 방문일 기록 (다음날부터 '오늘의 단어'를 단어장에 추가하기 위함)
             if (!localStorage.getItem('dofla_first_visit_date')) {
                 localStorage.setItem('dofla_first_visit_date', todayStr);
             }
@@ -1249,12 +1249,16 @@
             return currentStreak;
         }
 
+        /* 2. correct.mp3 소리 50% 줄임 조절 */
         function playSoundFile(filename) {
             const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
             if (!soundEnabled) return;
 
             try {
                 const audio = new Audio(filename);
+                if (filename === 'correct.mp3') {
+                    audio.volume = 0.5; // 소리 50%로 설정
+                }
                 audio.currentTime = 0;
                 audio.play().catch(() => {});
             } catch(e) {}
@@ -1312,16 +1316,16 @@
             showTitleScreen(nameInput);
         }
 
+        /* 3. ping.mp3가 빠른 타이밍(50ms)에 바로 등장하도록 수정 */
         function showTitleScreen(userName) {
             const rawTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
             const formattedTaunt = rawTaunt.replace(/\${userName}/g, userName);
             document.getElementById('speech-bubble').innerText = formattedTaunt;
             document.getElementById('title-screen').classList.remove('hidden');
 
-            // 인트로 종료 후 오늘의 단어 바텀시트가 ping.mp3 등장음과 함께 오픈
             setTimeout(() => {
                 openQuickWordSheet(true); 
-            }, 300);
+            }, 50);
         }
 
         function openSettings() {
@@ -1390,23 +1394,19 @@
             document.getElementById('day-screen').classList.remove('hidden');
         }
 
-        // 단어장 실행 시 기존 단어 + 지난날들의 '오늘의 단어'를 자동 병합하여 학습
         function startVocabularyDeck() {
             currentSelectedDay = null;
             let combined = [];
             
-            // 기존 일자별 단어장 병합
             for (let dayKey in allDayFlashcards) {
                 combined = combined.concat(allDayFlashcards[dayKey]);
             }
             
-            // 지난 날들의 '오늘의 단어'들 자동 추가
             const pastDailyWords = getPassedDailyWords();
             if (pastDailyWords.length > 0) {
                 combined = combined.concat(pastDailyWords);
             }
 
-            // 중복 단어 제거 (단어 기준)
             const uniqueMap = new Map();
             combined.forEach(item => {
                 if (!uniqueMap.has(item.word)) {
@@ -1699,7 +1699,7 @@
             bottomSheet.classList.add('active');
 
             if (isAutoIntro) {
-                playSoundFile('ping.mp3'); // 인트로 직후 열릴 때 ping.mp3 소리 재생
+                playSoundFile('ping.mp3');
             }
         }
 
