@@ -397,6 +397,22 @@
             justify-content: space-between;
         }
 
+        /* 퀴즈 문제 전환 애니메이션 */
+        .quiz-enter-animation {
+            animation: quizPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes quizPopIn {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         .quiz-top-bar {
             display: flex;
             justify-content: space-between;
@@ -543,7 +559,9 @@
             width: 100%;
             height: 220px;
             margin: 16px 0;
+            perspective: 1000px;
         }
+        
         .flashcard {
             width: 100%;
             height: 100%;
@@ -556,6 +574,28 @@
             align-items: center;
             padding: 24px;
             box-shadow: 0 6px 0 #fbcfe8;
+            will-change: transform, opacity;
+        }
+
+        /* 단어장 카드 빠른 슬라이드/뒤집기 애니메이션 클래스 */
+        .card-flip-quick {
+            animation: cardFlip 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .card-slide-next {
+            animation: cardSlideOutIn 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes cardFlip {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(90deg) scale(0.92); }
+            100% { transform: rotateY(0deg) scale(1); }
+        }
+
+        @keyframes cardSlideOutIn {
+            0% { transform: translateX(0) scale(1); opacity: 1; }
+            45% { transform: translateX(-80px) rotate(-6deg) scale(0.9); opacity: 0; }
+            50% { transform: translateX(80px) rotate(6deg) scale(0.9); opacity: 0; }
+            100% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; }
         }
 
         .card-content { font-size: 28px; color: var(--text-dark); font-weight: 800; word-break: break-all; text-align: center; }
@@ -1044,6 +1084,7 @@
         let isShowingMeaning = false;
         let introTimer = null;
         let hasIntroPassed = false;
+        let isCardAnimating = false; // 카드가 연타에 겹치지 않게 제어
         
         let quizTimerInterval = null;
         let quizTimeLeft = 20;
@@ -1314,7 +1355,6 @@
                 const island = document.createElement('div');
                 const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
                 
-                // allQuestions 객체에 해당 DAY의 문제 배열 데이터가 존재하는지 확인
                 const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
                 const isUnlocked = hasQuestions;
 
@@ -1377,6 +1417,12 @@
                 };
                 optionsContainer.appendChild(btn);
             });
+
+            // 문제 등장 및 전환 애니메이션 적용
+            const quizWrapper = document.getElementById('quiz-wrapper');
+            quizWrapper.classList.remove('quiz-enter-animation');
+            void quizWrapper.offsetWidth; // reflow 강제 실행
+            quizWrapper.classList.add('quiz-enter-animation');
 
             document.getElementById('quiz-screen').classList.remove('hidden');
             document.getElementById('result-screen').classList.add('hidden');
@@ -1468,27 +1514,57 @@
         function startReview() {
             currentReviewIndex = 0;
             isShowingMeaning = false;
-            updateFlashcardContent();
+            isCardAnimating = false;
+            updateFlashcardContent(false);
             document.getElementById('review-screen').classList.remove('hidden');
         }
 
-        function updateFlashcardContent() {
+        function updateFlashcardContent(animated = false, animType = '') {
             clearInterval(reviewTimerInterval);
             reviewTimeLeft = 5;
             document.getElementById('review-timer').innerText = reviewTimeLeft;
 
-            const card = activeFlashcards[currentReviewIndex];
+            const flashcardEl = document.getElementById('flashcard');
             const cardText = document.getElementById('card-text');
             const reviewBtn = document.getElementById('review-btn');
+            const card = activeFlashcards[currentReviewIndex];
 
-            if (!isShowingMeaning) {
-                cardText.innerText = card.word;
-                cardText.style.color = "var(--text-dark)";
-                reviewBtn.innerText = "정답 확인";
+            const renderData = () => {
+                if (!isShowingMeaning) {
+                    cardText.innerText = card.word;
+                    cardText.style.color = "var(--text-dark)";
+                    reviewBtn.innerText = "정답 확인";
+                } else {
+                    cardText.innerText = card.meaning;
+                    cardText.style.color = "var(--primary-pink)";
+                    reviewBtn.innerText = (currentReviewIndex === activeFlashcards.length - 1) ? "학습 완료" : "다음 단어";
+                }
+            };
+
+            if (animated) {
+                isCardAnimating = true;
+                flashcardEl.classList.remove('card-flip-quick', 'card-slide-next');
+                void flashcardEl.offsetWidth; // Reflow
+
+                if (animType === 'flip') {
+                    flashcardEl.classList.add('card-flip-quick');
+                    // 뒤집기 중간 시점(110ms)에 단어/뜻 텍스트 교체
+                    setTimeout(() => { renderData(); }, 110);
+                    setTimeout(() => { 
+                        flashcardEl.classList.remove('card-flip-quick');
+                        isCardAnimating = false; 
+                    }, 220);
+                } else if (animType === 'slide') {
+                    flashcardEl.classList.add('card-slide-next');
+                    // 카드가 화면 밖으로 빠져나가는 중간 시점(125ms)에 새 단어 교체
+                    setTimeout(() => { renderData(); }, 125);
+                    setTimeout(() => { 
+                        flashcardEl.classList.remove('card-slide-next');
+                        isCardAnimating = false; 
+                    }, 250);
+                }
             } else {
-                cardText.innerText = card.meaning;
-                cardText.style.color = "var(--primary-pink)";
-                reviewBtn.innerText = (currentReviewIndex === activeFlashcards.length - 1) ? "학습 완료" : "다음 단어";
+                renderData();
             }
 
             reviewTimerInterval = setInterval(() => {
@@ -1502,15 +1578,17 @@
         }
 
         function handleReviewAction() {
+            if (isCardAnimating) return; // 애니메이션 진행 중 중복 클릭 방지
+
             clearInterval(reviewTimerInterval);
             if (!isShowingMeaning) {
                 isShowingMeaning = true;
-                updateFlashcardContent();
+                updateFlashcardContent(true, 'flip'); // 카드 뒤집기 애니메이션
             } else {
                 currentReviewIndex++;
                 if (currentReviewIndex < activeFlashcards.length) {
                     isShowingMeaning = false;
-                    updateFlashcardContent();
+                    updateFlashcardContent(true, 'slide'); // 다음 카드로 빠르게 넘어가는 애니메이션
                 } else {
                     if (currentSelectedDay) {
                         localStorage.setItem(`dofla_day${currentSelectedDay}_completed`, 'true');
