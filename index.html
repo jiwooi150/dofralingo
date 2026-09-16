@@ -1313,7 +1313,10 @@
             for (let i = 1; i <= 30; i++) {
                 const island = document.createElement('div');
                 const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
-                const isUnlocked = (i === 1) || (localStorage.getItem(`dofla_day${i - 1}_completed`) === 'true');
+                
+                // allQuestions 객체에 해당 DAY의 문제 배열 데이터가 존재하는지 확인
+                const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
+                const isUnlocked = hasQuestions;
 
                 if (isUnlocked) {
                     island.className = isCompleted ? 'day-island completed' : 'day-island';
@@ -1328,7 +1331,7 @@
                         <div class="day-island-title">DAY ${i < 10 ? '0' + i : i}</div>
                         <div class="day-island-status">🔒</div>
                     `;
-                    island.onclick = () => { playButtonSound(); alert('이전 과제를 먼저 완료해라!'); };
+                    island.onclick = () => { playButtonSound(); alert('아직 문제가 업로드되지 않은 DAY다!'); };
                 }
                 container.appendChild(island);
             }
