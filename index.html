@@ -31,6 +31,13 @@
             --text-muted: #64748b;
             --border-light: #e2e8f0;
             --vh: 1vh;
+            
+            /* 채도가 진한 색상 변수 설정 */
+            --btn-day1: #ff0055; /* 진한 핫핑크 */
+            --btn-day2: #00cc55; /* 진한 비비드 그린 */
+            --btn-day3: #0099ff; /* 진한 시안/블루 */
+            --btn-day4: #ffaa00; /* 진한 옐로우/오렌지 */
+            --btn-day5: #9900ff; /* 진한 퍼플 */
         }
 
         * {
@@ -312,7 +319,7 @@
             min-height: 100%;
         }
 
-        /* Day 선택 버튼 스타일 수정 */
+        /* Day 선택 버튼 스타일 (네온 효과 제거 및 채도 높은 색상 적용) */
         .island-node {
             position: absolute;
             width: 108px;
@@ -332,32 +339,24 @@
             transform: scale(0.92) !important;
         }
 
-        /* 1. 열려있는 버튼 (연한 분홍색 / 진한 분홍색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
+        /* 1. 열려있는 버튼 (진하고 채도 높은 색상, 네온 효과 없음) */
         .island-node.unlocked {
-            background: #fbcfe8; 
-            box-shadow: 
-                0 10px 0 #db2777, 
-                0 14px 22px rgba(219, 39, 119, 0.3),
-                inset 0 2px 4px rgba(255,255,255,0.7);
+            background: var(--btn-day1); 
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
             border: none;
         }
 
-        /* 2. 완료한 버튼 (연한 초록색 / 진한 초록색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
+        /* 2. 완료한 버튼 (진한 초록색, 네온 효과 없음) */
         .island-node.completed {
-            background: #bbf7d0;
-            box-shadow: 
-                0 10px 0 #15803d, 
-                0 12px 20px rgba(21, 128, 61, 0.3),
-                inset 0 2px 4px rgba(255,255,255,0.8);
+            background: #00b050;
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
             border: none;
         }
 
-        /* 3. 잠겨있는 버튼 (회색 / 진한 회색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
+        /* 3. 잠겨있는 버튼 (회색, 네온 효과 없음) */
         .island-node.locked {
-            background: #cbd5e1;
-            box-shadow: 
-                0 8px 0 #475569, 
-                0 6px 12px rgba(0,0,0,0.04);
+            background: #94a3b8;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
             border: none;
             opacity: 0.85;
             cursor: not-allowed;
@@ -373,12 +372,13 @@
             50% { transform: translateY(-8px); }
         }
 
+        /* 숫자 폰트 크기 두 배로 확대 (기존 20px -> 40px) */
         .island-node .stage-num {
             font-family: 'Poppins', sans-serif;
-            font-size: 20px;
+            font-size: 40px;
             font-weight: 800;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             line-height: 1;
         }
         
@@ -388,7 +388,7 @@
         }
 
         .map-svg-layer {
-            display: none; /* 섬과 섬 사이 점선 모두 제거 */
+            display: none; 
         }
 
         .rule-card-wrapper {
@@ -1512,7 +1512,7 @@
             startReview();
         }
 
-        /* Day 선택 지도 렌더링 (점선 제거, 이모티콘 제거, 텍스트 "01", 최신 열린 버튼 흔들림 적용) */
+        /* Day 선택 지도 렌더링 (숫자 크기 2배 및 네온 제거 적용) */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1538,7 +1538,6 @@
             const totalHeight = startY + totalStages * rowGap + 60;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            // 열려있는 버튼 중 가장 최신(번호가 가장 큰 unlocked 상태) 찾기
             let highestUnlockedId = -1;
             for (let i = 1; i <= totalStages; i++) {
                 const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
@@ -1558,11 +1557,11 @@
 
                 if (hasQuestions) {
                     if (isCompleted) {
-                        statusClass = 'completed'; // 연한 초록색 / 진한 초록색 그림자
+                        statusClass = 'completed'; 
                     } else {
-                        statusClass = 'unlocked'; // 연한 분홍색 / 진한 분홍색 그림자
+                        statusClass = 'unlocked'; 
                         if (i === highestUnlockedId) {
-                            statusClass += ' latest-unlocked'; // 가장 최신 열린 버튼 위아래 흔들림
+                            statusClass += ' latest-unlocked'; 
                         }
                     }
                 }
@@ -1571,7 +1570,6 @@
                 node.style.left = `${data.x}px`;
                 node.style.top = `${data.y - 54}px`;
 
-                // 이모티콘 제거 및 텍스트 01(02, 03...) 형식 적용
                 const formattedNum = String(i).padStart(2, '0');
                 node.innerHTML = `
                     <span class="stage-num">${formattedNum}</span>
@@ -1868,3 +1866,4 @@
     </script>
 </body>
 </html>
+```[cite: 8]
