@@ -105,7 +105,6 @@
             z-index: 1;
         }
 
-        /* 메인 메뉴 팝업 애니메이션 */
         .main-pop-anim {
             animation: mainPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
@@ -244,26 +243,26 @@
             }
             60% {
                 opacity: 1;
-                transform: translateY(-30px) scale(1.1) rotate(360deg);
+                transform: translateY(70px) scale(1.1) rotate(360deg);
             }
             80% {
-                transform: translateY(10px) scale(0.95) rotate(360deg);
+                transform: translateY(110px) scale(0.95) rotate(360deg);
             }
             100% {
                 opacity: 1;
-                transform: translateY(0) scale(1) rotate(360deg);
+                transform: translateY(100px) scale(1) rotate(360deg);
             }
         }
 
-        /* 퇴장 애니메이션: Fade Out 처리 */
+        /* 퇴장 애니메이션: 위치 통일 후 Fade Out */
         @keyframes dooFadeOut {
             0% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(100px) scale(1);
             }
             100% {
                 opacity: 0;
-                transform: translateY(-10px) scale(0.95);
+                transform: translateY(90px) scale(0.95);
             }
         }
 
@@ -282,12 +281,10 @@
 
         .doo-idle-anim {
             opacity: 1 !important;
-            /* 1. 이름 설정할 때 smile.png 위치를 100px 정도 아래로 내림 */
             transform: translateY(100px) !important;
             animation: dooIdleGently 2.2s ease-in-out infinite;
         }
 
-        /* smile.png 크기 확대 */
         .doo-image {
             width: 250px;
             height: auto;
@@ -295,7 +292,6 @@
             display: block;
         }
 
-        /* 말풍선 위치 그대로 유지 (top: 110px) */
         .speech-bubble-anim {
             position: absolute;
             top: 110px;
@@ -453,7 +449,6 @@
             width: 0;
         }
 
-        /* 말풍선 위아래 살살 움직이기 */
         @keyframes bubbleBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
@@ -477,7 +472,6 @@
             transform: scale(1);
         }
 
-        /* good.png 1초 부들부들 떨림 애니메이션 */
         .doo-shaking {
             animation: shakingDoo 1s ease-in-out !important;
         }
@@ -493,6 +487,16 @@
             70% { transform: scale(1) translate(-2px, 1px) rotate(-1deg); }
             80% { transform: scale(1) translate(2px, -1px) rotate(1deg); }
             90% { transform: scale(1) translate(-1px, 0px) rotate(0deg); }
+        }
+
+        /* shy.png 지속적인 회전 애니메이션 */
+        .doo-spin-continuous {
+            animation: spinContinuous 3s linear infinite !important;
+        }
+
+        @keyframes spinContinuous {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1); }
         }
 
         .logo { 
@@ -1441,7 +1445,19 @@
 
         let activeTypewriterTimer = null;
         let isFirstTitleEntry = false;
-        let isShaking = false;
+
+        /* 터치 대사 관련 변수 추가 */
+        let touchStep = 0;
+        let isTouchAnimating = false;
+
+        const touchDialogues = [
+            "어딜 만져?",
+            "선생을 쓰다듬는 법이 있나?",
+            "그만",
+            "그만....",
+            "자꾸 쓰다듬으면...",
+            "어리광부릴 수 밖에 없어..."
+        ];
 
         function getCurrentQuestions() {
             return allQuestions[`day${currentSelectedDay}`] || allQuestions.day1;
@@ -1511,7 +1527,7 @@
         }
 
         function preloadImages() {
-            ['smile.png', 'shy.png', 'party.png', 'good.png'].forEach(src => {
+            ['smile.png', 'shy.png', 'shy2.png', 'party.png', 'good.png'].forEach(src => {
                 const img = new Image(); img.src = src;
             });
         }
@@ -1626,7 +1642,6 @@
             }
         }
 
-        /* --- 도오 등장 및 타이핑 애니메이션 --- */
         function typeWriterText(element, text, speed, callback) {
             if (activeTypewriterTimer) clearInterval(activeTypewriterTimer);
             element.innerText = '';
@@ -1745,24 +1760,24 @@
             }, 400);
         }
 
-        /* 3. 메인 메뉴 등장 애니메이션, good.png 1초 뒤 등장, 0.5초 뒤 말풍선, 대사 타이핑 시퀀스 */
         function showTitleScreen(userName, isFirstTime = false) {
             const titleScreen = document.getElementById('title-screen');
             const titleDooImg = document.getElementById('title-doo-img');
             const speechBubble = document.getElementById('speech-bubble');
 
-            // 3. 메인 메뉴창 팝업 애니메이션
+            touchStep = 0;
+            isTouchAnimating = false;
+
             titleScreen.classList.remove('main-pop-anim');
             void titleScreen.offsetWidth;
             titleScreen.classList.add('main-pop-anim');
             titleScreen.classList.remove('hidden');
 
-            // 캐릭터 및 말풍선 초기화
-            titleDooImg.classList.remove('show-doo', 'doo-shaking');
+            titleDooImg.src = "good.png";
+            titleDooImg.classList.remove('show-doo', 'doo-shaking', 'doo-spin-continuous');
             speechBubble.classList.remove('show-bubble');
             speechBubble.innerText = '';
 
-            // 대사 설정
             let targetText = "";
             if (isFirstTime) {
                 targetText = `${userName}, 신입이면 칠판부터 닦어`;
@@ -1771,11 +1786,9 @@
                 targetText = rawTaunt.replace(/\${userName}/g, userName);
             }
 
-            // 3. good.png 1초 늦게 팝업 등장
             setTimeout(() => {
                 titleDooImg.classList.add('show-doo');
 
-                // 3. 0.5초 후 말풍선 팝업 및 타이핑 연출
                 setTimeout(() => {
                     speechBubble.classList.add('show-bubble');
                     typeWriterText(speechBubble, targetText, 50);
@@ -1784,27 +1797,48 @@
             }, 1000);
         }
 
-        /* 3. good.png 터치 이벤트 - 1초간 부들부들 떨면서 "어딜 만지니?" 타이핑 */
+        /* good.png 터치 이벤트 수정 (shy2.png -> shy.png 단계별 변경 및 대사 처리) */
         function touchDooImage() {
-            if (isShaking) return;
-            isShaking = true;
+            if (touchStep >= touchDialogues.length || isTouchAnimating) return;
+            
+            isTouchAnimating = true;
 
             const titleDooImg = document.getElementById('title-doo-img');
             const speechBubble = document.getElementById('speech-bubble');
 
             playSoundFile('1.mp3');
-            titleDooImg.classList.add('doo-shaking');
+
+            if (touchStep === 0) {
+                titleDooImg.src = 'shy2.png';
+            }
+
+            if (touchStep === 5) {
+                titleDooImg.src = 'shy.png';
+                titleDooImg.classList.remove('doo-shaking');
+                titleDooImg.classList.add('doo-spin-continuous');
+            } else {
+                titleDooImg.classList.remove('doo-shaking');
+                void titleDooImg.offsetWidth;
+                titleDooImg.classList.add('doo-shaking');
+            }
 
             if (!speechBubble.classList.contains('show-bubble')) {
                 speechBubble.classList.add('show-bubble');
             }
 
-            typeWriterText(speechBubble, "어딜 만지니?", 50);
+            const currentText = touchDialogues[touchStep];
 
-            setTimeout(() => {
-                titleDooImg.classList.remove('doo-shaking');
-                isShaking = false;
-            }, 1000);
+            typeWriterText(speechBubble, currentText, 50, () => {
+                touchStep++;
+                if (touchStep < 5) {
+                    setTimeout(() => {
+                        titleDooImg.classList.remove('doo-shaking');
+                        isTouchAnimating = false;
+                    }, 500);
+                } else {
+                    isTouchAnimating = false;
+                }
+            });
         }
 
         function openSettings() {
