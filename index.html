@@ -255,6 +255,7 @@
             width: 140px;
             height: auto;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.3));
+            display: block;
         }
 
         .speech-bubble-anim {
@@ -408,6 +409,7 @@
             width: 100%;
             height: auto;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.25));
+            display: block;
         }
         .logo { 
             font-size: 28px; 
@@ -967,7 +969,7 @@
             <div id="speech-bubble-anim" class="speech-bubble-anim"></div>
             <div id="ground-hole" class="ground-hole"></div>
             <div id="doo-wrapper" class="doo-wrapper">
-                <img src="smile.png" alt="도오" class="doo-image" onerror="this.style.visibility='hidden';">
+                <img src="smile.png" alt="도오" class="doo-image">
             </div>
         </div>
 
@@ -984,7 +986,7 @@
         <div class="title-wrapper">
             <div class="character-area">
                 <div id="speech-bubble" class="speech-bubble">오늘도 공부할 준비 됐어?\n도오와 함께하자!</div>
-                <img src="smile.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
+                <img src="smile.png" alt="타이틀 이미지" class="title-image">
             </div>
             <div class="logo">도오링고</div>
             <div class="subtitle">도오의 영어공부법</div>
@@ -1053,7 +1055,7 @@
 
     <!-- 5. 결과 화면 -->
     <div id="result-screen" class="container hidden">
-        <img id="result-img" class="result-image" src="" alt="결과 이미지" onerror="this.style.display='none';">
+        <img id="result-img" class="result-image" src="" alt="결과 이미지">
         <div id="result-msg" class="result-text"></div>
         <div id="result-exp" class="result-explanation hidden"></div>
         <button id="action-btn" class="btn" onclick="playButtonSound(); handleNextAction()">다음</button>
@@ -1083,7 +1085,7 @@
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="party.png" alt="완료 이미지" style="width: 220px; height: 220px; object-fit: contain; border-radius: 16px; margin-bottom: 12px;" onerror="this.style.display='none';">
+        <img src="party.png" alt="완료 이미지" style="width: 220px; height: 220px; object-fit: contain; border-radius: 16px; margin-bottom: 12px;">
         <div style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">학습 완료!</div>
         <div class="subtitle">오늘의 목표를 달성했습니다!</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
@@ -1634,6 +1636,9 @@
                             typeWriterText(bubble, "잘 부탁해", 60, () => {
                                 setTimeout(() => {
                                     document.getElementById('name-screen').classList.add('hidden');
+                                    // 이름 설정 화면 요소 초기화
+                                    document.getElementById('doo-wrapper').className = 'doo-wrapper';
+                                    document.getElementById('ground-hole').className = 'ground-hole';
                                     showTitleScreen(nameInput);
                                 }, 2000);
                             });
