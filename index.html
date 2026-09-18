@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>도플라링고 - 도황의 영어공부법</title>
+    <title>도오링고 - 도오의 영어공부법</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="도플라링고">
+    <meta name="apple-mobile-web-app-title" content="도오링고">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#ffffff">
     
-    <link rel="manifest" href='data:application/manifest+json,{"name":"도플라링고","short_name":"도플라링고","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#ec4899","icons":[{"src":"title.png","sizes":"192x192","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"도오링고","short_name":"도오링고","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#95e085","icons":[{"src":"good.png","sizes":"192x192","type":"image/png"}]}'>
     
-    <link rel="apple-touch-icon" href="title.png">
-    <link rel="icon" type="image/png" href="title.png">
+    <link rel="apple-touch-icon" href="good.png">
+    <link rel="icon" type="image/png" href="good.png">
     
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -22,11 +22,11 @@
     
     <style>
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #ffffff;
             --card-bg: rgba(255, 255, 255, 0.98);
-            --primary-pink: #ec4899;
-            --primary-pink-dark: #be185d;
-            --primary-pink-shadow: #9d174d;
+            --primary-green: #95e085;
+            --primary-green-dark: #6ebf5e;
+            --primary-green-shadow: #529944;
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-light: #e2e8f0;
@@ -63,7 +63,7 @@
             width: 320px;
             height: 320px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(251, 207, 232, 0) 70%);
+            background: radial-gradient(circle, rgba(149, 224, 133, 0.3) 0%, rgba(149, 224, 133, 0) 70%);
             top: 5%;
             left: 5%;
             filter: blur(50px);
@@ -75,7 +75,7 @@
             width: 380px;
             height: 380px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, rgba(244, 114, 182, 0) 70%);
+            background: radial-gradient(circle, rgba(110, 191, 94, 0.2) 0%, rgba(110, 191, 94, 0) 70%);
             bottom: 5%;
             right: 5%;
             filter: blur(60px);
@@ -91,7 +91,7 @@
             border-radius: 32px;
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.06),
-                0 0 0 1px rgba(244, 114, 182, 0.2);
+                0 0 0 1px rgba(149, 224, 133, 0.3);
             width: 380px;
             height: 680px;
             max-height: calc(var(--vh, 1vh) * 92);
@@ -117,21 +117,21 @@
         }
 
         .btn {
-            background-color: var(--primary-pink);
+            background-color: var(--primary-green);
             color: #ffffff !important;
-            border: 2px solid var(--primary-pink-dark);
+            border: 2px solid var(--primary-green-dark);
             padding: 13px 0;
             width: 100%;
             font-size: 17px;
             font-weight: 700;
             border-radius: 18px;
             cursor: pointer;
-            box-shadow: 0 5px 0 var(--primary-pink-shadow);
+            box-shadow: 0 5px 0 var(--primary-green-shadow);
             transition: transform 0.05s ease, box-shadow 0.05s ease;
             font-family: 'Pretendard', sans-serif;
             margin-top: 10px;
             flex-shrink: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,7 +141,7 @@
 
         .btn:active, .btn.touch-active {
             transform: translateY(4px) !important;
-            box-shadow: 0 1px 0 var(--primary-pink-shadow) !important;
+            box-shadow: 0 1px 0 var(--primary-green-shadow) !important;
         }
 
         .btn-secondary {
@@ -165,12 +165,12 @@
         .intro-text {
             font-size: 42px;
             font-weight: 800;
-            color: var(--primary-pink);
+            color: var(--primary-green-dark);
             font-family: 'Poppins', 'Jua', sans-serif !important;
             letter-spacing: -0.5px;
             opacity: 0;
             animation: introPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            text-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            text-shadow: 0 4px 15px rgba(149, 224, 133, 0.4);
         }
 
         @keyframes introPopIn {
@@ -193,20 +193,20 @@
         .name-input-box {
             width: 100%;
             background: #ffffff;
-            border: 2px solid #fbcfe8;
+            border: 2px solid #c3f2b8;
             border-radius: 18px;
             padding: 16px;
             font-size: 20px;
             font-weight: 800;
             text-align: center;
-            color: var(--primary-pink-dark);
+            color: var(--primary-green-dark);
             outline: none;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
             transition: all 0.2s ease;
         }
         .name-input-box:focus {
-            border-color: var(--primary-pink);
-            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(149, 224, 133, 0.25);
         }
 
         .title-wrapper {
@@ -229,7 +229,7 @@
             position: absolute;
             top: -95px;
             background: #ffffff;
-            border: 2px solid rgba(236, 72, 153, 0.3);
+            border: 2px solid rgba(149, 224, 133, 0.5);
             border-radius: 18px;
             padding: 10px 20px;
             font-size: 15px;
@@ -266,7 +266,7 @@
             max-width: 150px;
             width: 100%;
             height: auto;
-            filter: drop-shadow(0 8px 16px rgba(236, 72, 153, 0.15));
+            filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.25));
         }
         .logo { 
             font-size: 28px; 
@@ -312,7 +312,6 @@
             min-height: 100%;
         }
 
-        /* Day 선택 버튼 스타일 수정 */
         .island-node {
             position: absolute;
             width: 108px;
@@ -332,27 +331,24 @@
             transform: scale(0.92) !important;
         }
 
-        /* 1. 열려있는 버튼 (연한 분홍색 / 진한 분홍색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.unlocked {
-            background: #fbcfe8; 
+            background: #c3f2b8; 
             box-shadow: 
-                0 10px 0 #db2777, 
-                0 14px 22px rgba(219, 39, 119, 0.3),
+                0 10px 0 #6ebf5e, 
+                0 14px 22px rgba(110, 191, 94, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.7);
             border: none;
         }
 
-        /* 2. 완료한 버튼 (연한 초록색 / 진한 초록색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.completed {
-            background: #bbf7d0;
+            background: #95e085;
             box-shadow: 
-                0 10px 0 #15803d, 
-                0 12px 20px rgba(21, 128, 61, 0.3),
+                0 10px 0 #529944, 
+                0 12px 20px rgba(82, 153, 68, 0.3),
                 inset 0 2px 4px rgba(255,255,255,0.8);
             border: none;
         }
 
-        /* 3. 잠겨있는 버튼 (회색 / 진한 회색 그림자 / 흰색 테두리 없음 / 텍스트 하얀색 01) */
         .island-node.locked {
             background: #cbd5e1;
             box-shadow: 
@@ -363,7 +359,6 @@
             cursor: not-allowed;
         }
 
-        /* 4. 가장 최신 열린 버튼 위아래 흔들림 애니메이션 */
         .island-node.latest-unlocked {
             animation: latestFloat 1.5s infinite ease-in-out;
         }
@@ -388,7 +383,7 @@
         }
 
         .map-svg-layer {
-            display: none; /* 섬과 섬 사이 점선 모두 제거 */
+            display: none;
         }
 
         .rule-card-wrapper {
@@ -419,7 +414,7 @@
         }
 
         .rule-box {
-            background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf2 100%);
             border-radius: 24px;
             padding: 28px 24px;
             width: 100%;
@@ -429,8 +424,8 @@
             font-weight: 700;
             line-height: 1.8;
             margin-bottom: 24px;
-            border: 2px solid #fbcfe8;
-            box-shadow: 0 12px 24px rgba(236, 72, 153, 0.08);
+            border: 2px solid #c3f2b8;
+            box-shadow: 0 12px 24px rgba(149, 224, 133, 0.12);
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -443,7 +438,7 @@
         }
 
         .rule-number {
-            background: var(--primary-pink);
+            background: var(--primary-green);
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
             font-size: 13px;
@@ -456,7 +451,7 @@
             justify-content: center;
             flex-shrink: 0;
             margin-top: 2px;
-            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+            box-shadow: 0 2px 6px rgba(110, 191, 94, 0.3);
         }
 
         .rule-text {
@@ -518,16 +513,16 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #fdf2f8;
-            border: 2px solid #fbcfe8;
+            background: #f4fbf2;
+            border: 2px solid #c3f2b8;
             padding: 6px 14px;
             border-radius: 12px;
             font-size: 14px;
-            color: var(--primary-pink);
+            color: var(--primary-green-dark);
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
         }
-        .timer-badge svg { width: 14px; height: 14px; fill: var(--primary-pink); }
+        .timer-badge svg { width: 14px; height: 14px; fill: var(--primary-green-dark); }
 
         .card-counter-badge {
             background: #f1f5f9;
@@ -544,7 +539,7 @@
         .question-title { 
             font-size: 14px; 
             font-weight: 800;
-            color: var(--primary-pink); 
+            color: var(--primary-green-dark); 
             text-align: left;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -571,8 +566,8 @@
         }
         
         .question-text u {
-            color: var(--primary-pink);
-            text-decoration-color: var(--primary-pink);
+            color: var(--primary-green-dark);
+            text-decoration-color: var(--primary-green-dark);
             text-underline-offset: 4px;
             font-weight: 800;
         }
@@ -602,9 +597,9 @@
         .option-btn:active, .option-btn.touch-active {
             transform: translateY(3px) !important;
             box-shadow: 0 1px 0 #cbd5e1 !important;
-            background: #fdf2f8;
-            border-color: var(--primary-pink); 
-            color: var(--primary-pink) !important;
+            background: #f4fbf2;
+            border-color: var(--primary-green); 
+            color: var(--primary-green-dark) !important;
         }
 
         .result-image {
@@ -623,8 +618,8 @@
             color: var(--text-dark);
             font-weight: 600;
             line-height: 1.6;
-            background: #fdf2f8;
-            border: 2px solid #fbcfe8;
+            background: #f4fbf2;
+            border: 2px solid #c3f2b8;
             padding: 14px 16px;
             border-radius: 16px;
             white-space: pre-line;
@@ -654,14 +649,14 @@
             width: 100%;
             height: 100%;
             background: #ffffff;
-            border: 2px solid #fbcfe8;
+            border: 2px solid #c3f2b8;
             border-radius: 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 24px;
-            box-shadow: 0 6px 0 #fbcfe8;
+            box-shadow: 0 6px 0 #c3f2b8;
             will-change: transform, opacity;
         }
 
@@ -759,7 +754,7 @@
             transition: .3s;
             border-radius: 50%;
         }
-        input:checked + .slider { background-color: var(--primary-pink); }
+        input:checked + .slider { background-color: var(--primary-green); }
         input:checked + .slider:before { transform: translateX(20px); }
 
         .sheet-backdrop {
@@ -796,9 +791,9 @@
         .sheet-banner-text {
             font-size: 18px;
             font-weight: 800;
-            color: var(--primary-pink);
-            background: #fdf2f8;
-            border: 1.5px solid #fbcfe8;
+            color: var(--primary-green-dark);
+            background: #f4fbf2;
+            border: 1.5px solid #c3f2b8;
             padding: 8px 18px;
             border-radius: 20px;
             margin-bottom: 10px;
@@ -812,7 +807,7 @@
             padding: 14px 16px; background: #f8fafc; border-radius: 12px; font-size: 15px;
             border: 1px solid #e2e8f0;
         }
-        .quick-word-item .word { font-weight: 700; color: var(--primary-pink-dark); }
+        .quick-word-item .word { font-weight: 700; color: var(--primary-green-dark); }
         .quick-word-item .meaning { color: var(--text-dark); font-weight: 600; }
 
         .hidden { display: none !important; }
@@ -822,7 +817,7 @@
 
     <!-- 0. 인트로 화면 -->
     <div id="intro-screen" class="container intro-container" onclick="skipIntro()">
-        <div class="intro-text">Doflalingo</div>
+        <div class="intro-text">Doolingo</div>
     </div>
 
     <!-- 0.5. 이름 설정 화면 -->
@@ -837,11 +832,11 @@
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
-                <div id="speech-bubble" class="speech-bubble">공부 안 하고 뭐 하냐?\n훗훗훗!</div>
-                <img src="title.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
+                <div id="speech-bubble" class="speech-bubble">오늘도 공부할 준비 됐어?\n도오와 함께하자!</div>
+                <img src="good.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
             </div>
-            <div class="logo">도플라링고</div>
-            <div class="subtitle">도황의 영어공부법</div>
+            <div class="logo">도오링고</div>
+            <div class="subtitle">도오의 영어공부법</div>
             <button class="btn" onclick="playButtonSound(); goToDaySelect()">일일 과제</button>
             <button class="btn btn-secondary" onclick="playButtonSound(); startVocabularyDeck()">단어장</button>
             <button class="btn" style="background: #8b5cf6; border-color: #6d28d9; box-shadow: 0 5px 0 #5b21b6;" onclick="openQuickWordSheet()">⚡ 오늘의 단어</button>
@@ -875,7 +870,7 @@
                 </div>
                 <div class="rule-item">
                     <span class="rule-number">3</span>
-                    <span class="rule-text">모르면 울지 말고 근거 있게 찍기</span>
+                    <span class="rule-text">모르면 포기하지 말고 근거 있게 찍기</span>
                 </div>
             </div>
             <button class="btn" onclick="startQuiz()">문제 풀기</button>
@@ -937,9 +932,9 @@
 
     <!-- 7. 최종 완료 화면 -->
     <div id="complete-screen" class="container hidden">
-        <img src="complete.gif" alt="완료 이미지" style="width: 220px; height: 220px; object-fit: contain; border-radius: 16px; margin-bottom: 12px;" onerror="this.style.display='none';">
+        <img src="party.png" alt="완료 이미지" style="width: 220px; height: 220px; object-fit: contain; border-radius: 16px; margin-bottom: 12px;" onerror="this.style.display='none';">
         <div style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">학습 완료!</div>
-        <div class="subtitle">토익 해적단 토벌 완료.</div>
+        <div class="subtitle">오늘의 목표를 달성했습니다!</div>
         <button class="btn" onclick="playButtonSound(); returnToMainFromComplete()">메인으로</button>
     </div>
 
@@ -1184,11 +1179,11 @@
         ];
 
         const randomTaunts = [
-            "${userName}, 아직도 그 모양인가?\n훗훗훗... 공부 안 해?",
-            "오호, ${userName}. 그 머리로\n영어 공부를 하겠다고?",
-            "${userName}, 단어 몇 개 외운다고\n네 인생이 바뀔 것 같나?",
-            "훗훗훗... ${userName}, 또 틀릴\n준비는 되었나?",
-            "덤벼라 ${userName}! 네 무지가\n어디까지 가나 구경하지!"
+            "안녕 ${userName}! 오늘도 도오와\n함께 재미있게 공부해볼까?",
+            "반가워 ${userName}! 차근차근 하다 보면\n실력이 금방 늘 거야!",
+            "${userName}, 매일 조금씩 쌓여가는\n네 영어 실력이 기대돼!",
+            "오늘도 파이팅, ${userName}!\n틀려도 괜찮으니까 도전해봐!",
+            "준비됐지 ${userName}? 도오랑 같이\n오늘의 과제를 시작해보자!"
         ];
 
         let currentSelectedDay = 1;
@@ -1236,7 +1231,7 @@
         }
 
         function getPassedDailyWords() {
-            const firstVisitStr = localStorage.getItem('dofla_first_visit_date');
+            const firstVisitStr = localStorage.getItem('doolingo_first_visit_date');
             if (!firstVisitStr) return [];
 
             const firstVisit = new Date(firstVisitStr);
@@ -1275,7 +1270,7 @@
         }
 
         function preloadImages() {
-            ['title.png', 'correct.gif', 'wrong.png', 'complete.gif'].forEach(src => {
+            ['good.png', 'smile.png', 'shy.png', 'party.png'].forEach(src => {
                 const img = new Image(); img.src = src;
             });
         }
@@ -1312,34 +1307,34 @@
 
         function checkStreakSystem() {
             const todayStr = new Date().toISOString().slice(0, 10);
-            let lastVisitDate = localStorage.getItem('dofla_last_visit');
-            let currentStreak = parseInt(localStorage.getItem('dofla_streak') || '1', 10);
+            let lastVisitDate = localStorage.getItem('doolingo_last_visit');
+            let currentStreak = parseInt(localStorage.getItem('doolingo_streak') || '1', 10);
 
-            if (!localStorage.getItem('dofla_first_visit_date')) {
-                localStorage.setItem('dofla_first_visit_date', todayStr);
+            if (!localStorage.getItem('doolingo_first_visit_date')) {
+                localStorage.setItem('doolingo_first_visit_date', todayStr);
             }
 
             if (!lastVisitDate) {
-                localStorage.setItem('dofla_last_visit', todayStr);
-                localStorage.setItem('dofla_streak', '1');
+                localStorage.setItem('doolingo_last_visit', todayStr);
+                localStorage.setItem('doolingo_streak', '1');
                 return 1;
             }
 
             const diffDays = Math.round((new Date(todayStr) - new Date(lastVisitDate)) / (1000 * 60 * 60 * 24));
             if (diffDays === 1) {
                 currentStreak += 1;
-                localStorage.setItem('dofla_streak', currentStreak.toString());
-                localStorage.setItem('dofla_last_visit', todayStr);
+                localStorage.setItem('doolingo_streak', currentStreak.toString());
+                localStorage.setItem('doolingo_last_visit', todayStr);
             } else if (diffDays > 1) {
                 currentStreak = 1;
-                localStorage.setItem('dofla_streak', '1');
-                localStorage.setItem('dofla_last_visit', todayStr);
+                localStorage.setItem('doolingo_streak', '1');
+                localStorage.setItem('doolingo_last_visit', todayStr);
             }
             return currentStreak;
         }
 
         function playSoundFile(filename) {
-            const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
+            const soundEnabled = localStorage.getItem('doolingo_sound_enabled') !== 'false';
             if (!soundEnabled) return;
 
             try {
@@ -1381,7 +1376,7 @@
             hasIntroPassed = true;
             document.getElementById('intro-screen').classList.add('hidden');
             
-            const savedName = localStorage.getItem('dofla_username');
+            const savedName = localStorage.getItem('doolingo_username');
             if (!savedName) {
                 document.getElementById('name-screen').classList.remove('hidden');
             } else {
@@ -1399,7 +1394,7 @@
             }
 
             playButtonSound();
-            localStorage.setItem('dofla_username', nameInput);
+            localStorage.setItem('doolingo_username', nameInput);
             document.getElementById('name-screen').classList.add('hidden');
             showTitleScreen(nameInput);
         }
@@ -1416,8 +1411,8 @@
         }
 
         function openSettings() {
-            const savedName = localStorage.getItem('dofla_username') || '';
-            const soundEnabled = localStorage.getItem('dofla_sound_enabled') !== 'false';
+            const savedName = localStorage.getItem('doolingo_username') || '';
+            const soundEnabled = localStorage.getItem('doolingo_sound_enabled') !== 'false';
             
             document.getElementById('edit-username-input').value = savedName;
             document.getElementById('sound-toggle').checked = soundEnabled;
@@ -1439,14 +1434,14 @@
             }
 
             playButtonSound();
-            localStorage.setItem('dofla_username', nameInput);
+            localStorage.setItem('doolingo_username', nameInput);
             showTitleScreen(nameInput);
             alert('닉네임이 변경되었습니다.');
             closeSettings();
         }
 
         function toggleSoundSetting(enabled) {
-            localStorage.setItem('dofla_sound_enabled', enabled ? 'true' : 'false');
+            localStorage.setItem('doolingo_sound_enabled', enabled ? 'true' : 'false');
             if (enabled) playButtonSound();
         }
 
@@ -1512,7 +1507,6 @@
             startReview();
         }
 
-        /* Day 선택 지도 렌더링 (점선 제거, 이모티콘 제거, 텍스트 "01", 최신 열린 버튼 흔들림 적용) */
         function renderWorldMapDays() {
             const pathWrapper = document.getElementById('worldmap-path');
             const svgLayer = document.getElementById('map-svg-layer');
@@ -1538,10 +1532,9 @@
             const totalHeight = startY + totalStages * rowGap + 60;
             pathWrapper.style.height = `${totalHeight}px`;
 
-            // 열려있는 버튼 중 가장 최신(번호가 가장 큰 unlocked 상태) 찾기
             let highestUnlockedId = -1;
             for (let i = 1; i <= totalStages; i++) {
-                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
+                const isCompleted = localStorage.getItem(`doolingo_day${i}_completed`) === 'true';
                 const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
                 if (hasQuestions && !isCompleted) {
                     highestUnlockedId = i;
@@ -1550,7 +1543,7 @@
 
             nodesData.forEach(data => {
                 const i = data.id;
-                const isCompleted = localStorage.getItem(`dofla_day${i}_completed`) === 'true';
+                const isCompleted = localStorage.getItem(`doolingo_day${i}_completed`) === 'true';
                 const hasQuestions = Boolean(allQuestions[`day${i}`] && allQuestions[`day${i}`].length > 0);
 
                 const node = document.createElement('div');
@@ -1558,11 +1551,11 @@
 
                 if (hasQuestions) {
                     if (isCompleted) {
-                        statusClass = 'completed'; // 연한 초록색 / 진한 초록색 그림자
+                        statusClass = 'completed';
                     } else {
-                        statusClass = 'unlocked'; // 연한 분홍색 / 진한 분홍색 그림자
+                        statusClass = 'unlocked';
                         if (i === highestUnlockedId) {
-                            statusClass += ' latest-unlocked'; // 가장 최신 열린 버튼 위아래 흔들림
+                            statusClass += ' latest-unlocked';
                         }
                     }
                 }
@@ -1571,7 +1564,6 @@
                 node.style.left = `${data.x}px`;
                 node.style.top = `${data.y - 54}px`;
 
-                // 이모티콘 제거 및 텍스트 01(02, 03...) 형식 적용
                 const formattedNum = String(i).padStart(2, '0');
                 node.innerHTML = `
                     <span class="stage-num">${formattedNum}</span>
@@ -1580,7 +1572,7 @@
                 if (hasQuestions) {
                     node.onclick = () => { selectDay(i); };
                 } else {
-                    node.onclick = () => { playButtonSound(); alert('아직 개척되지 않은 섬입니다!'); };
+                    node.onclick = () => { playButtonSound(); alert('아직 열리지 않은 단계입니다!'); };
                 }
 
                 pathWrapper.appendChild(node);
@@ -1666,9 +1658,9 @@
             const resultImg = document.getElementById('result-img');
             resultImg.style.display = 'block';
             isCorrectAnswer = false;
-            resultImg.src = "wrong.png"; 
+            resultImg.src = "shy.png"; 
             document.getElementById('result-msg').style.color = "#dc2626";
-            document.getElementById('result-msg').innerText = "죽어";
+            document.getElementById('result-msg').innerText = "아쉬워요!";
             document.getElementById('result-exp').classList.add('hidden');
             document.getElementById('action-btn').innerText = "다시 풀기";
 
@@ -1688,9 +1680,9 @@
             if (selectedOption === q.correct) {
                 isCorrectAnswer = true;
                 resultScreen.classList.remove('shake-animation'); 
-                resultImg.src = "correct.gif"; 
-                document.getElementById('result-msg').style.color = "var(--primary-pink)";
-                document.getElementById('result-msg').innerText = "도~황";
+                resultImg.src = "smile.png"; 
+                document.getElementById('result-msg').style.color = "var(--primary-green-dark)";
+                document.getElementById('result-msg').innerText = "정답입니다!";
                 
                 document.getElementById('result-exp').innerText = q.explanation;
                 document.getElementById('result-exp').classList.remove('hidden');
@@ -1703,9 +1695,9 @@
                 void resultScreen.offsetWidth; 
                 resultScreen.classList.add('shake-animation');
 
-                resultImg.src = "wrong.png"; 
+                resultImg.src = "shy.png"; 
                 document.getElementById('result-msg').style.color = "#dc2626";
-                document.getElementById('result-msg').innerText = "죽어";
+                document.getElementById('result-msg').innerText = "아쉬워요!";
                 document.getElementById('result-exp').classList.add('hidden');
                 document.getElementById('action-btn').innerText = "다시 풀기";
 
@@ -1756,7 +1748,7 @@
                     reviewBtn.innerText = "정답 확인";
                 } else {
                     cardText.innerText = card.meaning;
-                    cardText.style.color = "var(--primary-pink)";
+                    cardText.style.color = "var(--primary-green-dark)";
                     reviewBtn.innerText = (currentReviewIndex === activeFlashcards.length - 1) ? "학습 완료" : "다음 단어";
                 }
             };
@@ -1809,7 +1801,7 @@
                     updateFlashcardContent(true, 'slide');
                 } else {
                     if (currentSelectedDay) {
-                        localStorage.setItem(`dofla_day${currentSelectedDay}_completed`, 'true');
+                        localStorage.setItem(`doolingo_day${currentSelectedDay}_completed`, 'true');
                     }
                     triggerCompletionEffects();
                 }
@@ -1827,6 +1819,7 @@
         }
 
         function returnToMainFromComplete() {
+            document.getElementById('complete-screen').classList.remove('hidden');
             document.getElementById('complete-screen').classList.add('hidden');
             document.getElementById('title-screen').classList.remove('hidden');
         }
