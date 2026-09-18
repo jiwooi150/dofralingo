@@ -205,10 +205,10 @@
             padding-top: 40px;
         }
 
-        /* 회색 타원 그림자 위치를 바닥 쪽(-10px)으로 낮추고 원근감을 보정 */
+        /* 회색 타원 위치 30px 낮춤 (기존 -10px -> -40px) */
         .ground-hole {
             position: absolute;
-            bottom: -10px;
+            bottom: -40px;
             width: 170px;
             height: 28px;
             background: #94a3b8;
@@ -229,9 +229,10 @@
             animation: holeOpenClose 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
+        /* smile.png 이미지 위치 100px 위로 조정 */
         .doo-wrapper {
             position: absolute;
-            bottom: -10px;
+            top: 10px;
             z-index: 2;
             opacity: 0;
             transform: translateY(180px) scale(0.2) rotate(0deg);
