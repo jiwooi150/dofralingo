@@ -406,9 +406,10 @@
         }
 
         .title-image {
-            max-width: 150px;
-            width: 100%;
-            height: auto;
+            max-width: 200px;
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.25));
             display: block;
         }
@@ -986,8 +987,8 @@
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
-                <div id="speech-bubble" class="speech-bubble">오늘도 공부할 준비 됐어?\n도오와 함께하자!</div>
-                <img src="smile.png" alt="타이틀 이미지" class="title-image">
+                <div id="speech-bubble" class="speech-bubble">오늘도 찍기 연습이나 하려고?</div>
+                <img src="good.png" alt="타이틀 이미지" class="title-image">
             </div>
             <div class="logo">도오링고</div>
             <div class="subtitle">도오의 영어공부법</div>
@@ -1333,11 +1334,11 @@
         ];
 
         const randomTaunts = [
-            "안녕 ${userName}! 오늘도 도오와\n함께 재미있게 공부해볼까?",
-            "반가워 ${userName}! 차근차근 하다 보면\n실력이 금방 늘 거야!",
-            "${userName}, 매일 조금씩 쌓여가는\n네 영어 실력이 기대돼!",
-            "오늘도 파이팅, ${userName}!\n틀려도 괜찮으니까 도전해봐!",
-            "준비됐지 ${userName}? 도오랑 같이\n오늘의 과제를 시작해보자!"
+            "어이 ${userName},\n오늘도 또 찍으러 왔나?",
+            "영어 공부는 무슨...\n틀리지나 마라, ${userName}.",
+            "또 왔냐 ${userName}?\n이번엔 몇 개나 틀릴지 기대되는군.",
+            "공부하러 온 거야, 놀러 온 거야?\n적당히 하자, ${userName}.",
+            "오늘도 찍기 연습이겠지.\n실력 좀 보여봐, ${userName}."
         ];
 
         let currentSelectedDay = 1;
@@ -1424,7 +1425,7 @@
         }
 
         function preloadImages() {
-            ['smile.png', 'shy.png', 'party.png'].forEach(src => {
+            ['smile.png', 'shy.png', 'party.png', 'good.png'].forEach(src => {
                 const img = new Image(); img.src = src;
             });
         }
@@ -1539,7 +1540,7 @@
             }
         }
 
-        /* --- 도오 등장 및 말풍선 시퀀스 함수 (수정됨) --- */
+        /* --- 도오 등장 및 말풍선 시퀀스 함수 --- */
         function typeWriterText(element, text, speed, callback) {
             element.innerText = '';
             let i = 0;
