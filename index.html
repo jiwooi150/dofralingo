@@ -178,7 +178,7 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* --- 이름 설정 연출 커스텀 CSS (수정된 구역) --- */
+        /* --- 이름 설정 연출 커스텀 CSS --- */
         #name-screen {
             justify-content: flex-start;
             padding-top: 10px;
@@ -187,13 +187,13 @@
         .doo-stage {
             position: relative;
             width: 100%;
-            height: 340px; /* 전체 높이를 늘려 더욱 중앙에 위치하도록 함 */
+            height: 340px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 0px;
             flex-shrink: 0;
-            padding-top: 40px; /* 상단 여백을 주어 내려오도록 설정 */
+            padding-top: 40px;
         }
 
         .ground-hole {
@@ -221,7 +221,7 @@
 
         .doo-wrapper {
             position: absolute;
-            bottom: 30px; /* 이미지 위치를 말풍선 쪽으로 살짝 끌어올림 */
+            bottom: 20px;
             z-index: 2;
             opacity: 0;
             transform: translateY(180px) scale(0.2) rotate(0deg);
@@ -245,14 +245,15 @@
             }
         }
 
-        @keyframes dooPopDown {
+        /* 퇴장 애니메이션: Fade Out 처리 */
+        @keyframes dooFadeOut {
             0% {
                 opacity: 1;
-                transform: translateY(0) scale(1) rotate(0deg);
+                transform: translateY(0) scale(1);
             }
             100% {
                 opacity: 0;
-                transform: translateY(180px) scale(0.2) rotate(-360deg);
+                transform: translateY(-10px) scale(0.95);
             }
         }
 
@@ -261,7 +262,7 @@
         }
 
         .doo-down-anim {
-            animation: dooPopDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+            animation: dooFadeOut 0.8s ease-out forwards !important;
         }
 
         @keyframes dooIdleGently {
@@ -274,16 +275,18 @@
             animation: dooIdleGently 2.2s ease-in-out infinite;
         }
 
+        /* smile.png 크기 확대 */
         .doo-image {
-            width: 180px; /* 이미지 크기를 살짝 축소 (기존 220px) */
+            width: 250px;
             height: auto;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.3));
             display: block;
         }
 
+        /* 말풍선 위치 내림 및 간격 조정 */
         .speech-bubble-anim {
             position: absolute;
-            top: 35px; /* 이미지와 말풍선 사이의 거리를 줄임 */
+            top: 110px;
             background: #ffffff;
             border: 2px solid rgba(149, 224, 133, 0.8);
             border-radius: 18px;
@@ -992,7 +995,7 @@
         <div class="intro-text">Doolingo</div>
     </div>
 
-    <!-- 0.5. 이름 설정 화면 (도오 애니메이션 연출 포함) -->
+    <!-- 0.5. 이름 설정 화면 -->
     <div id="name-screen" class="container hidden">
         <div class="doo-stage">
             <div id="speech-bubble-anim" class="speech-bubble-anim"></div>
@@ -1631,6 +1634,7 @@
             }, 1200);
         }
 
+        /* 대사 수정: '잡담 그만 됐고 따라와' 적용 */
         function saveUserName() {
             const nameInput = document.getElementById('username-input').value.trim();
             const koreanRegex = /^[가-힣]{1,3}$/;
@@ -1645,7 +1649,6 @@
 
             const popup = document.getElementById('name-card-popup');
             const bubble = document.getElementById('speech-bubble-anim');
-            const hole = document.getElementById('ground-hole');
             const doo = document.getElementById('doo-wrapper');
 
             popup.classList.remove('show');
@@ -1664,14 +1667,10 @@
                         setTimeout(() => {
                             bubble.classList.remove('hide');
                             bubble.classList.add('show');
-                            typeWriterText(bubble, "잘 부탁해", 60, () => {
+                            typeWriterText(bubble, "잡담 그만 됐고 따라와", 60, () => {
                                 setTimeout(() => {
                                     bubble.classList.remove('show');
                                     bubble.classList.add('hide');
-
-                                    hole.classList.remove('hole-anim');
-                                    void hole.offsetWidth;
-                                    hole.classList.add('hole-anim');
 
                                     doo.classList.remove('doo-idle-anim');
                                     doo.classList.add('doo-down-anim');
@@ -1679,7 +1678,7 @@
                                     setTimeout(() => {
                                         document.getElementById('name-screen').classList.add('hidden');
                                         showTitleScreen(nameInput);
-                                    }, 1000);
+                                    }, 800);
                                 }, 1500);
                             });
                         }, 400);
