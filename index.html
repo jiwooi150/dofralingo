@@ -178,16 +178,157 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        .name-title {
-            font-size: 22px;
+        /* --- 이름 설정 연출 커스텀 CSS --- */
+        .doo-stage {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ground-hole {
+            position: absolute;
+            bottom: 20px;
+            width: 140px;
+            height: 35px;
+            background: #94a3b8;
+            border-radius: 50%;
+            transform: scale(0);
+            box-shadow: inset 0 6px 10px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+
+        @keyframes holeOpenClose {
+            0% { transform: scaleX(0) scaleY(0); opacity: 0; }
+            20% { transform: scaleX(1) scaleY(1); opacity: 1; }
+            70% { transform: scaleX(1) scaleY(1); opacity: 1; }
+            100% { transform: scaleX(0) scaleY(0); opacity: 0; }
+        }
+
+        .hole-anim {
+            animation: holeOpenClose 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .doo-wrapper {
+            position: absolute;
+            bottom: 30px;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(150px) scale(0.2) rotate(0deg);
+        }
+
+        @keyframes dooPopUpBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(150px) scale(0.2) rotate(0deg);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(-50px) scale(1.1) rotate(360deg);
+            }
+            80% {
+                transform: translateY(10px) scale(0.95) rotate(360deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(360deg);
+            }
+        }
+
+        .doo-pop-anim {
+            animation: dooPopUpBounce 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes dooIdleGently {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .doo-idle-anim {
+            animation: dooIdleGently 2.2s ease-in-out infinite;
+        }
+
+        .doo-image {
+            width: 140px;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.3));
+        }
+
+        .speech-bubble-anim {
+            position: absolute;
+            top: 0px;
+            background: #ffffff;
+            border: 2px solid rgba(149, 224, 133, 0.8);
+            border-radius: 18px;
+            padding: 12px 20px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 8px;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .speech-bubble-anim::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 8px 0 8px;
+            border-style: solid;
+            border-color: #ffffff transparent;
+            display: block;
+            width: 0;
+        }
+
+        .speech-bubble-anim.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .speech-bubble-anim.hide {
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+        }
+
+        .name-card-popup {
+            width: 100%;
+            background: #ffffff;
+            border: 2px solid #c3f2b8;
+            border-radius: 24px;
+            padding: 20px 18px;
+            box-shadow: 0 10px 25px rgba(149, 224, 133, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .name-card-popup.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .name-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
         .name-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             font-weight: 600;
         }
         .name-input-box {
@@ -195,8 +336,8 @@
             background: #ffffff;
             border: 2px solid #c3f2b8;
             border-radius: 18px;
-            padding: 16px;
-            font-size: 20px;
+            padding: 14px;
+            font-size: 18px;
             font-weight: 800;
             text-align: center;
             color: var(--primary-green-dark);
@@ -820,12 +961,22 @@
         <div class="intro-text">Doolingo</div>
     </div>
 
-    <!-- 0.5. 이름 설정 화면 -->
+    <!-- 0.5. 이름 설정 화면 (도오 애니메이션 연출 포함) -->
     <div id="name-screen" class="container hidden">
-        <div class="name-title">이름을 설정해 주세요</div>
-        <div class="name-subtitle">한글 최대 3자까지 입력 가능합니다.</div>
-        <input type="text" id="username-input" class="name-input-box" placeholder="이름 입력" maxlength="3">
-        <button class="btn" style="margin-top: 24px;" onclick="saveUserName()">시작하기</button>
+        <div class="doo-stage">
+            <div id="speech-bubble-anim" class="speech-bubble-anim"></div>
+            <div id="ground-hole" class="ground-hole"></div>
+            <div id="doo-wrapper" class="doo-wrapper">
+                <img src="good.png" alt="도오" class="doo-image" onerror="this.style.visibility='hidden';">
+            </div>
+        </div>
+
+        <div id="name-card-popup" class="name-card-popup">
+            <div class="name-title">이름을 설정해 주세요</div>
+            <div class="name-subtitle">한글 최대 3자까지 입력 가능합니다.</div>
+            <input type="text" id="username-input" class="name-input-box" placeholder="이름 입력" maxlength="3">
+            <button class="btn" style="margin-top: 16px;" onclick="saveUserName()">시작하기</button>
+        </div>
     </div>
 
     <!-- 1. 타이틀 화면 -->
@@ -1379,9 +1530,82 @@
             const savedName = localStorage.getItem('doolingo_username');
             if (!savedName) {
                 document.getElementById('name-screen').classList.remove('hidden');
+                startNameScreenAnimation();
             } else {
                 showTitleScreen(savedName);
             }
+        }
+
+        /* --- 도오 등장 및 말풍선 시퀀스 함수 --- */
+        function typeWriterText(element, text, speed, callback) {
+            element.innerText = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.innerText += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
+        function startNameScreenAnimation() {
+            const hole = document.getElementById('ground-hole');
+            const doo = document.getElementById('doo-wrapper');
+            const bubble = document.getElementById('speech-bubble-anim');
+            const popup = document.getElementById('name-card-popup');
+
+            // 1. Hole 애니메이션 시작
+            hole.classList.add('hole-anim');
+
+            // 2. 도오 팝업 애니메이션 (0.2초 후 시작)
+            setTimeout(() => {
+                doo.classList.add('doo-pop-anim');
+            }, 200);
+
+            // 3. 도오 등장 완료 후 살살 흔들리는 애니메이션 전환 & 1번째 말풍선
+            setTimeout(() => {
+                doo.classList.remove('doo-pop-anim');
+                doo.classList.add('doo-idle-anim');
+
+                // 말풍선 "나는 도오야" 팝업 & 타이핑
+                bubble.classList.remove('hide');
+                bubble.classList.add('show');
+                typeWriterText(bubble, "나는 도오야", 80, () => {
+                    // 3초 후 말풍선 쏙 들어감
+                    setTimeout(() => {
+                        bubble.classList.remove('show');
+                        bubble.classList.add('hide');
+
+                        // 4. 2번째 말풍선 "영어 공부를 하러 왔다고?"
+                        setTimeout(() => {
+                            bubble.classList.remove('hide');
+                            bubble.classList.add('show');
+                            typeWriterText(bubble, "영어 공부를 하러 왔다고?", 60, () => {
+                                // 3초 후 말풍선 쏙 들어감
+                                setTimeout(() => {
+                                    bubble.classList.remove('show');
+                                    bubble.classList.add('hide');
+
+                                    // 5. 3번째 말풍선 "근데 너 이름이 뭐야?" 및 이름 창 팝업
+                                    setTimeout(() => {
+                                        bubble.classList.remove('hide');
+                                        bubble.classList.add('show');
+                                        typeWriterText(bubble, "근데 너 이름이 뭐야?", 60, () => {
+                                            popup.classList.add('show');
+                                        });
+                                    }, 400);
+
+                                }, 3000);
+                            });
+                        }, 400);
+
+                    }, 3000);
+                });
+
+            }, 1200);
         }
 
         function saveUserName() {
