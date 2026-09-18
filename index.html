@@ -105,6 +105,16 @@
             z-index: 1;
         }
 
+        /* 메인 메뉴 팝업 애니메이션 */
+        .main-pop-anim {
+            animation: mainPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes mainPopIn {
+            0% { opacity: 0; transform: scale(0.85) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
         .shake-animation {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -266,12 +276,14 @@
         }
 
         @keyframes dooIdleGently {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(100px); }
+            50% { transform: translateY(92px); }
         }
 
         .doo-idle-anim {
             opacity: 1 !important;
+            /* 1. 이름 설정할 때 smile.png 위치를 100px 정도 아래로 내림 */
+            transform: translateY(100px) !important;
             animation: dooIdleGently 2.2s ease-in-out infinite;
         }
 
@@ -283,7 +295,7 @@
             display: block;
         }
 
-        /* 말풍선 위치 내림 및 간격 조정 */
+        /* 말풍선 위치 그대로 유지 (top: 110px) */
         .speech-bubble-anim {
             position: absolute;
             top: 110px;
@@ -396,6 +408,8 @@
             align-items: center;
             margin-bottom: 12px;
             margin-top: 48px;
+            height: 200px;
+            justify-content: flex-end;
         }
 
         .speech-bubble {
@@ -414,9 +428,18 @@
             max-width: 350px;
             line-height: 1.4;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-            animation: bubbleBounce 2s infinite ease-in-out;
             z-index: 10;
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        .speech-bubble.show-bubble {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            animation: bubbleBounce 2s infinite ease-in-out;
+        }
+
         .speech-bubble::after {
             content: '';
             position: absolute;
@@ -430,9 +453,10 @@
             width: 0;
         }
 
+        /* 말풍선 위아래 살살 움직이기 */
         @keyframes bubbleBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+            50% { transform: translateY(-6px); }
         }
 
         .title-image {
@@ -442,7 +466,35 @@
             object-fit: contain;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.25));
             display: block;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        .title-image.show-doo {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* good.png 1초 부들부들 떨림 애니메이션 */
+        .doo-shaking {
+            animation: shakingDoo 1s ease-in-out !important;
+        }
+
+        @keyframes shakingDoo {
+            0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); }
+            10% { transform: scale(1) translate(-4px, -2px) rotate(-3deg); }
+            20% { transform: scale(1) translate(4px, 2px) rotate(3deg); }
+            30% { transform: scale(1) translate(-4px, 2px) rotate(-3deg); }
+            40% { transform: scale(1) translate(4px, -2px) rotate(3deg); }
+            50% { transform: scale(1) translate(-3px, -1px) rotate(-2deg); }
+            60% { transform: scale(1) translate(3px, 1px) rotate(2deg); }
+            70% { transform: scale(1) translate(-2px, 1px) rotate(-1deg); }
+            80% { transform: scale(1) translate(2px, -1px) rotate(1deg); }
+            90% { transform: scale(1) translate(-1px, 0px) rotate(0deg); }
+        }
+
         .logo { 
             font-size: 28px; 
             font-weight: 800;
@@ -1017,8 +1069,8 @@
     <div id="title-screen" class="container hidden">
         <div class="title-wrapper">
             <div class="character-area">
-                <div id="speech-bubble" class="speech-bubble">오늘도 찍기 연습이나 하려고?</div>
-                <img src="good.png" alt="타이틀 이미지" class="title-image">
+                <div id="speech-bubble" class="speech-bubble"></div>
+                <img id="title-doo-img" src="good.png" alt="타이틀 이미지" class="title-image" onclick="touchDooImage()">
             </div>
             <div class="logo">도오링고</div>
             <div class="subtitle">도오의 영어공부법</div>
@@ -1364,7 +1416,7 @@
         ];
 
         const randomTaunts = [
-            "어이 ${userName},\n오늘도 또 찍으러 왔나?",
+            "${userName}, 오늘도 또 찍으러 왔나?",
             "영어 공부는 무슨...\n틀리지나 마라, ${userName}.",
             "또 왔냐 ${userName}?\n이번엔 몇 개나 틀릴지 기대되는군.",
             "공부하러 온 거야, 놀러 온 거야?\n적당히 하자, ${userName}.",
@@ -1386,6 +1438,10 @@
 
         let reviewTimerInterval = null;
         let reviewTimeLeft = 5;
+
+        let activeTypewriterTimer = null;
+        let isFirstTitleEntry = false;
+        let isShaking = false;
 
         function getCurrentQuestions() {
             return allQuestions[`day${currentSelectedDay}`] || allQuestions.day1;
@@ -1566,20 +1622,22 @@
                 document.getElementById('name-screen').classList.remove('hidden');
                 startNameScreenAnimation();
             } else {
-                showTitleScreen(savedName);
+                showTitleScreen(savedName, false);
             }
         }
 
-        /* --- 도오 등장 및 말풍선 시퀀스 함수 --- */
+        /* --- 도오 등장 및 타이핑 애니메이션 --- */
         function typeWriterText(element, text, speed, callback) {
+            if (activeTypewriterTimer) clearInterval(activeTypewriterTimer);
             element.innerText = '';
             let i = 0;
-            const timer = setInterval(() => {
+            activeTypewriterTimer = setInterval(() => {
                 if (i < text.length) {
                     element.innerText += text.charAt(i);
                     i++;
                 } else {
-                    clearInterval(timer);
+                    clearInterval(activeTypewriterTimer);
+                    activeTypewriterTimer = null;
                     if (callback) callback();
                 }
             }, speed);
@@ -1634,7 +1692,6 @@
             }, 1200);
         }
 
-        /* 대사 수정: '잡담 그만 됐고 따라와' 적용 */
         function saveUserName() {
             const nameInput = document.getElementById('username-input').value.trim();
             const koreanRegex = /^[가-힣]{1,3}$/;
@@ -1677,7 +1734,7 @@
 
                                     setTimeout(() => {
                                         document.getElementById('name-screen').classList.add('hidden');
-                                        showTitleScreen(nameInput);
+                                        showTitleScreen(nameInput, true);
                                     }, 800);
                                 }, 1500);
                             });
@@ -1688,15 +1745,66 @@
             }, 400);
         }
 
-        function showTitleScreen(userName) {
-            const rawTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
-            const formattedTaunt = rawTaunt.replace(/\${userName}/g, userName);
-            document.getElementById('speech-bubble').innerText = formattedTaunt;
-            document.getElementById('title-screen').classList.remove('hidden');
+        /* 3. 메인 메뉴 등장 애니메이션, good.png 1초 뒤 등장, 0.5초 뒤 말풍선, 대사 타이핑 시퀀스 */
+        function showTitleScreen(userName, isFirstTime = false) {
+            const titleScreen = document.getElementById('title-screen');
+            const titleDooImg = document.getElementById('title-doo-img');
+            const speechBubble = document.getElementById('speech-bubble');
+
+            // 3. 메인 메뉴창 팝업 애니메이션
+            titleScreen.classList.remove('main-pop-anim');
+            void titleScreen.offsetWidth;
+            titleScreen.classList.add('main-pop-anim');
+            titleScreen.classList.remove('hidden');
+
+            // 캐릭터 및 말풍선 초기화
+            titleDooImg.classList.remove('show-doo', 'doo-shaking');
+            speechBubble.classList.remove('show-bubble');
+            speechBubble.innerText = '';
+
+            // 대사 설정
+            let targetText = "";
+            if (isFirstTime) {
+                targetText = `${userName}, 신입이면 칠판부터 닦어`;
+            } else {
+                const rawTaunt = randomTaunts[Math.floor(Math.random() * randomTaunts.length)];
+                targetText = rawTaunt.replace(/\${userName}/g, userName);
+            }
+
+            // 3. good.png 1초 늦게 팝업 등장
+            setTimeout(() => {
+                titleDooImg.classList.add('show-doo');
+
+                // 3. 0.5초 후 말풍선 팝업 및 타이핑 연출
+                setTimeout(() => {
+                    speechBubble.classList.add('show-bubble');
+                    typeWriterText(speechBubble, targetText, 50);
+                }, 500);
+
+            }, 1000);
+        }
+
+        /* 3. good.png 터치 이벤트 - 1초간 부들부들 떨면서 "어딜 만지니?" 타이핑 */
+        function touchDooImage() {
+            if (isShaking) return;
+            isShaking = true;
+
+            const titleDooImg = document.getElementById('title-doo-img');
+            const speechBubble = document.getElementById('speech-bubble');
+
+            playSoundFile('1.mp3');
+            titleDooImg.classList.add('doo-shaking');
+
+            if (!speechBubble.classList.contains('show-bubble')) {
+                speechBubble.classList.add('show-bubble');
+            }
+
+            typeWriterText(speechBubble, "어딜 만지니?", 50);
 
             setTimeout(() => {
-                openQuickWordSheet(true); 
-            }, 50);
+                titleDooImg.classList.remove('doo-shaking');
+                isShaking = false;
+            }, 1000);
         }
 
         function openSettings() {
@@ -1724,7 +1832,7 @@
 
             playButtonSound();
             localStorage.setItem('doolingo_username', nameInput);
-            showTitleScreen(nameInput);
+            showTitleScreen(nameInput, false);
             alert('닉네임이 변경되었습니다.');
             closeSettings();
         }
@@ -1744,19 +1852,22 @@
 
         function goToTitle() {
             document.getElementById('day-screen').classList.add('hidden');
-            document.getElementById('title-screen').classList.remove('hidden');
+            const savedName = localStorage.getItem('doolingo_username') || '사용자';
+            showTitleScreen(savedName, false);
         }
 
         function goToTitleFromQuiz() {
             clearInterval(quizTimerInterval);
             document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('title-screen').classList.remove('hidden');
+            const savedName = localStorage.getItem('doolingo_username') || '사용자';
+            showTitleScreen(savedName, false);
         }
 
         function goToTitleFromReview() {
             clearInterval(reviewTimerInterval);
             document.getElementById('review-screen').classList.add('hidden');
-            document.getElementById('title-screen').classList.remove('hidden');
+            const savedName = localStorage.getItem('doolingo_username') || '사용자';
+            showTitleScreen(savedName, false);
         }
 
         function goToDaySelect() {
@@ -2108,9 +2219,9 @@
         }
 
         function returnToMainFromComplete() {
-            document.getElementById('complete-screen').classList.remove('hidden');
             document.getElementById('complete-screen').classList.add('hidden');
-            document.getElementById('title-screen').classList.remove('hidden');
+            const savedName = localStorage.getItem('doolingo_username') || '사용자';
+            showTitleScreen(savedName, false);
         }
 
         const bottomSheet = document.getElementById('bottom-sheet');
