@@ -179,21 +179,27 @@
         }
 
         /* --- 이름 설정 연출 커스텀 CSS --- */
+        #name-screen {
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
+
         .doo-stage {
             position: relative;
             width: 100%;
-            height: 280px;
+            height: 310px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 0px;
+            flex-shrink: 0;
         }
 
         .ground-hole {
             position: absolute;
-            bottom: 20px;
-            width: 140px;
-            height: 35px;
+            bottom: 10px;
+            width: 190px;
+            height: 42px;
             background: #94a3b8;
             border-radius: 50%;
             transform: scale(0);
@@ -214,20 +220,20 @@
 
         .doo-wrapper {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             z-index: 2;
             opacity: 0;
-            transform: translateY(150px) scale(0.2) rotate(0deg);
+            transform: translateY(180px) scale(0.2) rotate(0deg);
         }
 
         @keyframes dooPopUpBounce {
             0% {
                 opacity: 1;
-                transform: translateY(150px) scale(0.2) rotate(0deg);
+                transform: translateY(180px) scale(0.2) rotate(0deg);
             }
             60% {
                 opacity: 1;
-                transform: translateY(-50px) scale(1.1) rotate(360deg);
+                transform: translateY(-40px) scale(1.1) rotate(360deg);
             }
             80% {
                 transform: translateY(10px) scale(0.95) rotate(360deg);
@@ -238,8 +244,23 @@
             }
         }
 
+        @keyframes dooPopDown {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(180px) scale(0.2) rotate(-360deg);
+            }
+        }
+
         .doo-pop-anim {
             animation: dooPopUpBounce 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .doo-down-anim {
+            animation: dooPopDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
         }
 
         @keyframes dooIdleGently {
@@ -253,7 +274,7 @@
         }
 
         .doo-image {
-            width: 140px;
+            width: 220px;
             height: auto;
             filter: drop-shadow(0 8px 16px rgba(149, 224, 133, 0.3));
             display: block;
@@ -261,11 +282,11 @@
 
         .speech-bubble-anim {
             position: absolute;
-            top: 10px;
+            top: 0px;
             background: #ffffff;
             border: 2px solid rgba(149, 224, 133, 0.8);
             border-radius: 18px;
-            padding: 12px 20px;
+            padding: 10px 18px;
             font-size: 16px;
             font-weight: 800;
             color: var(--text-dark);
@@ -303,7 +324,11 @@
         }
 
         .name-card-popup {
-            width: 100%;
+            position: absolute;
+            bottom: 20px;
+            left: 22px;
+            right: 22px;
+            width: calc(100% - 44px);
             background: #ffffff;
             border: 2px solid #c3f2b8;
             border-radius: 24px;
@@ -313,6 +338,7 @@
             transform: translateY(30px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
+            z-index: 20;
         }
 
         .name-card-popup.show {
@@ -370,7 +396,7 @@
 
         .speech-bubble {
             position: absolute;
-            top: -95px;
+            top: -45px;
             background: #ffffff;
             border: 2px solid rgba(149, 224, 133, 0.5);
             border-radius: 18px;
@@ -1618,8 +1644,10 @@
 
             const popup = document.getElementById('name-card-popup');
             const bubble = document.getElementById('speech-bubble-anim');
+            const hole = document.getElementById('ground-hole');
+            const doo = document.getElementById('doo-wrapper');
 
-            popup.style.display = 'none';
+            popup.classList.remove('show');
 
             bubble.classList.remove('show');
             bubble.classList.add('hide');
@@ -1637,9 +1665,21 @@
                             bubble.classList.add('show');
                             typeWriterText(bubble, "잘 부탁해", 60, () => {
                                 setTimeout(() => {
-                                    document.getElementById('name-screen').classList.add('hidden');
-                                    showTitleScreen(nameInput);
-                                }, 2000);
+                                    bubble.classList.remove('show');
+                                    bubble.classList.add('hide');
+
+                                    hole.classList.remove('hole-anim');
+                                    void hole.offsetWidth;
+                                    hole.classList.add('hole-anim');
+
+                                    doo.classList.remove('doo-idle-anim');
+                                    doo.classList.add('doo-down-anim');
+
+                                    setTimeout(() => {
+                                        document.getElementById('name-screen').classList.add('hidden');
+                                        showTitleScreen(nameInput);
+                                    }, 1000);
+                                }, 1500);
                             });
                         }, 400);
 
