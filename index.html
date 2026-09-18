@@ -222,7 +222,7 @@
 
         @keyframes dooPopUpBounce {
             0% {
-                opacity: 0;
+                opacity: 1;
                 transform: translateY(150px) scale(0.2) rotate(0deg);
             }
             60% {
@@ -248,6 +248,7 @@
         }
 
         .doo-idle-anim {
+            opacity: 1 !important;
             animation: dooIdleGently 2.2s ease-in-out infinite;
         }
 
@@ -1538,7 +1539,7 @@
             }
         }
 
-        /* --- 도오 등장 및 말풍선 시퀀스 함수 --- */
+        /* --- 도오 등장 및 말풍선 시퀀스 함수 (수정됨) --- */
         function typeWriterText(element, text, speed, callback) {
             element.innerText = '';
             let i = 0;
@@ -1636,9 +1637,6 @@
                             typeWriterText(bubble, "잘 부탁해", 60, () => {
                                 setTimeout(() => {
                                     document.getElementById('name-screen').classList.add('hidden');
-                                    // 이름 설정 화면 요소 초기화
-                                    document.getElementById('doo-wrapper').className = 'doo-wrapper';
-                                    document.getElementById('ground-hole').className = 'ground-hole';
                                     showTitleScreen(nameInput);
                                 }, 2000);
                             });
