@@ -11,10 +11,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#ffffff">
     
-    <link rel="manifest" href='data:application/manifest+json,{"name":"도오링고","short_name":"도오링고","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#95e085","icons":[{"src":"good.png","sizes":"192x192","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"도오링고","short_name":"도오링고","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#95e085","icons":[{"src":"smile.png","sizes":"192x192","type":"image/png"}]}'>
     
-    <link rel="apple-touch-icon" href="good.png">
-    <link rel="icon" type="image/png" href="good.png">
+    <link rel="apple-touch-icon" href="smile.png">
+    <link rel="icon" type="image/png" href="smile.png">
     
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -259,7 +259,7 @@
 
         .speech-bubble-anim {
             position: absolute;
-            top: 0px;
+            top: 10px;
             background: #ffffff;
             border: 2px solid rgba(149, 224, 133, 0.8);
             border-radius: 18px;
@@ -967,7 +967,7 @@
             <div id="speech-bubble-anim" class="speech-bubble-anim"></div>
             <div id="ground-hole" class="ground-hole"></div>
             <div id="doo-wrapper" class="doo-wrapper">
-                <img src="good.png" alt="도오" class="doo-image" onerror="this.style.visibility='hidden';">
+                <img src="smile.png" alt="도오" class="doo-image" onerror="this.style.visibility='hidden';">
             </div>
         </div>
 
@@ -975,7 +975,7 @@
             <div class="name-title">이름을 설정해 주세요</div>
             <div class="name-subtitle">한글 최대 3자까지 입력 가능합니다.</div>
             <input type="text" id="username-input" class="name-input-box" placeholder="이름 입력" maxlength="3">
-            <button class="btn" style="margin-top: 16px;" onclick="saveUserName()">시작하기</button>
+            <button class="btn" style="margin-top: 16px;" onclick="saveUserName()">계속하기</button>
         </div>
     </div>
 
@@ -984,7 +984,7 @@
         <div class="title-wrapper">
             <div class="character-area">
                 <div id="speech-bubble" class="speech-bubble">오늘도 공부할 준비 됐어?\n도오와 함께하자!</div>
-                <img src="good.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
+                <img src="smile.png" alt="타이틀 이미지" class="title-image" onerror="this.style.visibility='hidden';">
             </div>
             <div class="logo">도오링고</div>
             <div class="subtitle">도오의 영어공부법</div>
@@ -1421,7 +1421,7 @@
         }
 
         function preloadImages() {
-            ['good.png', 'smile.png', 'shy.png', 'party.png'].forEach(src => {
+            ['smile.png', 'shy.png', 'party.png'].forEach(src => {
                 const img = new Image(); img.src = src;
             });
         }
@@ -1557,39 +1557,31 @@
             const bubble = document.getElementById('speech-bubble-anim');
             const popup = document.getElementById('name-card-popup');
 
-            // 1. Hole 애니메이션 시작
             hole.classList.add('hole-anim');
 
-            // 2. 도오 팝업 애니메이션 (0.2초 후 시작)
             setTimeout(() => {
                 doo.classList.add('doo-pop-anim');
             }, 200);
 
-            // 3. 도오 등장 완료 후 살살 흔들리는 애니메이션 전환 & 1번째 말풍선
             setTimeout(() => {
                 doo.classList.remove('doo-pop-anim');
                 doo.classList.add('doo-idle-anim');
 
-                // 말풍선 "나는 도오야" 팝업 & 타이핑
                 bubble.classList.remove('hide');
                 bubble.classList.add('show');
                 typeWriterText(bubble, "나는 도오야", 80, () => {
-                    // 3초 후 말풍선 쏙 들어감
                     setTimeout(() => {
                         bubble.classList.remove('show');
                         bubble.classList.add('hide');
 
-                        // 4. 2번째 말풍선 "영어 공부를 하러 왔다고?"
                         setTimeout(() => {
                             bubble.classList.remove('hide');
                             bubble.classList.add('show');
                             typeWriterText(bubble, "영어 공부를 하러 왔다고?", 60, () => {
-                                // 3초 후 말풍선 쏙 들어감
                                 setTimeout(() => {
                                     bubble.classList.remove('show');
                                     bubble.classList.add('hide');
 
-                                    // 5. 3번째 말풍선 "근데 너 이름이 뭐야?" 및 이름 창 팝업
                                     setTimeout(() => {
                                         bubble.classList.remove('hide');
                                         bubble.classList.add('show');
@@ -1598,11 +1590,11 @@
                                         });
                                     }, 400);
 
-                                }, 3000);
+                                }, 2000);
                             });
                         }, 400);
 
-                    }, 3000);
+                    }, 2000);
                 });
 
             }, 1200);
@@ -1619,8 +1611,37 @@
 
             playButtonSound();
             localStorage.setItem('doolingo_username', nameInput);
-            document.getElementById('name-screen').classList.add('hidden');
-            showTitleScreen(nameInput);
+
+            const popup = document.getElementById('name-card-popup');
+            const bubble = document.getElementById('speech-bubble-anim');
+
+            popup.style.display = 'none';
+
+            bubble.classList.remove('show');
+            bubble.classList.add('hide');
+
+            setTimeout(() => {
+                bubble.classList.remove('hide');
+                bubble.classList.add('show');
+                typeWriterText(bubble, `${nameInput}? 재미없는 이름이네`, 60, () => {
+                    setTimeout(() => {
+                        bubble.classList.remove('show');
+                        bubble.classList.add('hide');
+
+                        setTimeout(() => {
+                            bubble.classList.remove('hide');
+                            bubble.classList.add('show');
+                            typeWriterText(bubble, "잘 부탁해", 60, () => {
+                                setTimeout(() => {
+                                    document.getElementById('name-screen').classList.add('hidden');
+                                    showTitleScreen(nameInput);
+                                }, 2000);
+                            });
+                        }, 400);
+
+                    }, 2000);
+                });
+            }, 400);
         }
 
         function showTitleScreen(userName) {
